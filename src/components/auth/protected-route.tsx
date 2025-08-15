@@ -1,5 +1,7 @@
+import { socketManager } from '@/lib/socket-manager';
 import { useAuthStore } from '@/store/authStore';
-import React from 'react';
+import { useConfigStore } from '@/store/configStore';
+import React, { useEffect } from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 
 interface ProtectedRouteProps {
@@ -25,11 +27,25 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   // Select state and functions from the store
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated());
   const checkPermission = useAuthStore((state) => state.checkPermission);
-  console.log(
-    'current permissions',
-    useAuthStore((state) => state.permissions)
+  const getTenantSubDomain = useConfigStore(
+    (state) => state.getTenantSubDomain
   );
+
+  const getTenantNamespace = useConfigStore(
+    (state) => state.getTenantNamespace
+  );
+
+  const token = useAuthStore((state) => state.token);
+
   const location = useLocation();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      const namespace = getTenantNamespace();
+      const subdomain = getTenantSubDomain();
+      socketManager.connect(token.access, subdomain, namespace);
+    }
+  }, [getTenantNamespace, getTenantSubDomain, isAuthenticated, token.access]);
 
   // 1. First, check if the user is authenticated at all.
   if (!isAuthenticated) {

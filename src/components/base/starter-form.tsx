@@ -30,8 +30,8 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { urls } from '@/config/urls'; // Make sure to add USERS_URL here
-import { useApiResponseToast } from '@/hooks/api/use-api-response-toast';
-import { useMutation } from '@/hooks/api/useMutation'; // Assuming this is your custom hook
+import { useApiResponseToast } from '@/hooks/base/api/use-api-response-toast';
+import { useMutation } from '@/hooks/base/api/useMutation'; // Assuming this is your custom hook
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';

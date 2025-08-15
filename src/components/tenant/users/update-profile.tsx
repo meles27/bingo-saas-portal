@@ -21,9 +21,9 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { urls } from '@/config/urls';
-import { useApiResponseToast } from '@/hooks/api/use-api-response-toast';
-import { useMutation } from '@/hooks/api/useMutation';
-import type { UserProfileEntity } from '@/types/api/user.type';
+import { useApiResponseToast } from '@/hooks/base/api/use-api-response-toast';
+import { useMutation } from '@/hooks/base/api/useMutation';
+import type { UserProfileEntity } from '@/types/api/base/user.type';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
 import { useEffect } from 'react';

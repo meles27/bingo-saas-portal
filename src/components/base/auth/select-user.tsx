@@ -14,10 +14,10 @@ import {
   PopoverTrigger
 } from '@/components/ui/popover';
 import { urls } from '@/config/urls';
-import { useQuery } from '@/hooks/api/useQuery';
+import { useQuery } from '@/hooks/base/api/useQuery';
 import { cn } from '@/lib/utils';
-import type { PaginatedResponse } from '@/types/api';
-import type { UserEntity } from '@/types/api/user.type';
+import type { PaginatedResponse } from '@/types/api/base';
+import type { UserEntity } from '@/types/api/base/user.type';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import withAnimation from '../route-animation/with-animation';

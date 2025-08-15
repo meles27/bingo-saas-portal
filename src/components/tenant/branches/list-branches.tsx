@@ -20,14 +20,14 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import { urls } from '@/config/urls';
-import { useQuery } from '@/hooks/api/useQuery';
-import { useVisibilityManager } from '@/hooks/use-visibility-control';
+import { useQuery } from '@/hooks/base/api/useQuery';
+import { useVisibilityManager } from '@/hooks/base/use-visibility-control';
 import { useConfigStore } from '@/store/configStore';
-import type { PaginatedResponse } from '@/types/api';
+import type { PaginatedResponse } from '@/types/api/base';
 import type {
   BranchEntity,
   BranchQueryParamsType
-} from '@/types/api/branch.type';
+} from '@/types/api/base/branch.type';
 import { Building2, Eye, Pencil, Plus, Trash2 } from 'lucide-react';
 import { useRef, useState } from 'react';
 import ReactTimeAgo from 'react-time-ago';

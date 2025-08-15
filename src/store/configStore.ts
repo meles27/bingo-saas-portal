@@ -35,6 +35,7 @@ type ConfigStore = ConfigType & {
     value: Partial<ConfigType[K]>
   ) => unknown;
   getTenantSubDomain: () => string;
+  getTenantNamespace: () => string;
 };
 
 export const useConfigStore = create<ConfigStore>((set, get) => ({
@@ -61,5 +62,8 @@ export const useConfigStore = create<ConfigStore>((set, get) => ({
     }
 
     return subdomain;
+  },
+  getTenantNamespace() {
+    return `tenant-${get().getTenantSubDomain()}`;
   }
 }));

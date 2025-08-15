@@ -8,7 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { useVisibilityManager } from '@/hooks/use-visibility-control';
+import { useVisibilityManager } from '@/hooks/base/use-visibility-control';
 import { useAuthStore } from '@/store/authStore';
 import {
   Bell,

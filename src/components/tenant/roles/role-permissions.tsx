@@ -16,14 +16,14 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { urls } from '@/config/urls';
-import { useApiResponseToast } from '@/hooks/api/use-api-response-toast';
-import { useMutation } from '@/hooks/api/useMutation';
-import { useQuery } from '@/hooks/api/useQuery';
-import type { PaginatedResponse } from '@/types/api';
+import { useApiResponseToast } from '@/hooks/base/api/use-api-response-toast';
+import { useMutation } from '@/hooks/base/api/useMutation';
+import { useQuery } from '@/hooks/base/api/useQuery';
+import type { PaginatedResponse } from '@/types/api/base';
 import type {
   PermissionEntity,
   RolePermissionEntity
-} from '@/types/api/permission.type';
+} from '@/types/api/base/permission.type';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
 import { useCallback, useEffect, useMemo } from 'react';
@@ -125,13 +125,7 @@ export const RolePermissions = withAnimation(() => {
       permissions: []
     }
   });
-  const {
-    handleSubmit,
-    setValue,
-    getValues,
-    watch,
-    formState: { isDirty }
-  } = form;
+  const { handleSubmit, setValue, getValues, watch } = form;
 
   const selectedPermissions = watch('permissions');
 
@@ -323,9 +317,7 @@ export const RolePermissions = withAnimation(() => {
             </Show>
           </CardContent>
           <CardFooter className="flex justify-end sticky bottom-0 bg-background py-4 border-t">
-            <Button
-              type="submit"
-              disabled={rolePermissionsMutation.isLoading || !isDirty}>
+            <Button type="submit" disabled={rolePermissionsMutation.isLoading}>
               {rolePermissionsMutation.isLoading && (
                 <Loader2 className="animate-spin mr-2" />
               )}

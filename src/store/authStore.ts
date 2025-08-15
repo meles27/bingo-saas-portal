@@ -1,5 +1,5 @@
 import { urls } from '@/config/urls';
-import type { UserProfileEntity } from '@/types/api/user.type';
+import type { UserProfileEntity } from '@/types/api/base/user.type';
 import axiosInstance from '@/utils/interceptors';
 import type { JwtPayload } from 'jwt-decode';
 import { jwtDecode } from 'jwt-decode';
@@ -10,6 +10,8 @@ export interface AuthToken {
   access: string;
   refresh: string;
 }
+
+export type UserStatus = 'active' | 'suspended';
 
 export type PermissionScope = string[];
 
@@ -27,11 +29,12 @@ export interface AuthResponse {
 
 export interface UserJwtPayload extends JwtPayload {
   id: string;
-  first_name?: string;
-  last_name?: string;
-  username?: string;
-  active?: boolean;
-  isSystemUser?: boolean;
+  username: string;
+  first_name: string;
+  last_name: string;
+  status: UserStatus;
+  tenantId: string;
+  subdomain: string;
 }
 
 type AsyncState = {

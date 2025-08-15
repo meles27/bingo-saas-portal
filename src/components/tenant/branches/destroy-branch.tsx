@@ -10,9 +10,9 @@ import {
   DialogTitle
 } from '@/components/ui/dialog';
 import { urls } from '@/config/urls'; // Ensure you have a BRANCHS_URL
-import { useApiResponseToast } from '@/hooks/api/use-api-response-toast';
-import { useMutation } from '@/hooks/api/useMutation';
-import type { BranchEntity } from '@/types/api/branch.type'; // Adjust path as needed
+import { useApiResponseToast } from '@/hooks/base/api/use-api-response-toast';
+import { useMutation } from '@/hooks/base/api/useMutation';
+import type { BranchEntity } from '@/types/api/base/branch.type'; // Adjust path as needed
 import { Loader2 } from 'lucide-react';
 
 type DestroyBranchProps = {

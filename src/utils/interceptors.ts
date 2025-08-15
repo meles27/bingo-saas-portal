@@ -9,6 +9,12 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   (config) => {
+    /**
+     * get tenant subdomain from configuration
+     */
+    const subdomain = useConfigStore.getState().getTenantSubDomain();
+    config.baseURL = urls.get_base_url(subdomain);
+
     console.log(
       'the current request is ',
       `${config.baseURL}${config.url ? config.url : ''}${
@@ -16,14 +22,6 @@ axiosInstance.interceptors.request.use(
       }`,
       config.params
     );
-    /**
-     * get tenant subdomain from configuration
-     */
-    const subdomain = useConfigStore.getState().getTenantSubDomain();
-    config.baseURL = subdomain
-      ? urls.BASE_URL.replace('${subdomain}', `${subdomain}.`)
-      : urls.BASE_URL.replace('${subdomain}', '');
-
     const token = useAuthStore.getState().token;
 
     if (config.url !== '/auth/token/') {

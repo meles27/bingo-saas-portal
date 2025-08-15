@@ -20,9 +20,9 @@ import {
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { urls } from '@/config/urls'; // Ensure BRANCHS_URL is configured
-import { useApiResponseToast } from '@/hooks/api/use-api-response-toast';
-import { useMutation } from '@/hooks/api/useMutation';
-import type { BranchEntity } from '@/types/api/branch.type'; // Adjust path
+import { useApiResponseToast } from '@/hooks/base/api/use-api-response-toast';
+import { useMutation } from '@/hooks/base/api/useMutation';
+import type { BranchEntity } from '@/types/api/base/branch.type'; // Adjust path
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2, PlusCircle, Trash2 } from 'lucide-react';
 import { useEffect } from 'react';

@@ -1,5 +1,5 @@
 import { Input } from '@/components/ui/input';
-import { useDebounce } from '@/hooks/use-debounce';
+import { useDebounce } from '@/hooks/base/use-debounce';
 import { cn } from '@/lib/utils';
 import { Search } from 'lucide-react';
 import * as React from 'react';

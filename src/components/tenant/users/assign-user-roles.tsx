@@ -19,8 +19,8 @@ import {
 } from '@/components/ui/form';
 import { Label } from '@/components/ui/label';
 import { urls } from '@/config/urls';
-import { useMutation } from '@/hooks/api/useMutation';
-import type { UserEntity } from '@/types/api/user.type';
+import { useMutation } from '@/hooks/base/api/useMutation';
+import type { UserEntity } from '@/types/api/base/user.type';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';

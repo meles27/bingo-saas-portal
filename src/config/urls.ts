@@ -1,5 +1,42 @@
-export const urls = {
-  BASE_URL: 'http://${subdomain}localhost.test:3000',
+type Urls = {
+  get_base_url: (subdomain?: string) => string;
+  get_sock_base_url: (subdomain?: string, namespace?: string) => string;
+  AUTH_TOKEN_URL: string;
+  AUTH_REFRESH_TOKEN_URL: string;
+  AUTH_FORGET_PASSWORD: string;
+  AUTH_CONFIRM_FORGET_PASSWORD: string;
+  USERS_URL: string;
+  USER_URL: string;
+  ACTIVATE_USER_URL: string;
+  CHANGE_USER_STATUS_URL: string;
+  CHANGE_USER_ROLE_URL: string;
+  TENANT_SETTINGS: string;
+  UPGRADE_PLAN: string;
+  ROLES_URL: string;
+  ROLE_URL: string;
+  ROLE_PERMISSIONS_URL: string;
+  PERMISSIONS_URL: string;
+  PERMISSION_URL: string;
+  BRANCHES_URL: string;
+  BRANCH_URL: string;
+  DEFAULT_ACCESS_TOKEN: string;
+  DEFAULT_REFRESH_TOKEN: string;
+  USER_LOGIN_REDIRECT: string;
+  ADMIN_LOGIN_REDIRECT: string;
+  STUFF_LOGIN_REDIRECT: string;
+  LOGOUT_REDIRECT: string;
+  TENANT_IDENTIFIER: string;
+};
+
+export const urls: Urls = {
+  get_base_url: (subdomain?: string) =>
+    `http://${subdomain ? subdomain + '.' : ''}localhost.test:3000`,
+
+  get_sock_base_url: (subdomain?: string, namespace?: string) =>
+    `http://${subdomain ? subdomain + '.' : ''}localhost.test:3000/${
+      namespace ? namespace : ''
+    }`,
+
   /**
    * *******************************TENANT SPECIFIC ROUTES ************************
    */

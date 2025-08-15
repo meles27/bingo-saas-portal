@@ -10,7 +10,7 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog';
-import type { RoleEntity } from '@/types/api/role.type';
+import type { RoleEntity } from '@/types/api/base/role.type';
 import { Check, Copy } from 'lucide-react';
 import { useState } from 'react';
 

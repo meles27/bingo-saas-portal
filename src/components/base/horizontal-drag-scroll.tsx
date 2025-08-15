@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { motion } from 'framer-motion';
 import React, { useEffect, useRef } from 'react';
-import useDragToScroll from '../../hooks/use-drag-to-scroll';
+import useDragToScroll from '../../hooks/base/use-drag-to-scroll';
 
 // ============================================================================
 // 2. The Refactored Component

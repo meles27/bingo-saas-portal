@@ -25,9 +25,9 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { urls } from '@/config/urls';
-import { useApiResponseToast } from '@/hooks/api/use-api-response-toast';
-import { useMutation } from '@/hooks/api/useMutation';
-import type { RoleEntity } from '@/types/api/role.type';
+import { useApiResponseToast } from '@/hooks/base/api/use-api-response-toast';
+import { useMutation } from '@/hooks/base/api/useMutation';
+import type { RoleEntity } from '@/types/api/base/role.type';
 import { useEffect } from 'react';
 
 interface UpdateRoleProps {

@@ -30,11 +30,14 @@ import {
 } from '@/components/ui/table';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { urls } from '@/config/urls';
-import { useQuery } from '@/hooks/api/useQuery';
-import { useVisibilityManager } from '@/hooks/use-visibility-control';
+import { useQuery } from '@/hooks/base/api/useQuery';
+import { useVisibilityManager } from '@/hooks/base/use-visibility-control';
 import { useConfigStore } from '@/store/configStore';
-import type { PaginatedResponse } from '@/types/api';
-import type { UserEntity, UserQueryParamsType } from '@/types/api/user.type';
+import type { PaginatedResponse } from '@/types/api/base';
+import type {
+  UserEntity,
+  UserQueryParamsType
+} from '@/types/api/base/user.type';
 import { Eye, Trash2, UserCheck, UserCog, UserPlus, UserX } from 'lucide-react';
 import { useRef, useState } from 'react';
 import ReactTimeAgo from 'react-time-ago';

@@ -25,7 +25,7 @@ import {
   SidebarMenuItem,
   useSidebar
 } from '@/components/ui/sidebar';
-import { useVisibilityManager } from '@/hooks/use-visibility-control';
+import { useVisibilityManager } from '@/hooks/base/use-visibility-control';
 import { Logout } from './auth/logout';
 
 export function NavUser({

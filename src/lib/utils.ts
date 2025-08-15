@@ -1,7 +1,5 @@
-import { useConfigStore } from '@/store/configStore';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { parse } from 'tldts'; // <-- Import the library
 
 /**
  * A utility function to conditionally join class names together.
@@ -94,27 +92,3 @@ export const formatDate = (
   // 4. Format the date using the selected variant.
   return new Intl.DateTimeFormat(locale, formatOptions[variant]).format(date);
 };
-
-/**
- * Extracts a tenant identifier (subdomain or ID) from an Express request
- * using the robust `tldts` library for domain parsing.
- *
- * @param req The Express Request object.
- * @returns The found tenant identifier string, or an empty string if not found.
- */
-export function getTenantSubDomain(): string {
-  let subdomain: string = '';
-  const hostname = window.location.hostname;
-  const position = useConfigStore.getState().SUBDOMAIN_POSITION;
-  // Use tldts to reliably parse the hostname
-  const parsed = parse(hostname, { allowPrivateDomains: true });
-
-  if (parsed.subdomain) {
-    const subdomains = parsed.subdomain.split('.');
-    if (subdomains.length > position) {
-      subdomain = subdomains[position];
-    }
-  }
-
-  return subdomain;
-}

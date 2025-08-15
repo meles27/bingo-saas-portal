@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
 import { formatDate } from '@/lib/utils';
-import type { BranchEntity } from '@/types/api/branch.type';
+import type { BranchEntity } from '@/types/api/base/branch.type';
 import { Check, Copy, MapPin } from 'lucide-react';
 import { useState } from 'react';
 

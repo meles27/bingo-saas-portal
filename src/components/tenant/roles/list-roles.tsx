@@ -21,11 +21,14 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import { urls } from '@/config/urls';
-import { useQuery } from '@/hooks/api/useQuery';
-import { useVisibilityManager } from '@/hooks/use-visibility-control';
+import { useQuery } from '@/hooks/base/api/useQuery';
+import { useVisibilityManager } from '@/hooks/base/use-visibility-control';
 import { useConfigStore } from '@/store/configStore';
-import type { PaginatedResponse } from '@/types/api';
-import type { RoleEntity, RoleQueryParamsType } from '@/types/api/role.type';
+import type { PaginatedResponse } from '@/types/api/base';
+import type {
+  RoleEntity,
+  RoleQueryParamsType
+} from '@/types/api/base/role.type';
 import { Eye, KeyRound, Pencil, PlusCircle, Trash2 } from 'lucide-react';
 import { useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';

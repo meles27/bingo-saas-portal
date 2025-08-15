@@ -1,7 +1,7 @@
 import { ApiError } from '@/components/base/api-error';
 import { Spinner } from '@/components/base/spinner';
 import { urls } from '@/config/urls';
-import { useQuery } from '@/hooks/api/useQuery';
+import { useQuery } from '@/hooks/base/api/useQuery';
 import { useConfigStore } from '@/store/configStore';
 import type { AxiosBaseQueryErrorResponse } from '@/utils/axiosInstance';
 import { AnimatePresence } from 'framer-motion';
