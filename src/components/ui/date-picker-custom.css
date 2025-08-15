@@ -1,0 +1,88 @@
+/* src/components/ui/date-picker-custom.css */
+
+/* Main calendar container */
+.react-datepicker {
+  @apply rounded-lg border bg-popover p-3 font-sans text-sm text-popover-foreground shadow-md;
+}
+
+/* Header */
+.react-datepicker__header {
+  @apply border-b-0 bg-transparent p-0;
+}
+
+.react-datepicker__current-month,
+.react-datepicker-time__header,
+.react-datepicker-year-header {
+  @apply pb-4 pt-1 text-sm font-medium;
+}
+
+/* Navigation buttons */
+.react-datepicker__navigation {
+  @apply absolute top-4;
+}
+.react-datepicker__navigation--previous {
+  @apply left-1;
+}
+.react-datepicker__navigation--next {
+  @apply right-1;
+}
+.react-datepicker__navigation-icon::before {
+  @apply h-4 w-4 border-foreground;
+}
+
+/* Month and Year dropdowns */
+.react-datepicker__year-dropdown-container,
+.react-datepicker__month-dropdown-container {
+  @apply mx-1;
+}
+.react-datepicker__year-select,
+.react-datepicker__month-select {
+  @apply rounded-md border-input bg-background p-1 pr-4 text-sm font-medium;
+}
+
+/* Day styles */
+.react-datepicker__day-name,
+.react-datepicker__day,
+.react-datepicker__time-name {
+  @apply m-0.5 inline-flex h-9 w-9 items-center justify-center rounded-md p-0 text-sm;
+}
+
+.react-datepicker__day:hover,
+.react-datepicker__month-text:hover,
+.react-datepicker__quarter-text:hover,
+.react-datepicker__year-text:hover {
+  @apply rounded-md bg-accent text-accent-foreground;
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__day--in-selecting-range,
+.react-datepicker__day--in-range,
+.react-datepicker__month--selected,
+.react-datepicker__month--in-selecting-range,
+.react-datepicker__month--in-range,
+.react-datepicker__quarter--selected,
+.react-datepicker__quarter--in-selecting-range,
+.react-datepicker__quarter--in-range,
+.react-datepicker__year--selected,
+.react-datepicker__year--in-selecting-range,
+.react-datepicker__year--in-range {
+  @apply rounded-md bg-primary text-primary-foreground;
+}
+
+.react-datepicker__day--selected:hover,
+.react-datepicker__day--in-selecting-range:hover,
+.react-datepicker__day--in-range:hover {
+  @apply bg-primary text-primary-foreground;
+}
+
+.react-datepicker__day--keyboard-selected {
+  @apply rounded-md bg-accent text-accent-foreground;
+}
+
+.react-datepicker__day--disabled {
+  @apply opacity-50;
+}
+
+.react-datepicker__day--outside-month {
+  @apply text-muted-foreground opacity-50;
+}
