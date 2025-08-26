@@ -1,0 +1,31 @@
+###
+# LIST MEMBERSHIPS
+GET {{ TENANT_BASE_URL }}/memberships
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+
+###
+# CREATE BRANCH-USER
+POST {{ TENANT_BASE_URL }}/memberships HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+{
+  "roleId": "32182e94-2e89-46bd-8260-34f9cdae5f41",
+  "userId": "8425568d-fcbb-4262-b6e1-16f0d10b00f0"
+}
+
+
+###
+# RETRIEVE BRANCH-USER
+GET {{ TENANT_BASE_URL }}/memberships/{{ membershipId }} HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+
+###
+# DELETE BRANCH-USER
+DELETE {{ TENANT_BASE_URL }}/memberships/{{ membershipId }} HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json

@@ -1,0 +1,49 @@
+###
+# LIST USERS
+GET {{ TENANT_BASE_URL }}/users HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+
+###
+# CREATE USER
+POST {{ TENANT_BASE_URL }}/users HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+{
+  "firstName": "Filmon",
+  "lastName": "Abadi",
+  "username": "filmon",
+  "email": "filmon05@billing.saas.com",
+  "password": "meles05",
+  "password1": "meles05",
+  "roleId": "351e4169-9fa9-4eae-a228-8550603fd265",
+  "phone": "+251 98434 8348"
+}
+
+
+###
+# RETRIEVE USER
+GET {{ TENANT_BASE_URL }}/users/{{ userId }} HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+
+###
+# UPDATE USER
+PATCH {{ TENANT_BASE_URL }}/users/{{ userId }} HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+{
+  "ast": "atte",
+  "email": "saraBest.kebede@support.com"
+}
+
+
+###
+# DELETE USER
+DELETE {{ TENANT_BASE_URL }}/users/{{ userId }} HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json

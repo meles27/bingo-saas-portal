@@ -1,0 +1,40 @@
+###
+# this is for the participants in the single game session
+# LIST GAME-SESSION PARTICIPANTS
+GET {{ TENANT_BASE_URL }}/game-sessions/{{ sessionId }}/participants?search= HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+
+###
+# CREATE GAME-SESSION PARTICIPANT
+POST {{ TENANT_BASE_URL }}/game-sessions/{{ sessionId }}/participants HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+{
+  "userId": "{{ userId }}"
+}
+
+
+###
+# RETRIEVE GAME-SESSION PARTICIPANT
+GET {{ TENANT_BASE_URL }}/game-sessions//{{ sessionId }}/participants/{{ participantId }} HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+
+###
+# UPDATE  GAME-SESSION PARTICIPANT
+PATCH {{ TENANT_BASE_URL }}/game-sessions//{{ sessionId }}/participants/{{ participantId }} HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+{}
+
+
+###
+# DELETE  GAME-SESSION PARTICIPANT
+DELETE {{ TENANT_BASE_URL }}/game-sessions//{{ sessionId }}/participants/{{ participantId }} HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json

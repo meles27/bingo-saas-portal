@@ -1,0 +1,87 @@
+###
+# LIST PRICING-PLANS
+GET {{ SYSTEM_BASE_URL }}/pricing-plans HTTP/1.1
+
+
+###
+#CREATE PRICING-PLAN
+POST {{ SYSTEM_BASE_URL }}/pricing-plans HTTP/1.1
+content-type: application/json
+
+{
+  "name": "Enterprise",
+  "description": "Full-featured plan for large organizations with unlimited scalability.",
+  "monthlyPrice": "99.99",
+  "annualPrice": "999.99",
+  "extraFeatures": [
+    "Dedicated Account Manager",
+    "24/7 Phone Support",
+    "Custom Integrations"
+  ]
+}
+
+
+###
+# RETRIEVE PRICING-PLAN
+GET {{ SYSTEM_BASE_URL }}/pricing-plans/{{ pricingPlanId }} HTTP/1.1
+
+
+###
+# UPDATE PRICING-PLAN
+PATCH {{ SYSTEM_BASE_URL }}/pricing-plans/{{ pricingPlanId }} HTTP/1.1
+content-type: application/json
+
+{
+  "extraFeatures": [
+    "Basic Reports",
+    "Email Support",
+    "Barcode Scanning support"
+  ]
+}
+
+
+###
+# DELETE PRICING-PLAN
+DELETE {{ SYSTEM_BASE_URL }}/pricing-plans/{{ pricingPlanId }} HTTP/1.1
+content-type: application/json
+
+
+###
+# DELETE PRICING-PLAN
+OPTIONS {{ SYSTEM_BASE_URL }}/pricing-plans/{{ pricingPlanId }} HTTP/1.1
+content-type: application/json
+
+[
+  {
+    "name": "Starter",
+    "description": "Basic plan suitable for small shops just starting out.",
+    "monthlyPrice": "9.99",
+    "annualPrice": "99.99",
+    "extraFeatures": [
+      "Basic Reports",
+      "Email Support"
+    ]
+  },
+  {
+    "name": "Professional",
+    "description": "Advanced features for growing businesses with multiple users.",
+    "monthlyPrice": "29.99",
+    "annualPrice": "299.99",
+    "extraFeatures": [
+      "Advanced Reports",
+      "Priority Email Support",
+      "API Access"
+    ]
+  },
+  {
+    "name": "Enterprise",
+    "description": "Full-featured plan for large organizations with unlimited scalability.",
+    "monthlyPrice": "99.99",
+    "annualPrice": "999.99",
+    "extraFeatures": [
+      "Dedicated Account Manager",
+      "24/7 Phone Support",
+      "Custom Integrations"
+    ]
+  }
+]

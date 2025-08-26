@@ -1,0 +1,41 @@
+###
+# @login login
+POST {{ TENANT_BASE_URL }}/auth/token HTTP/1.1
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "meles05"
+}
+
+
+###
+# @refresh refresh
+POST {{ TENANT_BASE_URL }}/auth/token/refresh HTTP/1.1
+Content-Type: application/json
+
+{
+  "refresh": "{{ refresh }}"
+}
+
+
+###
+# @reset-password reset-password
+POST {{ TENANT_BASE_URL }}/auth/reset-password HTTP/1.1
+Content-Type: application/json
+
+{
+  "username": "admin"
+}
+
+
+###
+# @confirm-reset-password confirm-reset-password
+POST {{ TENANT_BASE_URL }}/auth/confirm-reset-password HTTP/1.1
+Content-Type: application/json
+
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijg0MjU1NjhkLWZjYmItNDI2Mi1iNmUxLTE2ZjBkMTBiMDBmMCIsImlhdCI6MTc1MjYxODAzMCwiZXhwIjoxNzUyNjIxNjMwfQ.vLqtE41EPtzg1gjpLNsURcQBGLRKUouWz0icmxDjZQ0",
+  "password": "meles05",
+  "password1": "meles05"
+}

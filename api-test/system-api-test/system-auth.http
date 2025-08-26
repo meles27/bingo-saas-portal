@@ -1,0 +1,41 @@
+###
+# @login login
+POST {{ SYSTEM_BASE_URL }}/system-auth/token HTTP/1.1
+Content-Type: application/json
+
+{
+  "username": "meles",
+  "password": "meles05"
+}
+
+
+###
+# @refresh refresh
+POST {{ SYSTEM_BASE_URL }}/system-auth/token/refresh HTTP/1.1
+content-type: application/json
+
+{
+  "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjM1ZmNiY2UwLWJmMGUtNGU4My04MmM0LTc4ZmNhYjljNWI0YSIsInVzZXJuYW1lIjoibWVsZXMiLCJmaXJzdE5hbWUiOiJNZWxlcyIsImxhc3ROYW1lIjoiSGFpbGVzZWxhc3NpZSIsImFjdGl2ZSI6dHJ1ZSwiaXNTeXN0ZW1Vc2VyIjp0cnVlLCJpYXQiOjE3NTI2MDAyNTIsImV4cCI6MTc1NTE5MjI1Mn0.RkzhuiVrvukbFShfau-1DxdsX0V2n5XelSHcdwOETu4"
+}
+
+
+###
+# @reset-password reset-password
+POST {{ SYSTEM_BASE_URL }}/system-auth/reset-password HTTP/1.1
+content-type: application/json
+
+{
+  "username": "meles"
+}
+
+
+###
+# @confirm-reset-password confirm-reset-password
+POST {{ SYSTEM_BASE_URL }}/system-auth/confirm-reset-password HTTP/1.1
+content-type: application/json
+
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjM1ZmNiY2UwLWJmMGUtNGU4My04MmM0LTc4ZmNhYjljNWI0YSIsImlhdCI6MTc1MjEyMTI1MSwiZXhwIjoxNzUyMTI0ODUxfQ.0cwXdMjVioQ3sViqc2sxKcd0M8Uih5hziF93sQMYzv4",
+  "password": "meles05",
+  "password1": "meles05"
+}

@@ -60,6 +60,9 @@ type ActionType =
   | 'status';
 
 export const ListUsers = withAnimation(() => {
+  const userRef = useRef<UserEntity | null>(null);
+  const paginationRef = useRef<CustomPaginationRefIFace | null>(null);
+  const PAGE_SIZE = useConfigStore((state) => state.PAGE_SIZE);
   const { states, actions } = useVisibilityManager<ActionType>([
     'create',
     'retrieve',
@@ -67,23 +70,18 @@ export const ListUsers = withAnimation(() => {
     'assign-role',
     'status'
   ]);
-
-  const userRef = useRef<UserEntity | null>(null);
-  const PAGE_SIZE = useConfigStore((state) => state.PAGE_SIZE);
   const [searchParams, setSearchParams] = useState<UserQueryParamsType>({
     offset: 0,
     limit: PAGE_SIZE,
     search: ''
   });
 
-  const paginationRef = useRef<CustomPaginationRefIFace | null>(null);
   const listUsersResponse = useQuery<PaginatedResponse<UserEntity>>(
     urls.USERS_URL,
     {
       params: searchParams
     }
   );
-
   const handleTabChange = (value: string) => {
     paginationRef.current?.reset();
     setSearchParams((prev) => ({

@@ -1,0 +1,21 @@
+###
+# RETRIEVE TENANT CONFIGURATION
+GET {{ TENANT_BASE_URL }}/config HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+
+###
+# UPDATE TENANT CONFIGURATION
+PATCH {{ TENANT_BASE_URL }}/config HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+{}
+
+
+###
+# UPGRATE PLAN
+POST {{ TENANT_BASE_URL }}/config/upgrade-plan HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json

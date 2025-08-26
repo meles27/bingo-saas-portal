@@ -1,0 +1,21 @@
+###
+# LIST TRANSACTIONS
+GET {{ TENANT_BASE_URL }}/transactions HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+
+###
+POST {{ TENANT_BASE_URL }}/transactions/webhooks/chapa HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+
+###
+POST {{ TENANT_BASE_URL }}/transactions/webhooks/telebirr HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+{
+  "name": "Update User Status ."
+}

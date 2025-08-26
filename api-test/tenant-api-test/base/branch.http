@@ -1,0 +1,82 @@
+###
+# LIST BRANCHES
+GET {{ TENANT_BASE_URL }}/branches?search= HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+
+###
+# CREATE BRANCH
+POST {{ TENANT_BASE_URL }}/branches HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+{}
+
+
+###
+# RETRIEVE BRANCH
+GET {{ TENANT_BASE_URL }}/branches/{{ branchId }} HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+
+###
+# UPDATE BRANCH
+PATCH {{ TENANT_BASE_URL }}/branches/{{ branchId }} HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+{
+  "name": "beza burger house no.1"
+}
+
+
+###
+# DELETE BRANCH
+DELETE {{ TENANT_BASE_URL }}/branches/{{ branchId }} HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+
+###
+# sample data
+OPTIONS {{ TENANT_BASE_URL }}/branches?search= HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+[
+  {
+    "name": "Central Warehouse",
+    "locations": [
+      {
+        "address": "123 Main St, Springfield"
+      },
+      {
+        "address": "456 Side Ave, Springfield"
+      }
+    ]
+  },
+  {
+    "name": "Downtown Store",
+    "locations": [
+      {
+        "address": "789 Market St, Springfield"
+      },
+      {
+        "address": "101 Commerce Blvd, Springfield"
+      },
+      {
+        "address": "102 Commerce Blvd, Springfield"
+      }
+    ]
+  },
+  {
+    "name": "East Side Outlet",
+    "locations": [
+      {
+        "address": "22 Industrial Park Rd, Shelbyville"
+      }
+    ]
+  }
+]
