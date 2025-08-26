@@ -20,7 +20,7 @@ const config = {
   SCANNER_DEBOUNCE_TIME: 300,
   UPGRADE_ALERT_TIME: 10 * 1000, // 10 seconds
   JWT_KEY_NAME: 'token',
-  user: { first_name: 'meles', last_name: 'haileselassie' },
+  user: { firstName: 'meles', lastName: 'haileselassie' },
   SUBDOMAIN_POSITION: 0
 };
 

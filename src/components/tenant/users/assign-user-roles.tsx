@@ -65,7 +65,7 @@ export function AssignUserRoles({
     }
   });
 
-  const assignRoleMutation = useMutation(urls.USERS_URL, 'POST');
+  const assignRoleMutation = useMutation(urls.getUsersUrl(), 'POST');
 
   // --- 4. Define the form submission handler ---
   async function onSubmit(values: AssignRolesFormValues) {
@@ -92,8 +92,8 @@ export function AssignUserRoles({
   }
 
   const fullName = useMemo(
-    () => `${user.first_name} ${user.last_name}`,
-    [user.first_name, user.last_name]
+    () => `${user.firstName} ${user.lastName}`,
+    [user.firstName, user.lastName]
   );
 
   useEffect(() => {

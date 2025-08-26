@@ -42,7 +42,7 @@ export default function SelectRole({
     data: listRolesResponse,
     isLoading,
     isError
-  } = useQuery<PaginatedResponse<RoleEntity>>(urls.ROLES_URL, {
+  } = useQuery<PaginatedResponse<RoleEntity>>(urls.getRolesUrl(), {
     params: { limit: 1000 }
   });
 

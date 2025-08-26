@@ -52,12 +52,12 @@ export interface PricingPlanEntity {
    */
   creditSupport: boolean;
   /**
-   * @property {Date} created_at - The timestamp when the pricingPlanEntity was created.
+   * @property {Date} createdAt - The timestamp when the pricingPlanEntity was created.
    */
-  created_at: Date;
+  createdAt: Date;
   /**
-   * @property {Date} updated_at - The timestamp when the pricingPlanEntity was last updated.
+   * @property {Date} updatedAt - The timestamp when the pricingPlanEntity was last updated.
    */
-  updated_at: Date;
+  updatedAt: Date;
   // tenants: Tenant[]; // Exclude TypeORM relations from the basic interface if not explicitly needed for data transfer
 }

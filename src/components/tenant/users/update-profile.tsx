@@ -41,12 +41,10 @@ interface UpdateProfileProps {
 // 1. Define the validation schema with Zod for our fields
 const UpdateProfileSchema = z.object({
   username: z.string().min(3, 'Username must be at least 3 characters long.'),
-  first_name: z.string().min(1, 'First name is required.'),
-  last_name: z.string().min(1, 'Last name is required.'),
-  email: z
-    .string()
-    .min(1, 'Email is required.')
-    .email('Please enter a valid email address.'),
+  firstName: z.string().min(1, 'First name is required.'),
+  lastName: z.string().min(1, 'Last name is required.'),
+  email: z.email('Please enter a valid email address.'),
+
   image: z
     .array(
       z.union([
@@ -75,8 +73,8 @@ export const UpdateProfile: React.FC<UpdateProfileProps> = withAnimation(
       resolver: zodResolver(UpdateProfileSchema),
       defaultValues: {
         username: user.username,
-        first_name: user.first_name,
-        last_name: user.last_name,
+        firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
         image: user.image
           ? [{ url: user.image, public_id: user.image_public_id || '' }]
@@ -88,8 +86,8 @@ export const UpdateProfile: React.FC<UpdateProfileProps> = withAnimation(
     useEffect(() => {
       form.reset({
         username: user.username,
-        first_name: user.first_name,
-        last_name: user.last_name,
+        firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
         image: user.image
           ? [{ url: user.image, public_id: user.image_public_id || '' }]
@@ -99,7 +97,7 @@ export const UpdateProfile: React.FC<UpdateProfileProps> = withAnimation(
 
     // 3. Set up the API mutation for updating the user
     const updateProfileMutation = useMutation<object, FormData>(
-      `${urls.USERS_URL}/${user.id}`,
+      urls.getUserUrl(user.id),
       'PUT'
     );
 
@@ -166,7 +164,7 @@ export const UpdateProfile: React.FC<UpdateProfileProps> = withAnimation(
                   <div className="grid grid-cols-2 gap-4">
                     <FormField
                       control={form.control}
-                      name="first_name"
+                      name="firstName"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>First Name</FormLabel>
@@ -179,7 +177,7 @@ export const UpdateProfile: React.FC<UpdateProfileProps> = withAnimation(
                     />
                     <FormField
                       control={form.control}
-                      name="last_name"
+                      name="lastName"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Last Name</FormLabel>

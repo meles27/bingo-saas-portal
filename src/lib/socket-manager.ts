@@ -29,7 +29,7 @@ class SocketManager {
       this.socket.disconnect();
     }
 
-    const socketUrl = urls.get_sock_base_url(subdomain, namespace);
+    const socketUrl = urls.getSockBaseUrl(subdomain, namespace);
     console.log(`Attempting to connect to ${socketUrl}`);
 
     // The 'io' function is also generic and accepts our event types

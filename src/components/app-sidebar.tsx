@@ -46,10 +46,6 @@ const data = {
       isActive: true,
       items: [
         {
-          title: 'Branches',
-          url: '/dashboard/branches'
-        },
-        {
           title: 'Credientials',
           url: '/dashboard/users'
         },
@@ -103,7 +99,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavUser
           user={{
             email: userInfo?.email || 'N/A',
-            name: `${userInfo?.first_name} ${userInfo?.last_name}`,
+            name: `${userInfo?.firstName} ${userInfo?.lastName}`,
             avatar: userInfo?.image || ''
           }}
         />

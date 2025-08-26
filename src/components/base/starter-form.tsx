@@ -60,8 +60,8 @@ interface CreateUserProps {
 const CreateUserSchema = z
   .object({
     username: z.string().min(3, 'Username must be at least 3 characters long.'),
-    first_name: z.string().min(1, 'First name is required.'),
-    last_name: z.string().min(1, 'Last name is required.'),
+    firstName: z.string().min(1, 'First name is required.'),
+    lastName: z.string().min(1, 'Last name is required.'),
     email: z
       .string()
       .min(1, 'Email is required.')
@@ -104,8 +104,8 @@ export const CreateUser: React.FC<CreateUserProps> = ({
   const form = useForm<TCreateUserSchema>({
     resolver: zodResolver(CreateUserSchema),
     defaultValues: {
-      first_name: 'meles',
-      last_name: 'haileselassie',
+      firstName: 'meles',
+      lastName: 'haileselassie',
       username: 'meles',
       password: 'meles05',
       password1: 'meles05',
@@ -167,7 +167,7 @@ export const CreateUser: React.FC<CreateUserProps> = ({
               {/* First Name Field */}
               <FormField
                 control={form.control}
-                name="first_name"
+                name="firstName"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>First Name</FormLabel>
@@ -181,7 +181,7 @@ export const CreateUser: React.FC<CreateUserProps> = ({
               {/* Last Name Field */}
               <FormField
                 control={form.control}
-                name="last_name"
+                name="lastName"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Last Name</FormLabel>

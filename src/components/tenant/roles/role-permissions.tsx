@@ -130,7 +130,7 @@ export const RolePermissions = withAnimation(() => {
   const selectedPermissions = watch('permissions');
 
   const permissionsQuery = useQuery<PaginatedResponse<PermissionEntity>>(
-    urls.PERMISSIONS_URL,
+    urls.getPermissionsUrl(),
     {
       params: { limit: 1000 }
     }
@@ -138,12 +138,12 @@ export const RolePermissions = withAnimation(() => {
 
   const rolePermissionsQuery = useQuery<
     PaginatedResponse<RolePermissionEntity>
-  >(urls.ROLE_PERMISSIONS_URL.replace(':roleId', params.roleId!), {
+  >(urls.getRolePermissionsUrl(params.roleId || ''), {
     skip: !params.roleId
   });
 
   const rolePermissionsMutation = useMutation<object, TAssignPermissionSchema>(
-    urls.ROLE_PERMISSIONS_URL.replace(':roleId', params.roleId!),
+    urls.getRolePermissionsUrl(params.roleId || ''),
     'PATCH'
   );
 

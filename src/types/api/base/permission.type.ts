@@ -5,14 +5,14 @@ export interface PermissionEntity {
   group: string;
   applicability: string;
   description: string;
-  created_at: string;
-  updated_at: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface RolePermissionEntity {
   id: string;
-  created_at: string;
-  updated_at: string;
+  createdAt: string;
+  updatedAt: string;
   is_temporary: boolean;
   permission: PermissionEntity;
 }

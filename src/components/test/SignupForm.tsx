@@ -9,8 +9,8 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
 type SignupFormValues = {
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   username: string;
   password: string;
@@ -57,24 +57,24 @@ export default function SignupForm() {
       onSubmit={handleSubmit(onSubmit)}
       className="max-w-md mx-auto space-y-4 p-6 border rounded-xl shadow-md">
       <div className="space-y-2">
-        <Label htmlFor="first_name">First Name</Label>
+        <Label htmlFor="firstName">First Name</Label>
         <Input
-          id="first_name"
-          {...register('first_name', { required: 'First name is required' })}
+          id="firstName"
+          {...register('firstName', { required: 'First name is required' })}
         />
-        {errors.first_name && (
-          <p className="text-red-500 text-sm">{errors.first_name.message}</p>
+        {errors.firstName && (
+          <p className="text-red-500 text-sm">{errors.firstName.message}</p>
         )}
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="last_name">Last Name</Label>
+        <Label htmlFor="lastName">Last Name</Label>
         <Input
-          id="last_name"
-          {...register('last_name', { required: 'Last name is required' })}
+          id="lastName"
+          {...register('lastName', { required: 'Last name is required' })}
         />
-        {errors.last_name && (
-          <p className="text-red-500 text-sm">{errors.last_name.message}</p>
+        {errors.lastName && (
+          <p className="text-red-500 text-sm">{errors.lastName.message}</p>
         )}
       </div>
 

@@ -9,8 +9,8 @@ export interface JwtTokenIface {
 }
 
 export interface JwtPayloadIface extends JwtPayload {
-  first_name?: string;
-  last_name?: string;
+  firstName?: string;
+  lastName?: string;
   username?: string;
   user_id?: string;
   role?: string;

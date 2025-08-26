@@ -7,8 +7,6 @@ interface CanProps {
   children: React.ReactNode;
   /** An array of permission strings. The children will be rendered if the user has AT LEAST ONE of these permissions. */
   I: string[];
-  /** An optional branch ID to check the permissions against for branch-specific roles. */
-  branchId?: string;
 }
 
 /**
@@ -16,7 +14,7 @@ interface CanProps {
  * It uses the `useAuthStore` to check if the user has at least one of the
  * `I`. If the check fails, it renders nothing.
  */
-export const Can: React.FC<CanProps> = ({ children, I, branchId }) => {
+export const Can: React.FC<CanProps> = ({ children, I }) => {
   // 1. Select the permission checking function from the store.
   const checkPermission = useAuthStore((state) => state.checkPermission);
 
@@ -28,9 +26,7 @@ export const Can: React.FC<CanProps> = ({ children, I, branchId }) => {
 
   // 3. Use `some()` to check if the user has AT LEAST ONE of the required permissions.
   // This is the exact same logic as in your ProtectedRoute.
-  const isAuthorized = I.some((permission) =>
-    checkPermission(permission, branchId)
-  );
+  const isAuthorized = I.some((permission) => checkPermission(permission));
 
   // 4. If the user is authorized, render the children. Otherwise, render nothing.
   return isAuthorized ? <>{children}</> : null;

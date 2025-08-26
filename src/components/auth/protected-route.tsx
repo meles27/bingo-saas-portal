@@ -9,8 +9,6 @@ interface ProtectedRouteProps {
   children?: React.ReactNode;
   /** An array of permissions required. Access is granted if the user has AT LEAST ONE. */
   requiredPermissions?: string[];
-  /** The specific branch ID to check permissions against. */
-  branchId?: string;
   /** Path to redirect to if not authenticated. Defaults to "/login". */
   redirectTo?: string;
   /** Path to redirect to if authenticated but not authorized. Defaults to "/unauthorized". */
@@ -20,7 +18,6 @@ interface ProtectedRouteProps {
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children,
   requiredPermissions,
-  branchId,
   redirectTo = '/login',
   onAuthorizationFailRedirect = '/unauthorized'
 }) => {
@@ -58,7 +55,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     // Use `some()` to check if the user has AT LEAST ONE of the required permissions.
     // This directly implements the logic you asked for.
     const hasRequiredPermission = requiredPermissions.some((perm) =>
-      checkPermission(perm, branchId)
+      checkPermission(perm)
     );
 
     if (!hasRequiredPermission) {

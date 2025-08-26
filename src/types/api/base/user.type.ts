@@ -3,31 +3,31 @@ import type { BaseQueryParams } from '.';
 
 export interface UserEntity {
   id: string;
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   username: string;
   image: string | null;
   status: UserStatusValue;
-  image_id: string | null;
-  last_login: string;
-  date_joined: string;
-  delete_at: null | string;
+  imageId: string | null;
+  lastLogin: string;
+  dateJoined: string;
+  deletedAt: null | string;
   phone: string;
 }
 
 export interface UserProfileEntity {
   id: string;
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   username: string;
   image: string | null;
   status: UserStatusValue;
   image_public_id: string | null;
-  last_login: string;
-  date_joined: string;
-  delete_at: null | string;
+  lastLogin: string;
+  dateJoined: string;
+  deletedAt: null | string;
   phone: string;
 }
 

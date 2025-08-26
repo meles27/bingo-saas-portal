@@ -1,20 +1,79 @@
-import type { AxiosBaseQueryErrorResponse } from '@/utils/axiosInstance';
 import axiosInstance from '@/utils/interceptors';
-import axios, { type AxiosRequestConfig } from 'axios';
+import type { AxiosRequestConfig } from 'axios';
+import axios from 'axios';
 import { useCallback, useEffect, useMemo, useReducer, useRef } from 'react';
 
-// --- Shared Error Interface and Generator ---
+// --- Type Definitions ---
 
-interface UseQueryResult<T> {
-  data: T | null;
-  error: AxiosBaseQueryErrorResponse | null;
-  isLoading: boolean;
-  isSuccess: boolean;
-  isError: boolean;
+/**
+ * A standardized error response structure for API queries.
+ */
+export interface AxiosBaseQueryErrorResponse {
+  status: number | undefined;
+  data: {
+    detail: string;
+    errors?: Record<string, unknown>;
+  };
+}
+
+// --- Discriminated Union for Query Result ---
+
+interface UseQueryBaseResult<T> {
+  /**
+   * Function to manually trigger a refetch of the query.
+   * Returns a promise that resolves with the [data, error] tuple.
+   */
   refetch: () => Promise<
     [T | undefined, AxiosBaseQueryErrorResponse | undefined]
   >;
 }
+
+interface UseQueryLoadingResult<T> extends UseQueryBaseResult<T> {
+  data: T | null; // Can hold stale data while refetching
+  error: null;
+  isLoading: true;
+  isSuccess: false;
+  isError: false;
+}
+
+interface UseQuerySuccessResult<T> extends UseQueryBaseResult<T> {
+  data: T; // Data is guaranteed to be present and non-nullable
+  error: null;
+  isLoading: false;
+  isSuccess: true;
+  isError: false;
+}
+
+interface UseQueryErrorResult<T> extends UseQueryBaseResult<T> {
+  data: null;
+  error: AxiosBaseQueryErrorResponse; // Error is guaranteed to be present
+  isLoading: false;
+  isSuccess: false;
+  isError: true;
+}
+
+interface UseQueryIdleResult<T> extends UseQueryBaseResult<T> {
+  data: null;
+  error: null;
+  isLoading: false;
+  isSuccess: false;
+  isError: false;
+}
+
+/**
+ * The result of the useQuery hook, discriminated by the state flags
+ * (isLoading, isSuccess, isError). This allows for type-safe access
+ * to `data` and `error` properties.
+ *
+ * - When `isSuccess` is true, `data` is of type `T`.
+ * - When `isError` is true, `error` is of type `AxiosBaseQueryErrorResponse`.
+ * - When `isLoading` is true, `data` can be null (or hold stale data).
+ */
+export type UseQueryResult<T> =
+  | UseQueryLoadingResult<T>
+  | UseQuerySuccessResult<T>
+  | UseQueryErrorResult<T>
+  | UseQueryIdleResult<T>;
 
 /**
  * Generates a structured error object from various error types.
@@ -66,8 +125,6 @@ function generateAxiosError(error: unknown): AxiosBaseQueryErrorResponse {
   };
 }
 
-// --- Hook-Specific Type Definitions ---
-
 export interface UseQueryOptions {
   params?: AxiosRequestConfig['params'];
   headers?: AxiosRequestConfig['headers'];
@@ -115,6 +172,8 @@ function fetchReducer<T>(state: State<T>, action: Action<T>): State<T> {
   }
 }
 
+// --- useQuery Hook Implementation ---
+
 export function useQuery<T>(
   url: string,
   options: UseQueryOptions = {}
@@ -130,6 +189,8 @@ export function useQuery<T>(
 
   const [state, dispatch] = useReducer(fetchReducer<T>, initialState);
   const isInitialMount = useRef(true);
+
+  // Derive the isError flag from the state
   const isError = useMemo(() => state.error !== null, [state.error]);
 
   const refetch = useCallback(async (): Promise<
@@ -152,11 +213,14 @@ export function useQuery<T>(
   }, [url, skip, JSON.stringify(params), JSON.stringify(headers)]);
 
   useEffect(() => {
+    // Only fetch on initial mount if not manual or skipped
     if (isInitialMount.current && !manual && !skip) {
       isInitialMount.current = false;
       refetch();
       return;
     }
+
+    // After initial mount, refetch if dependencies change, but not if manual/skipped
     if (!isInitialMount.current && !manual && !skip) {
       refetch();
     }
@@ -181,5 +245,5 @@ export function useQuery<T>(
     ]
   );
 
-  return result;
+  return result as UseQueryResult<T>;
 }

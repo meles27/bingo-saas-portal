@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button'; // Assuming a similar shadcn/ui Button component
+import { useAuthStore } from '@/store/authStore';
 import type { AxiosBaseQueryErrorResponse } from '@/utils/axiosInstance';
 import {
   AlertTriangle,
@@ -6,6 +7,7 @@ import {
   FileSearch,
   FolderSearch,
   Home,
+  LogOut, // <-- ADDED: Icon for the logout button
   ServerCrash,
   ShieldOff,
   UserX,
@@ -44,8 +46,9 @@ export const ApiError: React.FC<ApiErrorProps> = withAnimation(
     showDetails = true,
     customAction
   }) => {
-    // --- ROUTER HOOK ---
+    // --- ROUTER & AUTH HOOKS ---
     const navigate = useNavigate();
+    const { logout } = useAuthStore();
     const goBack = () => navigate(-1);
     const goHome = () => navigate('/');
 
@@ -102,7 +105,7 @@ export const ApiError: React.FC<ApiErrorProps> = withAnimation(
           return {
             statusCode: 401,
             title: 'Unauthorized',
-            description: `You need to be authenticated to access this page. Please log in.`,
+            description: `Your session may have expired. Please log out and sign in again.`,
             icon: UserX
           } as ErrorDetails;
         default:
@@ -194,17 +197,24 @@ export const ApiError: React.FC<ApiErrorProps> = withAnimation(
             <Button variant="outline" onClick={goBack}>
               <ArrowLeft className="mr-2 h-4 w-4" /> Go Back
             </Button>
-            {/* Custom Action Button */}
-            {customAction ? (
+            {/* highlight-start */}
+            {/* Show Logout button for 401 Unauthorized errors */}
+            {error.status === 401 ? (
+              <Button onClick={logout}>
+                <LogOut className="mr-2 h-4 w-4" /> Logout
+              </Button>
+            ) : customAction ? (
+              /* Custom Action Button (if not 401) */
               <Button onClick={customAction.handler}>
                 {customAction.label}
               </Button>
             ) : (
-              /* Default Home Button */
+              /* Default Home Button (if not 401 and no custom action) */
               <Button onClick={goHome}>
                 <Home className="mr-2 h-4 w-4" /> Return Home
               </Button>
             )}
+            {/* highlight-end */}
           </div>
         </div>
       </div>

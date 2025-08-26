@@ -59,7 +59,7 @@ export const UpdateRole: React.FC<UpdateRoleProps> = withAnimation(
     });
 
     const updateRoleMutation = useMutation<unknown, UpdateRoleFormValues>(
-      urls.ROLE_URL.replace(':roleId', role.id),
+      urls.getRoleUrl(role.id),
       'PATCH'
     );
 

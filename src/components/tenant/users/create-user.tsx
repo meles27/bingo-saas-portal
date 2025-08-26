@@ -1,4 +1,3 @@
-import SelectRole from '@/components/base/auth/select-roles';
 import Camera from '@/components/base/camera/camera';
 import PasswordInput from '@/components/base/password-input';
 import withAnimation from '@/components/base/route-animation/with-animation';
@@ -34,7 +33,6 @@ import { z } from 'zod';
 interface CreateUserProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  /** Optional callback to run after the API call is complete. */
   callback?: (success: boolean) => void;
 }
 
@@ -42,15 +40,12 @@ interface CreateUserProps {
 const CreateUserSchema = z
   .object({
     username: z.string().min(3, 'Username must be at least 3 characters long.'),
-    first_name: z.string().min(1, 'First name is required.'),
-    last_name: z.string().min(1, 'Last name is required.'),
-    email: z
-      .string()
-      .min(1, 'Email is required.')
-      .email('Please enter a valid email address.'),
+    firstName: z.string().min(1, 'First name is required.'),
+    lastName: z.string().min(1, 'Last name is required.'),
+    email: z.email('Please enter a valid email address.'),
     password: z.string().min(6, 'Password must be at least 6 characters long.'),
     password1: z.string().min(6, 'Please confirm your password.'),
-    roleIds: z.array(z.string().uuid()),
+    phone: z.string().min(1, 'Phone number is required.'),
     image: z
       .array(
         z
@@ -60,7 +55,7 @@ const CreateUserSchema = z
             }),
             z.object({
               public_id: z.string(),
-              url: z.string().url()
+              url: z.url()
             })
           ])
           .optional()
@@ -88,7 +83,7 @@ export const CreateUser: React.FC<CreateUserProps> = withAnimation(
 
     // 3. Set up the API mutation using your custom hook
     const createUserMutation = useMutation<object, FormData>(
-      urls.USERS_URL,
+      urls.getUsersUrl(),
       'POST'
     );
 
@@ -114,15 +109,12 @@ export const CreateUser: React.FC<CreateUserProps> = withAnimation(
 
     // 5. Define the submit handler
     async function onSubmit(values: TCreateUserSchema) {
+      console.log('values', values);
       const { image, ...validatedData } = values;
       const formData = new FormData();
       console.log('values', values);
       Object.entries(validatedData).map(([key, value]) => {
-        if (value instanceof Array) {
-          value.map((v) => formData.append('roleIds', v));
-        } else {
-          formData.append(key, value);
-        }
+        formData.append(key, value);
       });
       if (image.length) {
         const file = image[0];
@@ -157,7 +149,7 @@ export const CreateUser: React.FC<CreateUserProps> = withAnimation(
                     {/* First Name Field */}
                     <FormField
                       control={form.control}
-                      name="first_name"
+                      name="firstName"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>First Name</FormLabel>
@@ -171,7 +163,7 @@ export const CreateUser: React.FC<CreateUserProps> = withAnimation(
                     {/* Last Name Field */}
                     <FormField
                       control={form.control}
-                      name="last_name"
+                      name="lastName"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Last Name</FormLabel>
@@ -252,15 +244,12 @@ export const CreateUser: React.FC<CreateUserProps> = withAnimation(
                   {/* Role Field */}
                   <FormField
                     control={form.control}
-                    name="roleIds"
+                    name="phone"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>User Role</FormLabel>
+                        <FormLabel>Phone Number</FormLabel>
                         <FormControl>
-                          <SelectRole
-                            value={field.value}
-                            onChange={field.onChange}
-                          />
+                          <Input {...field} placeholder="+251 ..." />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -293,13 +282,14 @@ export const CreateUser: React.FC<CreateUserProps> = withAnimation(
               </div>
             </form>
           </Form>
-          <DialogFooter className="sticky bottom-0 left-0 bg-white py-6 z-10 mt-8">
+          <DialogFooter className="sticky bottom-0 left-0 flex flex-row w-full justify-end bg-white py-6 z-10 mt-8">
             <DialogClose asChild>
-              <Button type="button" variant="outline">
+              <Button type="button" className="flex-1" variant="outline">
                 Cancel
               </Button>
             </DialogClose>
             <Button
+              className="flex-2"
               form={formId}
               type="submit"
               disabled={createUserMutation.isLoading}>

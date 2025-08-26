@@ -40,11 +40,11 @@ import type {
 } from '@/types/api/base/user.type';
 import { Eye, Trash2, UserCheck, UserCog, UserPlus, UserX } from 'lucide-react';
 import { useRef, useState } from 'react';
-import ReactTimeAgo from 'react-time-ago';
 import { AssignUserRoles } from './assign-user-roles';
 import { ChangeUserStatus } from './change-user-status';
 import { CreateUser } from './create-user';
 import { DestroyUser } from './destroy-user';
+import { UserDetail } from './user-detail';
 
 const TABS = [
   { label: 'All', value: 'all' },
@@ -52,20 +52,20 @@ const TABS = [
   { label: 'Suspended', value: 'false' }
 ];
 type ActionType =
-  | 'retrieve'
+  | 'detail'
   | 'update'
   | 'delete'
   | 'create'
   | 'assign-role'
   | 'status';
 
-export const ListUsers = withAnimation(() => {
+export const UserList = withAnimation(() => {
   const userRef = useRef<UserEntity | null>(null);
   const paginationRef = useRef<CustomPaginationRefIFace | null>(null);
   const PAGE_SIZE = useConfigStore((state) => state.PAGE_SIZE);
   const { states, actions } = useVisibilityManager<ActionType>([
     'create',
-    'retrieve',
+    'detail',
     'delete',
     'assign-role',
     'status'
@@ -76,8 +76,8 @@ export const ListUsers = withAnimation(() => {
     search: ''
   });
 
-  const listUsersResponse = useQuery<PaginatedResponse<UserEntity>>(
-    urls.USERS_URL,
+  const usersQuery = useQuery<PaginatedResponse<UserEntity>>(
+    urls.getUsersUrl(),
     {
       params: searchParams
     }
@@ -142,17 +142,17 @@ export const ListUsers = withAnimation(() => {
           </div>
         </CardHeader>
         <CardContent>
-          {listUsersResponse.isLoading && <Spinner variant="page" />}
-          {listUsersResponse.isError && (
+          {usersQuery.isLoading && <Spinner variant="page" />}
+          {usersQuery.isError && (
             <ApiError
-              error={listUsersResponse.error}
+              error={usersQuery.error}
               customAction={{
                 label: 'Refresh',
-                handler: listUsersResponse.refetch
+                handler: usersQuery.refetch
               }}
             />
           )}
-          {listUsersResponse.isSuccess && (
+          {usersQuery.isSuccess && (
             <HorizontalDragScroll>
               <Table>
                 <TableHeader>
@@ -160,14 +160,13 @@ export const ListUsers = withAnimation(() => {
                     <TableHead className="w-[50px]">No.</TableHead>
                     <TableHead>Member</TableHead>
                     <TableHead>Status</TableHead>
-                    <TableHead>Date Joined</TableHead>
-                    <TableHead>Last Login</TableHead>
+                    {/* Removed Date Joined and Last Login headers */}
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {listUsersResponse.data?.results.length ? (
-                    listUsersResponse.data.results.map((user, index) => (
+                  {usersQuery.data.results.length ? (
+                    usersQuery.data.results.map((user, index) => (
                       <TableRow key={user.id}>
                         <TableCell className="font-medium">
                           {(paginationRef.current?.getCurrentPage() || 0) *
@@ -176,10 +175,11 @@ export const ListUsers = withAnimation(() => {
                             1}
                         </TableCell>
                         <TableCell>
+                          {/* UPDATED: Changed to camelCase properties */}
                           <UserAvatar
                             user={{
-                              first_name: user.first_name,
-                              last_name: user.last_name,
+                              firstName: user.firstName,
+                              lastName: user.lastName,
                               email: user.email,
                               username: user.username,
                               imageUrl: user.image
@@ -189,34 +189,23 @@ export const ListUsers = withAnimation(() => {
                         <TableCell>
                           <Badge
                             variant={
-                              user.status == 'active' ? 'default' : 'secondary'
+                              user.status === 'active' ? 'default' : 'secondary'
                             }>
-                            {user.status == 'active' ? 'Active' : 'Suspended'}
+                            {user.status === 'active' ? 'Active' : 'Suspended'}
                           </Badge>
                         </TableCell>
-                        <TableCell className="text-muted-foreground">
-                          <ReactTimeAgo
-                            date={new Date(user.date_joined)}
-                            locale="en-US"
-                          />
-                        </TableCell>
-                        <TableCell className="text-muted-foreground">
-                          <ReactTimeAgo
-                            date={new Date(user.last_login)}
-                            locale="en-US"
-                          />
-                        </TableCell>
+                        {/* REMOVED: Table cells for dateJoined and lastLogin */}
                         <TableCell className="text-right">
                           <ActionMenu label="User Actions">
                             <ActionMenuItem
-                              label="View Profile"
+                              label="View Detail"
                               icon={<Eye className="h-4 w-4" />}
-                              callback={() => openDialog('retrieve', user)}
+                              callback={() => openDialog('detail', user)}
                             />
                             <ActionMenuItem
-                              label="change status"
+                              label="Change Status"
                               icon={
-                                user.status == 'active' ? (
+                                user.status === 'active' ? (
                                   <UserX className="h-4 w-4" />
                                 ) : (
                                   <UserCheck className="h-4 w-4" />
@@ -233,12 +222,10 @@ export const ListUsers = withAnimation(() => {
                               label="Delete"
                               icon={<Trash2 className="h-4 w-4" />}
                               className="text-destructive"
-                              callback={() =>
-                                actions.open(
-                                  'delete',
-                                  () => (userRef.current = user)
-                                )
-                              }
+                              callback={() => {
+                                userRef.current = user;
+                                actions.open('delete');
+                              }}
                             />
                           </ActionMenu>
                         </TableCell>
@@ -246,7 +233,8 @@ export const ListUsers = withAnimation(() => {
                     ))
                   ) : (
                     <TableRow>
-                      <TableCell colSpan={6} className="h-24 text-center">
+                      {/* UPDATED: colSpan adjusted from 6 to 4 */}
+                      <TableCell colSpan={4} className="h-24 text-center">
                         <EmptyList itemName="user" />
                       </TableCell>
                     </TableRow>
@@ -257,53 +245,53 @@ export const ListUsers = withAnimation(() => {
           )}
         </CardContent>
         <CardFooter>
-          <CustomPagination
-            ref={paginationRef}
-            totalItems={listUsersResponse.data?.count || 0}
-            pageSize={PAGE_SIZE}
-            onPageChange={(page) =>
-              setSearchParams((prev) => ({
-                ...prev,
-                offset: page * PAGE_SIZE
-              }))
-            }
-          />
+          {usersQuery.isSuccess && (
+            <CustomPagination
+              ref={paginationRef}
+              totalItems={usersQuery.data.count}
+              pageSize={PAGE_SIZE}
+              onPageChange={(page) =>
+                setSearchParams((prev) => ({
+                  ...prev,
+                  offset: page * PAGE_SIZE
+                }))
+              }
+            />
+          )}
         </CardFooter>
       </Card>
 
-      {/* --- Dialogs --- */}
+      {/* --- Dialogs (unchanged) --- */}
       <CreateUser
         open={states.create}
         onOpenChange={(open) => actions.set('create', open)}
-        callback={(success) => (success ? listUsersResponse.refetch() : null)}
+        callback={(success) => (success ? usersQuery.refetch() : undefined)}
       />
       {userRef.current && (
         <>
+          <UserDetail
+            userId={userRef.current.id}
+            open={states.detail}
+            onOpenChange={(open) => actions.set('detail', open)}
+          />
           <ChangeUserStatus
             user={userRef.current}
             open={states.status}
             onOpenChange={(open) => actions.set('status', open)}
-            callback={(success) =>
-              success ? listUsersResponse.refetch() : null
-            }
+            callback={(success) => (success ? usersQuery.refetch() : undefined)}
           />
           <DestroyUser
             user={userRef.current}
             open={states.delete}
             onOpenChange={(open) => actions.set('delete', open)}
-            callback={(success) =>
-              success ? listUsersResponse.refetch() : null
-            }
+            callback={(success) => (success ? usersQuery.refetch() : undefined)}
           />
           <AssignUserRoles
             user={userRef.current}
             open={states['assign-role']}
             onOpenChange={(open) => actions.set('assign-role', open)}
-            callback={(success) =>
-              success ? listUsersResponse.refetch() : null
-            }
+            callback={(success) => (success ? usersQuery.refetch() : undefined)}
           />
-          {/* Add other dialogs like UpdateProfile and ChangeUserRole here */}
         </>
       )}
     </div>

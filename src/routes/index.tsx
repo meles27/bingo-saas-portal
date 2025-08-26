@@ -4,7 +4,6 @@ import { RolePermissions } from '@/components/tenant/roles/role-permissions';
 import { LoginPage } from '@/pages/base/login-page';
 import { NotFound404Page } from '@/pages/base/not-found-404-page';
 import { DefaultPage } from '@/pages/dashboard/default-page';
-import { BranchesPage } from '@/pages/dashboard/tenant/branches-page';
 import { RolesPage } from '@/pages/dashboard/tenant/roles-page';
 import { UsersPage } from '@/pages/dashboard/tenant/users-page';
 import { HomePage } from '@/pages/site/home-page';
@@ -45,12 +44,7 @@ const router = createBrowserRouter([
        */
       {
         path: 'dashboard',
-        element: (
-          <ProtectedRoute
-            branchId="db1e8a0d-c4d6-47d8-8d49-b21f66ca83ee"
-            requiredPermissions={[]}
-          />
-        ),
+        element: <ProtectedRoute requiredPermissions={[]} />,
         children: [
           {
             path: '',
@@ -72,11 +66,6 @@ const router = createBrowserRouter([
                 path: 'roles/:roleId/assign-permissions',
                 element: <RolePermissions />
               },
-              {
-                path: 'branches',
-                element: <BranchesPage />
-              },
-
               {
                 path: 'test',
                 element: <TestPage />

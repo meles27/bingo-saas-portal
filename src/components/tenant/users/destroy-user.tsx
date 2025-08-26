@@ -28,7 +28,7 @@ type DestroyUserData = { userId: string; active: boolean };
 export const DestroyUser: React.FC<DestroyUserProps> = withAnimation(
   (props) => {
     const destroyUserMutation = useMutation<unknown, DestroyUserData>(
-      urls.USER_URL.replace(':userId', props.user?.id),
+      urls.getUserUrl(props.user.id),
       'DELETE'
     );
 
@@ -86,7 +86,7 @@ export const DestroyUser: React.FC<DestroyUserProps> = withAnimation(
               <div className="flex flex-col">
                 <p className="font-semibold text-sm">{props.user.username}</p>
                 <p className="text-sm text-muted-foreground">
-                  {props.user.first_name} {props.user.last_name}
+                  {props.user.firstName} {props.user.lastName}
                 </p>
               </div>
             </div>
@@ -104,7 +104,9 @@ export const DestroyUser: React.FC<DestroyUserProps> = withAnimation(
             </DialogClose>
             <Button
               type="button"
-              variant={props.user.active ? 'destructive' : 'default'}
+              variant={
+                props.user.status == 'active' ? 'destructive' : 'default'
+              }
               disabled={destroyUserMutation.isLoading}
               onClick={handleChangeStatus}>
               {destroyUserMutation.isLoading && (

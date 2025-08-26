@@ -177,7 +177,7 @@ const AppHeader: React.FC<AppHeaderProps> = (props) => {
                   <Avatar>
                     <AvatarImage
                       src={user?.image || ''}
-                      alt={user?.last_name || ''}
+                      alt={user?.lastName || ''}
                     />
                     <AvatarFallback>CN</AvatarFallback>
                   </Avatar>

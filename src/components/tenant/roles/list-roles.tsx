@@ -37,7 +37,7 @@ import { DestroyRole } from './destroy-role';
 import { RetrieveRole } from './retrieve-role';
 import { UpdateRole } from './update-role';
 
-type ActionType = 'retrieve' | 'update' | 'delete' | 'create';
+type ActionType = 'detail' | 'update' | 'delete' | 'create';
 
 export const ListRoles = withAnimation(() => {
   /**
@@ -45,7 +45,7 @@ export const ListRoles = withAnimation(() => {
    */
   const { states, actions } = useVisibilityManager<ActionType>([
     'create',
-    'retrieve',
+    'detail',
     'update',
     'delete'
   ]);
@@ -60,7 +60,7 @@ export const ListRoles = withAnimation(() => {
   });
 
   const paginationRef = useRef<CustomPaginationRefIFace | null>(null);
-  const rolesQuery = useQuery<PaginatedResponse<RoleEntity>>(urls.ROLES_URL, {
+  const rolesQuery = useQuery<PaginatedResponse<RoleEntity>>(urls.getRolesUrl(), {
     params: searchParams
   });
 
@@ -152,7 +152,7 @@ export const ListRoles = withAnimation(() => {
                         <ActionMenuItem
                           label="Detail"
                           icon={<Eye className="mr-2 h-4 w-4" />}
-                          callback={() => openDialog('retrieve', role)}
+                          callback={() => openDialog('detail', role)}
                           hide={false}
                         />
                         <ActionMenuItem
@@ -220,8 +220,8 @@ export const ListRoles = withAnimation(() => {
           <>
             <RetrieveRole
               role={roleRef.current}
-              open={states.retrieve}
-              onOpenChange={(open) => actions.set('retrieve', open)}
+              open={states.detail}
+              onOpenChange={(open) => actions.set('detail', open)}
             />
             <UpdateRole
               role={roleRef.current}

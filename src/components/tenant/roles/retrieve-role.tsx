@@ -112,10 +112,10 @@ export const RetrieveRole: React.FC<RetrieveRoleProps> = withAnimation(
             </DetailItem>
 
             <DetailItem label="Created At">
-              {formatDate(role.created_at)}
+              {formatDate(role.createdAt)}
             </DetailItem>
             <DetailItem label="Last Updated">
-              {formatDate(role.updated_at)}
+              {formatDate(role.updatedAt)}
             </DetailItem>
           </div>
 

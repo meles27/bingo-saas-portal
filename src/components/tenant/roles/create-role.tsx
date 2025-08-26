@@ -56,7 +56,7 @@ export const CreateRole: React.FC<CreateRoleProps> = withAnimation(
     });
 
     const createRoleMutation = useMutation<unknown, CreateRoleFormValues>(
-      urls.ROLES_URL,
+      urls.getRolesUrl(),
       'POST'
     );
 
@@ -84,7 +84,6 @@ export const CreateRole: React.FC<CreateRoleProps> = withAnimation(
     }
 
     return (
-      // Control the dialog's state programmatically
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="sm:max-w-[475px]">
           <DialogHeader>

@@ -30,7 +30,7 @@ export const DestroyRole: React.FC<DestroyRoleProps> = withAnimation(
      * remove
      */
     const destroyRoleMutation = useMutation<unknown, DestroyRoleData>(
-      urls.ROLE_URL.replace(':roleId', role?.id),
+      urls.getRoleUrl(role?.id),
       'DELETE'
     );
 
@@ -56,7 +56,6 @@ export const DestroyRole: React.FC<DestroyRoleProps> = withAnimation(
       }
     };
 
-    // The Dialog can't render without a role, so we return null to prevent errors.
     if (!role) {
       return null;
     }

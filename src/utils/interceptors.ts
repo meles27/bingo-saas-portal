@@ -7,13 +7,18 @@ const axiosInstance = axios.create({
   withCredentials: true
 });
 
+/**
+ * urls that doesn't required access token
+ */
+const publicUrls = [urls.getAuthTokenUrl(), urls.getTenantSettingsUrl()];
+
 axiosInstance.interceptors.request.use(
   (config) => {
     /**
      * get tenant subdomain from configuration
      */
     const subdomain = useConfigStore.getState().getTenantSubDomain();
-    config.baseURL = urls.get_base_url(subdomain);
+    config.baseURL = urls.getBaseUrl(subdomain);
 
     console.log(
       'the current request is ',
@@ -24,7 +29,7 @@ axiosInstance.interceptors.request.use(
     );
     const token = useAuthStore.getState().token;
 
-    if (config.url !== '/auth/token/') {
+    if (!publicUrls.includes(config.url || '')) {
       if (token && token?.access) {
         config.headers.Authorization = `Bearer ${token?.access}`;
       }

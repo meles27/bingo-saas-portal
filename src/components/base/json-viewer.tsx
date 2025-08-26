@@ -22,16 +22,49 @@ export const JsonViewer = <T = unknown,>({
 }: JsonViewerProps<T>): React.JSX.Element => {
   const [isCopied, setIsCopied] = React.useState(false);
 
+  // const handleCopy = async () => {
+  //   try {
+  //     if (!isCopied) {
+  //       const json = JSON.stringify(data, null, 2);
+  //       await navigator.clipboard.writeText(json);
+  //       toast.success('JSON copied to clipboard!');
+  //       setIsCopied(true);
+  //       setTimeout(() => setIsCopied(false), 2000);
+  //     }
+  //   } catch {
+  //     toast.error('Failed to copy JSON.');
+  //   }
+  // };
+
   const handleCopy = async () => {
     try {
-      if (!isCopied) {
-        const json = JSON.stringify(data, null, 2);
-        await navigator.clipboard.writeText(json);
-        toast.success('JSON copied to clipboard!');
-        setIsCopied(true);
-        setTimeout(() => setIsCopied(false), 2000);
+      const json =
+        typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+
+      if (!json) {
+        toast.error('Nothing to copy.');
+        return;
       }
-    } catch {
+
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(json);
+      } else {
+        // fallback for insecure context
+        const textArea = document.createElement('textarea');
+        textArea.value = json;
+        textArea.style.position = 'fixed'; // avoid scrolling
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+      }
+
+      toast.success('JSON copied to clipboard!');
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 2000);
+    } catch (err) {
+      console.error('Copy error:', err);
       toast.error('Failed to copy JSON.');
     }
   };

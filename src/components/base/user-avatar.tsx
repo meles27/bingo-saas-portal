@@ -9,8 +9,8 @@ import React from 'react';
  * Defines the shape of the user data the avatar component expects.
  */
 export interface UserProfile {
-  first_name?: string | null;
-  last_name?: 'LNU' | string | null; // LNU is Last Name Unknown
+  firstName?: string | null;
+  lastName?: 'LNU' | string | null; // LNU is Last Name Unknown
   imageUrl?: string | null;
   email?: string | null;
   username?: string | null;
@@ -37,8 +37,8 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
    * Handles cases where names might be missing.
    */
   const getInitials = (): string => {
-    const first = user?.first_name?.[0] ?? '';
-    const last = user?.last_name?.[0] ?? '';
+    const first = user?.firstName?.[0] ?? '';
+    const last = user?.lastName?.[0] ?? '';
     // If both initials exist, return them. Otherwise, return the first letter
     // of the first name, or the first letter of the email/username as a last resort.
     const initials = `${first}${last}`.toUpperCase();
@@ -50,10 +50,10 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
    * Constructs the full name for the tooltip display.
    */
   const getFullName = (): string => {
-    if (!user?.first_name && !user?.last_name) {
+    if (!user?.firstName && !user?.lastName) {
       return user?.username || user?.email || 'Unknown User';
     }
-    return `${user.first_name || ''} ${user.last_name || ''}`.trim();
+    return `${user.firstName || ''} ${user.lastName || ''}`.trim();
   };
 
   // If no user object is provided at all, show a generic icon.
@@ -81,7 +81,7 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
       </Avatar>
       <div>
         <p className="text-sm">
-          {user.first_name} {user.last_name}
+          {user.firstName} {user.lastName}
         </p>
         <p className="text-sm font-bold">{user.username}</p>
       </div>

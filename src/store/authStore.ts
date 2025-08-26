@@ -17,7 +17,6 @@ export type PermissionScope = string[];
 
 export interface Permissions {
   global: string[];
-  branches: [branchId: string, scopes: PermissionScope][];
 }
 
 export interface AuthResponse {
@@ -30,8 +29,8 @@ export interface AuthResponse {
 export interface UserJwtPayload extends JwtPayload {
   id: string;
   username: string;
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   status: UserStatus;
   tenantId: string;
   subdomain: string;
@@ -64,7 +63,7 @@ type AuthStore = {
   logout: () => void;
   refresh: () => Promise<AsyncResult<AuthResponse>>;
 
-  checkPermission: (permission: string, branchId?: string) => boolean;
+  checkPermission: (permission: string) => boolean;
 
   // SELECTORS / GETTERS
   decodeJwtToken: (token: string) => UserJwtPayload | null;
@@ -105,7 +104,7 @@ export const useAuthStore = create<AuthStore>()(
 
         try {
           const response = await axiosInstance.post<AuthResponse>(
-            urls.AUTH_TOKEN_URL,
+            urls.getAuthTokenUrl(),
             { username, password }
           );
 
@@ -153,7 +152,7 @@ export const useAuthStore = create<AuthStore>()(
 
         try {
           const response = await axiosInstance.post<AuthResponse>(
-            urls.AUTH_REFRESH_TOKEN_URL,
+            urls.getAuthRefreshTokenUrl(),
             { refresh: get().token.refresh }
           );
 
@@ -190,7 +189,7 @@ export const useAuthStore = create<AuthStore>()(
 
       // --- SELECTORS / GETTERS (No changes needed here) ---
 
-      checkPermission: (permission: string, branchId?: string): boolean => {
+      checkPermission: (permission: string): boolean => {
         const { permissions } = get();
 
         if (!permissions) {
@@ -200,17 +199,6 @@ export const useAuthStore = create<AuthStore>()(
         // 2. Check for a matching global permission.
         if (permissions.global.includes(permission)) {
           return true;
-        }
-
-        // 3. If a branchId is provided, check for a matching branch permission.
-        if (branchId) {
-          const branchTuple = permissions.branches.find(
-            ([id]) => id === branchId
-          );
-
-          if (branchTuple && branchTuple[1]?.includes(permission)) {
-            return true;
-          }
         }
 
         // 4. If no permission was found, deny access.

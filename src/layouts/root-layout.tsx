@@ -31,7 +31,7 @@ export const RootLayout: React.FC = () => {
   const TOAST_DEFAULT_TIMEOUT = useConfigStore(
     (state) => state.TOAST_DEFAULT_TIMEOUT
   );
-  const retrieveTenantResponse = useQuery(urls.TENANT_SETTINGS);
+  const retrieveTenantResponse = useQuery(urls.getTenantSettingsUrl());
   useEffect(() => {
     if (retrieveTenantResponse.isSuccess) {
       console.log('tenant; ', retrieveTenantResponse.data);

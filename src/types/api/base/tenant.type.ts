@@ -13,8 +13,8 @@ export interface TenantConfigEntity {
   toastTimeoutError: number;
   toastTimeoutWarning: number;
   toastTimeoutSuccess: number;
-  created_at: Date;
-  updated_at: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface TenantEntity {
@@ -24,8 +24,8 @@ export interface TenantEntity {
   logoUrl: string | null;
   logoUrl_public_id: string | null;
   active: boolean;
-  created_at: string;
-  updated_at: string;
+  createdAt: string;
+  updatedAt: string;
   pricingPlan: PricingPlanEntity;
   tenantConfig: TenantConfigEntity | null;
 }

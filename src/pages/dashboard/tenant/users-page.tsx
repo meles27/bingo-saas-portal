@@ -1,10 +1,10 @@
 import withAnimation from '@/components/base/route-animation/with-animation';
-import { ListUsers } from '@/components/tenant/users/list-users';
+import { UserList } from '@/components/tenant/users/user-list';
 
 export const UsersPage = withAnimation(() => {
   return (
     <>
-      <ListUsers />
+      <UserList />
     </>
   );
 });
