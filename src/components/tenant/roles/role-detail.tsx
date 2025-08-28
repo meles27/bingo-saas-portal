@@ -14,13 +14,12 @@ import type { RoleEntity } from '@/types/api/base/role.type';
 import { Check, Copy } from 'lucide-react';
 import { useState } from 'react';
 
-type RetrieveRoleProps = {
+type RoleDetailProps = {
   role: RoleEntity;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 };
 
-// A small helper component to keep the layout consistent
 const DetailItem: React.FC<{ label: string; children: React.ReactNode }> = ({
   label,
   children
@@ -31,7 +30,7 @@ const DetailItem: React.FC<{ label: string; children: React.ReactNode }> = ({
   </div>
 );
 
-export const RetrieveRole: React.FC<RetrieveRoleProps> = withAnimation(
+export const RoleDetail: React.FC<RoleDetailProps> = withAnimation(
   ({ role, open, onOpenChange }) => {
     const [isCopied, setIsCopied] = useState(false);
 
@@ -64,10 +63,8 @@ export const RetrieveRole: React.FC<RetrieveRoleProps> = withAnimation(
       <Dialog
         open={open}
         onOpenChange={(isOpen) => {
-          // Only trigger onOpenChange when closing the dialog
           if (!isOpen) {
             onOpenChange(false);
-            // Reset copy state when dialog closes
             setIsCopied(false);
           }
         }}>

@@ -1,0 +1,24 @@
+###
+# LIST SYSTEM-PERMISSIONS
+GET {{ SYSTEM_BASE_URL }}/system-permissions HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+
+###
+# RETRIEVE SYSTEM-USER
+GET {{ SYSTEM_BASE_URL }}/system-permissions/{{ systemPermissionId }} HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+
+###
+# UPDATE SYSTEM-USER
+PATCH {{ SYSTEM_BASE_URL }}/system-permissions/{{ systemPermissionId }} HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+{
+  "ast": "atte",
+  "email": "saraBest.kebede@support.com"
+}

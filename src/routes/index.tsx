@@ -4,6 +4,8 @@ import { RolePermissions } from '@/components/tenant/roles/role-permissions';
 import { LoginPage } from '@/pages/base/login-page';
 import { NotFound404Page } from '@/pages/base/not-found-404-page';
 import { DefaultPage } from '@/pages/dashboard/default-page';
+import { GamesPage } from '@/pages/dashboard/tenant/game/games-page';
+import { PatternsPage } from '@/pages/dashboard/tenant/game/patterns-page';
 import { RolesPage } from '@/pages/dashboard/tenant/roles-page';
 import { UsersPage } from '@/pages/dashboard/tenant/users-page';
 import { HomePage } from '@/pages/site/home-page';
@@ -65,6 +67,16 @@ const router = createBrowserRouter([
               {
                 path: 'roles/:roleId/assign-permissions',
                 element: <RolePermissions />
+              },
+
+              // game section
+              {
+                path: 'games',
+                element: <GamesPage />
+              },
+              {
+                path: 'patterns',
+                element: <PatternsPage />
               },
               {
                 path: 'test',

@@ -13,6 +13,6 @@ export interface RolePermissionEntity {
   id: string;
   createdAt: string;
   updatedAt: string;
-  is_temporary: boolean;
+  isTemporary: boolean;
   permission: PermissionEntity;
 }

@@ -118,7 +118,7 @@ export const CreateRole: React.FC<CreateRoleProps> = withAnimation(
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Description (Optional)</FormLabel>
+                    <FormLabel>Description</FormLabel>
                     <FormControl>
                       <Textarea
                         placeholder="Describe what this role is responsible for."

@@ -1,0 +1,46 @@
+###
+# LIST games
+GET {{ TENANT_BASE_URL }}/games HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+
+###
+# CREATE GAME
+POST {{ TENANT_BASE_URL }}/games HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+{
+  "name": "Friday night ",
+  "totalRounds": 4,
+  "entryFee": "500.0",
+  "startedAt": "2025-08-27T07:32:10.123Z",
+  "endedAt": "2025-08-29T07:32:10.123Z"
+}
+
+
+###
+# RETRIEVE GAME
+GET {{ TENANT_BASE_URL }}/games/{{ gameId }} HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+
+###
+# UPDATE GAME
+PATCH {{ TENANT_BASE_URL }}/games/{{ gameId }} HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+{
+  "name": "Friday Night Mega Prize Bingo",
+  "description": "Friday Night Mega Prize Bingo brings the thrill of big wins and endless fun to your weekend nights. Join the excitement for a chance to take home mega prizes while enjoying the ultimate bingo experience!"
+}
+
+
+###
+# DELETE GAME 
+DELETE {{ TENANT_BASE_URL }}/games/{{ gameId }} HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json

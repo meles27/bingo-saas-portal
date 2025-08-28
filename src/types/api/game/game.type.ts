@@ -1,0 +1,65 @@
+import type { RoundStatus } from './round.type';
+
+export type GameStatus = 'pending' | 'active' | 'completed' | 'cancelled';
+
+export interface GameListEntity {
+  id: string;
+  name: string;
+  description: string | null;
+  status: GameStatus;
+  totalRounds: number;
+  entryFee: string;
+  startedAt: string;
+  endedAt: string;
+  currency: string;
+}
+
+export interface GameDetailEntity {
+  id: string;
+  name: string;
+  description: string | null;
+  status: GameStatus;
+  totalRounds: number;
+  entryFee: string;
+  startedAt: string;
+  endedAt: string;
+  currency: string;
+  createdAt: string;
+  updatedAt: string;
+  rounds: {
+    id: string;
+    name: string;
+    roundNumber: number;
+    status: RoundStatus;
+    prize: string; // decimal as string
+    startedAt: string;
+    endedAt: string | null;
+  }[];
+}
+
+export interface CreateGameInput {
+  name: string;
+  totalRounds: number;
+  entryFee: string;
+  startedAt: string;
+  endedAt: string;
+  currency?: string;
+}
+
+export class UpdateGameInput {
+  name?: string;
+  description?: string;
+  entryFee?: string;
+  totalRounds?: number;
+  status?: GameStatus;
+  startedAt?: Date;
+  endedAt?: Date;
+}
+
+export interface GameQueryParamsType {
+  offset: number;
+  limit: number;
+  search?: string;
+  entryFee?: string;
+  status?: GameStatus;
+}

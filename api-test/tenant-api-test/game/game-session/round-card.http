@@ -1,0 +1,51 @@
+###
+# this is for the round cards in the single game's round
+# LIST ROUND CARDS
+GET {{ TENANT_BASE_URL }}/games/{{ gameId }}/rounds/{{ roundId }}/cards HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+
+###
+# CREATE ROUND CARD
+POST {{ TENANT_BASE_URL }}/games/{{ gameId }}/rounds/{{ roundId }}/cards HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+{
+  "participantId": "{{ participantId }}"
+}
+
+
+###
+# RETRIEVE ROUND CARD
+GET {{ TENANT_BASE_URL }}/games//{{ gameId }}/rounds/{{ roundId }}/cards/{{ cardId }} HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+
+###
+# DELETE  GAME ROUND
+DELETE {{ TENANT_BASE_URL }}/games//{{ gameId }}/rounds/{{ roundId }}/cards/{{ cardId }} HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+
+###
+# UPDATE  Mark or unmark a cell on a card.
+PATCH {{ TENANT_BASE_URL }}/games//{{ gameId }}/rounds/{{ roundId }}/cards/{{ cardId }}/mark-cell HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+{
+  "name": "Friday Night Mega Prize Bingo"
+}
+
+
+###
+# sample data for game 
+OPTIONS {{ TENANT_BASE_URL }}/games?search= HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+[]

@@ -1,0 +1,41 @@
+###
+# @login login
+POST {{ TENANT_BASE_URL }}/auth/token HTTP/1.1
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "meles05"
+}
+
+
+###
+# @refresh refresh
+POST {{ TENANT_BASE_URL }}/auth/token/refresh HTTP/1.1
+Content-Type: application/json
+
+{
+  "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImRhZmFmZWNkLTMwY2YtNDJhMC05NDQ3LWYzMTRmYzNiMDk4NiIsInVzZXJuYW1lIjoiYWRtaW4iLCJmaXJzdE5hbWUiOiJtZWxlcyIsImxhc3ROYW1lIjoiaGFpbGVzZWxhc3NpZSIsInN0YXR1cyI6ImFjdGl2ZSIsInRlbmFudElkIjoiMjYyNjgzYjQtMmJmMi00NDdkLTlhYWUtMzJlOWNhMzRlNGE1Iiwic3ViZG9tYWluIjoiYmV6YS1idXJnZXIiLCJpYXQiOjE3NTYyMjcwODAsImV4cCI6MTc1ODgxOTA4MH0.KCbGDjmfNcF7Zm8NHBn1l-HMterF8e18UBBtQfINpD8"
+}
+
+
+###
+# @reset-password reset-password
+POST {{ TENANT_BASE_URL }}/auth/reset-password HTTP/1.1
+Content-Type: application/json
+
+{
+  "username": "admin"
+}
+
+
+###
+# @confirm-reset-password confirm-reset-password
+POST {{ TENANT_BASE_URL }}/auth/confirm-reset-password HTTP/1.1
+Content-Type: application/json
+
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijg0MjU1NjhkLWZjYmItNDI2Mi1iNmUxLTE2ZjBkMTBiMDBmMCIsImlhdCI6MTc1MjYxODAzMCwiZXhwIjoxNzUyNjIxNjMwfQ.vLqtE41EPtzg1gjpLNsURcQBGLRKUouWz0icmxDjZQ0",
+  "password": "meles05",
+  "password1": "meles05"
+}

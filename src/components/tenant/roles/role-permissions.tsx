@@ -35,8 +35,8 @@ import { z } from 'zod';
 export const AssignPermissionSchema = z.object({
   permissions: z.array(
     z.object({
-      permission_id: z.string(),
-      is_temporary: z.boolean()
+      permissionId: z.string(),
+      isTemporary: z.boolean()
     })
   )
 });
@@ -48,15 +48,15 @@ export type TAssignPermissionSchema = z.infer<typeof AssignPermissionSchema>;
 interface PermissionCardProps {
   permission: PermissionEntity;
   isChecked: boolean;
-  is_temporary: boolean;
+  isTemporary: boolean;
   onCheckedChange: (checked: boolean) => void;
-  onTemporaryChange: (is_temporary: boolean) => void;
+  onTemporaryChange: (isTemporary: boolean) => void;
 }
 
 const PermissionCard = ({
   permission,
   isChecked,
-  is_temporary,
+  isTemporary,
   onCheckedChange,
   onTemporaryChange
 }: PermissionCardProps) => {
@@ -98,7 +98,7 @@ const PermissionCard = ({
         <div className="flex items-center space-x-2">
           <Switch
             id={`temp-${permission.code}`}
-            checked={is_temporary}
+            checked={isTemporary}
             onCheckedChange={onTemporaryChange}
             disabled={!isChecked}
           />
@@ -162,8 +162,8 @@ export const RolePermissions = withAnimation(() => {
     if (rolePermissionsQuery.data) {
       const initialPermissions = rolePermissionsQuery.data.results.map(
         (rp) => ({
-          permission_id: rp.permission.id,
-          is_temporary: rp.is_temporary
+          permissionId: rp.permission.id,
+          isTemporary: rp.isTemporary
         })
       );
       setValue('permissions', initialPermissions, { shouldDirty: false });
@@ -171,18 +171,18 @@ export const RolePermissions = withAnimation(() => {
   }, [rolePermissionsQuery.data, setValue]);
 
   const handleCheckedChange = useCallback(
-    (permission_id: string, checked: boolean) => {
+    (permissionId: string, checked: boolean) => {
       const currentValues = getValues('permissions');
       if (checked) {
         setValue(
           'permissions',
-          [...currentValues, { permission_id, is_temporary: false }],
+          [...currentValues, { permissionId, isTemporary: false }],
           { shouldDirty: true }
         );
       } else {
         setValue(
           'permissions',
-          currentValues.filter((p) => p.permission_id !== permission_id),
+          currentValues.filter((p) => p.permissionId !== permissionId),
           { shouldDirty: true }
         );
       }
@@ -191,12 +191,12 @@ export const RolePermissions = withAnimation(() => {
   );
 
   const handleTemporaryChange = useCallback(
-    (permission_id: string, is_temporary: boolean) => {
+    (permissionId: string, isTemporary: boolean) => {
       const currentValues = getValues('permissions');
       setValue(
         'permissions',
         currentValues.map((p) =>
-          p.permission_id === permission_id ? { ...p, is_temporary } : p
+          p.permissionId === permissionId ? { ...p, isTemporary } : p
         ),
         { shouldDirty: true }
       );
@@ -239,7 +239,7 @@ export const RolePermissions = withAnimation(() => {
   }, [permissionsQuery.data]);
 
   const selectedPermissionsMap = new Map(
-    selectedPermissions.map((p) => [p.permission_id, p])
+    selectedPermissions.map((p) => [p.permissionId, p])
   );
 
   return (
@@ -287,14 +287,14 @@ export const RolePermissions = withAnimation(() => {
                                 permission.id
                               );
                               const isChecked = !!state;
-                              const is_temporary = state?.is_temporary ?? false;
+                              const isTemporary = state?.isTemporary ?? false;
 
                               return (
                                 <PermissionCard
                                   key={permission.id}
                                   permission={permission}
                                   isChecked={isChecked}
-                                  is_temporary={is_temporary}
+                                  isTemporary={isTemporary}
                                   onCheckedChange={(checked) =>
                                     handleCheckedChange(permission.id, checked)
                                   }

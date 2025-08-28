@@ -26,22 +26,22 @@ import { useVisibilityManager } from '@/hooks/base/use-visibility-control';
 import { useConfigStore } from '@/store/configStore';
 import type { PaginatedResponse } from '@/types/api/base';
 import type {
-  RoleEntity,
-  RoleQueryParamsType
-} from '@/types/api/base/role.type';
-import { Eye, KeyRound, Pencil, PlusCircle, Trash2 } from 'lucide-react';
+  PatternListEntity,
+  PatternQueryParamsType
+} from '@/types/api/game/pattern.type';
+import { Eye, Pencil, PlusCircle, Trash2 } from 'lucide-react';
 import { useMemo, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { CreateRole } from './create-role';
-import { DestroyRole } from './destroy-role';
-import { RetrieveRole } from './retrieve-role';
-import { UpdateRole } from './update-role';
+import { CreatePattern } from './create-pattern';
+import { DestroyPattern } from './destroy-pattern';
+import { PatternDetail } from './pattern-detail';
+import { PatternVisualizer } from './pattern-visualizer';
+import { UpdatePattern } from './update-pattern';
 
 type ActionType = 'detail' | 'update' | 'delete' | 'create';
 
-export const ListRoles = withAnimation(() => {
+export const PatternList = withAnimation(() => {
   /**
-   * dialog managers
+   * Dialog managers
    */
   const { states, actions } = useVisibilityManager<ActionType>([
     'create',
@@ -50,23 +50,24 @@ export const ListRoles = withAnimation(() => {
     'delete'
   ]);
 
-  const navigete = useNavigate();
-
-  const roleRef = useRef<RoleEntity | null>(null);
+  const patternRef = useRef<PatternListEntity | null>(null);
   const PAGE_SIZE = useConfigStore((state) => state.PAGE_SIZE);
-  const [searchParams, setSearchParams] = useState<RoleQueryParamsType>({
+  const [searchParams, setSearchParams] = useState<PatternQueryParamsType>({
     offset: 0,
     limit: PAGE_SIZE
   });
 
   const paginationRef = useRef<CustomPaginationRefIFace | null>(null);
-  const rolesQuery = useQuery<PaginatedResponse<RoleEntity>>(urls.getRolesUrl(), {
-    params: searchParams
-  });
+  const patternsQuery = useQuery<PaginatedResponse<PatternListEntity>>(
+    urls.getPatternsUrl(),
+    {
+      params: searchParams
+    }
+  );
 
-  const roles = useMemo(
-    () => rolesQuery.data?.results || [],
-    [rolesQuery.data?.results]
+  const patterns = useMemo(
+    () => patternsQuery.data?.results || [],
+    [patternsQuery.data?.results]
   );
 
   const handleSearchChange = (search: string | undefined) => {
@@ -78,8 +79,8 @@ export const ListRoles = withAnimation(() => {
     }));
   };
 
-  const openDialog = (name: ActionType, role: RoleEntity) => {
-    roleRef.current = role;
+  const openDialog = (name: ActionType, pattern: PatternListEntity) => {
+    patternRef.current = pattern;
     actions.open(name);
   };
 
@@ -89,13 +90,15 @@ export const ListRoles = withAnimation(() => {
       <CardHeader>
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <CardTitle>Roles List</CardTitle>
-            <CardDescription>See information about roles.</CardDescription>
+            <CardTitle>Bingo Patterns</CardTitle>
+            <CardDescription>
+              Manage winning patterns for your bingo games.
+            </CardDescription>
           </div>
           <CardAction>
             <Button onClick={() => actions.toggle('create')}>
               <PlusCircle className="mr-2 h-4 w-4" />
-              Add New Role
+              Add New Pattern
             </Button>
           </CardAction>
         </div>
@@ -105,7 +108,7 @@ export const ListRoles = withAnimation(() => {
       <CardHeader>
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <SearchInput
-            placeholder="Search by name or rolename..."
+            placeholder="Search by name or description..."
             onDebouncedChange={handleSearchChange}
             className="w-full md:max-w-sm"
           />
@@ -114,35 +117,35 @@ export const ListRoles = withAnimation(() => {
       {/* main content */}
       <CardContent>
         {/* loading */}
-        {rolesQuery.isLoading && <Spinner variant="page" />}
+        {patternsQuery.isLoading && <Spinner variant="page" />}
         {/* error */}
-        {rolesQuery.isError && (
+        {patternsQuery.isError && (
           <ApiError
-            error={rolesQuery.error}
+            error={patternsQuery.error}
             customAction={{
               label: 'Refresh',
-              handler: rolesQuery.refetch
+              handler: patternsQuery.refetch
             }}
           />
         )}
         {/* success */}
-        {rolesQuery.isSuccess && (
+        {patternsQuery.isSuccess && (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {rolesQuery.data?.results.length ? (
-              roles.map((role) => (
-                <Card className="gap-2" key={role.id}>
+            {patternsQuery.data?.results.length ? (
+              patterns.map((pattern) => (
+                <Card className="flex flex-col gap-2" key={pattern.id}>
                   <CardHeader>
                     <div className="flex items-start justify-between">
                       <div className="flex-1 space-y-1.5 pr-4">
                         <CardTitle className="flex items-center gap-2">
-                          <span>{role.name}</span>
-                          {role.isDefault && (
-                            <Badge variant="outline">Default</Badge>
-                          )}
+                          <span>{pattern.name}</span>
+                          <Badge variant="outline" className="capitalize">
+                            {pattern.type}
+                          </Badge>
                         </CardTitle>
                         <CardDescription>
                           <TruncatedText
-                            text={role.description}
+                            text={pattern.description || ''}
                             maxLength={50}
                             className="text-sm text-muted-foreground"
                           />
@@ -152,46 +155,30 @@ export const ListRoles = withAnimation(() => {
                         <ActionMenuItem
                           label="Detail"
                           icon={<Eye className="mr-2 h-4 w-4" />}
-                          callback={() => openDialog('detail', role)}
-                          hide={false}
+                          callback={() => openDialog('detail', pattern)}
                         />
                         <ActionMenuItem
                           label="Edit"
                           icon={<Pencil className="mr-2 h-4 w-4" />}
-                          callback={() => openDialog('update', role)}
-                          hide={false}
+                          callback={() => openDialog('update', pattern)}
                         />
                         <ActionMenuItem
                           label="Delete"
                           icon={<Trash2 className="mr-2 h-4 w-4" color="red" />}
                           className="text-red-500"
-                          callback={() => openDialog('delete', role)}
-                          hide={false}
+                          callback={() => openDialog('delete', pattern)}
                         />
                       </ActionMenu>
                     </div>
                   </CardHeader>
 
-                  <CardContent className="flex-grow py-0" />
-
-                  <CardFooter>
-                    <CardAction
-                      className="flex flex-col w-full items-end"
-                      onClick={() =>
-                        navigete(
-                          `/dashboard/roles/${role.id}/assign-permissions`
-                        )
-                      }>
-                      <Button variant="outline" size="sm">
-                        <KeyRound />
-                        Permissions
-                      </Button>
-                    </CardAction>
-                  </CardFooter>
+                  <CardContent className="flex-grow flex items-center justify-center">
+                    <PatternVisualizer coordinates={pattern.coordinates} />
+                  </CardContent>
                 </Card>
               ))
             ) : (
-              <EmptyList itemName="roles" />
+              <EmptyList itemName="patterns" />
             )}
           </div>
         )}
@@ -200,7 +187,7 @@ export const ListRoles = withAnimation(() => {
       <CardFooter>
         <CustomPagination
           ref={paginationRef}
-          totalItems={rolesQuery.data?.count || 0}
+          totalItems={patternsQuery.data?.count || 0}
           pageSize={PAGE_SIZE}
           onPageChange={(page) =>
             setSearchParams((prev) => ({
@@ -210,30 +197,34 @@ export const ListRoles = withAnimation(() => {
           }
         />
 
-        <CreateRole
+        <CreatePattern
           open={states.create}
           onOpenChange={(open) => actions.set('create', open)}
-          callback={(success) => (success ? rolesQuery.refetch() : undefined)}
+          callback={(success) =>
+            success ? patternsQuery.refetch() : undefined
+          }
         />
         {/* dialogs */}
-        {roleRef.current && (
+        {patternRef.current && (
           <>
-            <RetrieveRole
-              role={roleRef.current}
+            <PatternDetail
+              patternId={patternRef.current?.id}
               open={states.detail}
               onOpenChange={(open) => actions.set('detail', open)}
             />
-            <UpdateRole
-              role={roleRef.current}
+
+            <UpdatePattern
+              patternId={patternRef.current?.id}
               open={states.update}
               onOpenChange={(open) => actions.set('update', open)}
-              callback={(success) => (success ? rolesQuery.refetch() : null)}
+              callback={(success) => (success ? patternsQuery.refetch() : null)}
             />
-            <DestroyRole
-              role={roleRef.current}
+
+            <DestroyPattern
+              pattern={patternRef.current}
               open={states.delete}
               onOpenChange={(open) => actions.set('delete', open)}
-              callback={(success) => (success ? rolesQuery.refetch() : null)}
+              callback={(success) => (success ? patternsQuery.refetch() : null)}
             />
           </>
         )}

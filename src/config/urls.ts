@@ -47,6 +47,18 @@ export const urls = {
     `/api/v1/tenant/permissions/${permissionId}`,
 
   /**
+   * *************************** game related settings *********************
+   */
+
+  //game games
+  getGamesUrl: () => '/api/v1/tenant/games',
+  getGameUrl: (gameId: string) => `/api/v1/tenant/games/${gameId}`,
+
+  //game patterns
+  getPatternsUrl: () => '/api/v1/tenant/patterns',
+  getPatternUrl: (patternId: string) => `/api/v1/tenant/patterns/${patternId}`,
+
+  /**
    * =================================================================
    *                      STATIC CONFIGURATION VALUES
    * =================================================================

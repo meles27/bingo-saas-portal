@@ -1,6 +1,6 @@
 import withAnimation from '@/components/base/route-animation/with-animation';
-import { ListRoles } from '@/components/tenant/roles/list-roles';
+import { RoleList } from '@/components/tenant/roles/role-list';
 
 export const RolesPage = withAnimation(() => {
-  return <ListRoles />;
+  return <RoleList />;
 });
