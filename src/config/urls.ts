@@ -55,9 +55,8 @@ export const urls = {
   getGameUrl: (gameId: string) => `/api/v1/tenant/games/${gameId}`,
 
   //game patterns
-  getRoundsUrl: (gameId: string) => `/api/v1/tenant/games/${gameId}/rounds`,
-  getRoundUrl: (gameId: string, roundId: string) =>
-    `/api/v1/tenant//games/${gameId}/rounds/${roundId}`,
+  getRoundsUrl: () => `/api/v1/tenant/rounds`,
+  getRoundUrl: (roundId: string) => `/api/v1/tenant/rounds/${roundId}`,
 
   //game patterns
   getPatternsUrl: () => '/api/v1/tenant/patterns',

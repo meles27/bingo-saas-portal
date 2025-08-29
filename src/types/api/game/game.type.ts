@@ -37,23 +37,18 @@ export interface GameDetailEntity {
   }[];
 }
 
-export interface CreateGameInput {
+export interface CreateGameApiInput {
   name: string;
-  totalRounds: number;
+  description?: string;
   entryFee: string;
-  startedAt: string;
-  endedAt: string;
-  currency?: string;
+  startedAt: string; // ISO String
 }
 
-export class UpdateGameInput {
+export class UpdateGameApiInput {
   name?: string;
   description?: string;
   entryFee?: string;
-  totalRounds?: number;
-  status?: GameStatus;
-  startedAt?: Date;
-  endedAt?: Date;
+  startedAt?: string;
 }
 
 export interface GameQueryParamsIface {

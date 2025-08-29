@@ -35,11 +35,13 @@ interface FormatDateOptions {
  * @returns A formatted date string, or a fallback for invalid dates.
  */
 export const formatDate = (
-  dateInput: Date | string | number,
+  dateInput: Date | string | number | null,
   options: FormatDateOptions = {}
 ): string => {
   const { variant = 'long', locale = 'en-US' } = options;
-
+  if (!dateInput) {
+    return 'N/A';
+  }
   // 1. Create a valid Date object or return a fallback.
   const date = new Date(dateInput);
   if (Number.isNaN(date.getTime())) {

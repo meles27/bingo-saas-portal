@@ -58,15 +58,16 @@ type UpdatePatternFormValues = z.infer<typeof updatePatternSchema>;
 
 export const UpdatePattern: React.FC<UpdatePatternProps> = withAnimation(
   ({ patternId, open, onOpenChange, callback }) => {
+    // form validation
+    const form = useForm<UpdatePatternFormValues>({
+      resolver: zodResolver(updatePatternSchema)
+    });
+    // fetch pattern
     const patternQuery = useQuery<PatternDetailEntity>(
       urls.getPatternUrl(patternId!),
       { skip: !patternId || !open }
     );
-
-    const form = useForm<UpdatePatternFormValues>({
-      resolver: zodResolver(updatePatternSchema)
-    });
-
+    // populate the field
     useEffect(() => {
       if (patternQuery.data) {
         form.reset({
@@ -77,12 +78,12 @@ export const UpdatePattern: React.FC<UpdatePatternProps> = withAnimation(
         });
       }
     }, [patternQuery.data, form.reset]);
-
+    // update pattern
     const updatePatternMutation = useMutation<unknown, UpdatePatternFormValues>(
       urls.getPatternUrl(patternId!),
       'PATCH'
     );
-
+    // handle error
     useApiResponseToast(
       {
         error: updatePatternMutation.error,
@@ -98,7 +99,7 @@ export const UpdatePattern: React.FC<UpdatePatternProps> = withAnimation(
         errorCallback: () => callback?.(false)
       }
     );
-
+    // submit form
     function onSubmit(values: UpdatePatternFormValues) {
       updatePatternMutation.execute(values);
     }

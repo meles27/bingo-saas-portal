@@ -141,21 +141,21 @@ export const ApiError: React.FC<ApiErrorProps> = withAnimation(
     const statusCodeClasses = useMemo(
       () => `
     font-bold tracking-wider text-destructive/80
-    ${size === 'large' ? 'text-7xl md:text-8xl' : 'text-5xl'}`,
+    ${size === 'large' ? 'text-4xl md:text-5xl' : 'text-5xl'}`,
       [size]
     );
 
     const titleClasses = useMemo(
       () => `
     font-bold tracking-wide
-    ${size === 'large' ? 'text-3xl md:text-4xl mt-2' : 'text-2xl mt-2'}`,
+    ${size === 'large' ? 'text-xl md:text-2xl mt-2' : 'text-2xl mt-2'}`,
       [size]
     );
 
     const descriptionClasses = useMemo(
       () => `
     text-muted-foreground
-    ${size === 'large' ? 'text-lg my-8' : 'text-base my-6'}`,
+    ${size === 'large' ? 'text-md my-6' : 'text-base my-4'}`,
       [size]
     );
 

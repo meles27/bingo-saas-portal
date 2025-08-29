@@ -5,13 +5,15 @@ import * as z from 'zod';
 
 import withAnimation from '@/components/base/route-animation/with-animation';
 import { Button } from '@/components/ui/button';
+import { DateTimePicker } from '@/components/ui/date-picker-custom';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle
+  DialogTitle,
+  DialogTrigger
 } from '@/components/ui/dialog';
 import {
   Form,
@@ -26,18 +28,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { urls } from '@/config/urls';
 import { useApiResponseToast } from '@/hooks/base/api/use-api-response-toast';
 import { useMutation } from '@/hooks/base/api/useMutation';
-import { DialogTrigger } from '@radix-ui/react-dialog';
+import type { CreateGameApiInput } from '@/types/api/game/game.type';
 
-// This is the shape the API expects, as you defined.
-export interface CreateGameInput {
-  name: string;
-  description?: string;
-  totalRounds: number;
-  entryFee: string;
-  startedAt: string; // ISO String
-  endedAt: string; // ISO String
-  currency?: string;
-}
+// --- Types and Schema ---
 
 interface CreateGameProps {
   open: boolean;
@@ -45,59 +38,53 @@ interface CreateGameProps {
   callback?: (success: boolean) => void;
 }
 
-// 1. Define the validation schema using z.date()
+// Zod schema for frontend validation (dates are Date objects)
 const createGameSchema = z
   .object({
     name: z.string().min(3, 'Game name must be at least 3 characters.'),
     description: z.string().optional(),
-    totalRounds: z
-      .number({ error: 'Total rounds must be a number.' })
+    totalRounds: z.coerce
+      .number()
       .int()
-      .min(1, 'A game must have at least one round.'),
+      .min(1, 'Must have at least one round.'),
     entryFee: z
       .string()
-      .min(1, 'Entry fee is required.')
-      .regex(
-        /^\d+(\.\d{1,2})?$/,
-        'Must be a valid decimal number (e.g., 500 or 500.00).'
-      ),
-    startedAt: z.string().refine((val) => !isNaN(Date.parse(val)), {
-      message: 'A valid start date is required.'
-    }),
-    endedAt: z.string().refine((val) => !isNaN(Date.parse(val)), {
-      message: 'A valid end date is required.'
-    }),
+      .regex(/^\d+(\.\d{1,2})?$/, 'Must be a valid decimal number.'),
+    startedAt: z.date({ error: 'A valid start date is required.' }),
+    endedAt: z.date({ error: 'A valid end date is required.' }),
     currency: z
       .string()
       .length(3, 'Currency must be a 3-letter code.')
       .optional()
   })
-  .refine((data) => new Date(data.endedAt) > new Date(data.startedAt), {
+  .refine((data) => data.endedAt > data.startedAt, {
     message: 'End date must be after the start date.',
     path: ['endedAt']
   });
 
-// This type is for the form's internal state, where dates are Date objects.
+// Type for the form's internal state
 type CreateGameFormValues = z.infer<typeof createGameSchema>;
+
+// --- Main Component ---
 
 export const CreateGame: React.FC<CreateGameProps> = withAnimation(
   ({ open, onOpenChange, callback }) => {
-    // 2. Initialize react-hook-form
-    const form = useForm<CreateGameFormValues>({
+    const form = useForm({
       resolver: zodResolver(createGameSchema),
       defaultValues: {
         name: '',
         description: '',
-        totalRounds: 1,
+        totalRounds: '1',
         entryFee: '0.00',
-        currency: 'ETB'
+        startedAt: undefined
       }
     });
 
-    const createGameMutation = useMutation<unknown, CreateGameFormValues>(
+    const createGameMutation = useMutation<unknown, CreateGameApiInput>(
       urls.getGamesUrl(),
       'POST'
     );
+
     useApiResponseToast(
       {
         error: createGameMutation.error,
@@ -116,18 +103,26 @@ export const CreateGame: React.FC<CreateGameProps> = withAnimation(
     );
 
     function onSubmit(values: CreateGameFormValues) {
-      // 3. Transform the data to match the API's expectations
-      createGameMutation.execute(values);
+      const apiPayload: CreateGameApiInput = {
+        ...values,
+        startedAt: values.startedAt.toISOString()
+      };
+      createGameMutation.execute(apiPayload);
     }
 
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent
           showCloseButton={false}
-          className="sm:max-w-lg max-h-[95dvh] overflow-y-auto">
-          <DialogHeader className="sticky top-0 left-0 z bg-inherit">
-            <DialogTrigger className="absolute top-0 right-0">
-              <X className="hover:text-red-500 hover:scale-105 active:scale-95 transform" />
+          className="sm:max-w-lg max-h-[95dvh] py-0 overflow-auto">
+          <DialogHeader className="sticky top-0 py-6 bg-background z-10">
+            <DialogTrigger asChild className="absolute top-4 right-4">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => onOpenChange(false)}>
+                <X className="h-4 w-4" />
+              </Button>
             </DialogTrigger>
             <DialogTitle>Create New Game</DialogTitle>
             <DialogDescription>
@@ -138,7 +133,7 @@ export const CreateGame: React.FC<CreateGameProps> = withAnimation(
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-4 p-4">
+              className="space-y-4 overflow-y-auto flex-grow">
               <FormField
                 control={form.control}
                 name="name"
@@ -172,20 +167,7 @@ export const CreateGame: React.FC<CreateGameProps> = withAnimation(
                   </FormItem>
                 )}
               />
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="totalRounds"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Total Rounds</FormLabel>
-                      <FormControl>
-                        <Input type="number" min={1} {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+              <div className="flex flex-col w-full gap-4 sm:flex-row">
                 <FormField
                   control={form.control}
                   name="entryFee"
@@ -193,55 +175,54 @@ export const CreateGame: React.FC<CreateGameProps> = withAnimation(
                     <FormItem>
                       <FormLabel>Entry Fee</FormLabel>
                       <FormControl>
-                        <Input placeholder="500.00" {...field} />
+                        <Input
+                          className="sm:flex-1"
+                          placeholder="500.00"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="startedAt"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col">
+                      <FormLabel>Start Date and Time</FormLabel>
+                      <FormControl>
+                        <DateTimePicker
+                          className="sm:flex-1"
+                          selected={field.value}
+                          onChange={field.onChange}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
               </div>
-              <FormField
-                control={form.control}
-                name="startedAt"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Start Date and Time</FormLabel>
-                    <FormControl>
-                      <Input type="datetime-local" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="endedAt"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>End Date and Time</FormLabel>
-                    <FormControl>
-                      <Input type="datetime-local" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <DialogFooter className="pt-4 sticky bottom-0 left-0 z-10 bg-inherit">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => onOpenChange(false)}>
-                  Cancel
-                </Button>
-                <Button type="submit" disabled={createGameMutation.isLoading}>
-                  {createGameMutation.isLoading && (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  )}
-                  Create Game
-                </Button>
-              </DialogFooter>
             </form>
           </Form>
+
+          <DialogFooter className="sticky bottom-0 right-0 py-6 bg-background z-10">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => onOpenChange(false)}>
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              form="create-game-form"
+              disabled={createGameMutation.isLoading}>
+              {createGameMutation.isLoading && (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              )}
+              Create Game
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     );

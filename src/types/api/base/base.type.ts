@@ -3,3 +3,5 @@ export interface BaseQueryParamsIface {
   offset?: number;
   limit?: number;
 }
+
+export type Currency = 'ETB' | 'USD';

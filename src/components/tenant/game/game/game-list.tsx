@@ -45,7 +45,9 @@ import {
 import { useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CreateGame } from './create-game';
+import { DestroyGame } from './destroy-game';
 import { GameDetail } from './game-detail';
+import { UpdateGame } from './update-game';
 // import { CreateGame } from './create-game';
 // import { DestroyGame } from './destroy-game';
 // import { GameDetail } from './game-detail';
@@ -160,7 +162,7 @@ const GameCard = ({
         <Button
           size="sm"
           className="w-full"
-          onClick={() => navigate(`/dashboard/games/${game.id}/rounds`)}>
+          onClick={() => navigate(`/dashboard/rounds?gameId=${game.id}`)}>
           <PlayCircle className="mr-2 h-4 w-4" />
           Manage Rounds
         </Button>
@@ -290,19 +292,20 @@ export const GameList = withAnimation(() => {
               open={states.detail}
               onOpenChange={(open) => actions.set('detail', open)}
             />
-            {/*
+
             <UpdateGame
               gameId={gameRef.current.id}
               open={states.update}
               onOpenChange={(open) => actions.set('update', open)}
               callback={(success) => (success ? gamesQuery.refetch() : null)}
             />
+
             <DestroyGame
               game={gameRef.current}
               open={states.delete}
               onOpenChange={(open) => actions.set('delete', open)}
               callback={(success) => (success ? gamesQuery.refetch() : null)}
-            /> */}
+            />
           </>
         )}
       </CardFooter>

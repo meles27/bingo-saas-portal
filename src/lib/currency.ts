@@ -1,5 +1,3 @@
-// src/lib/currency.ts
-
 /**
  * Returns currency symbol and its position based on locale.
  * @param locale - e.g., "en-US", "de-DE"

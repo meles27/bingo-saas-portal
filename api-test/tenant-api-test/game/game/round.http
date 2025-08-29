@@ -22,8 +22,7 @@ Content-Type: application/json
     "ea0b7b03-578b-4fba-919b-b050fc6b050c"
   ],
   "prize": "10000.00",
-  "startedAt": "2025-08-27T07:32:10.123Z",
-  "endedAt": "2025-08-29T07:32:10.123Z"
+  "startedAt": "2025-08-27T07:32:10.123Z"
 }
 
 
@@ -39,6 +38,12 @@ Content-Type: application/json
 PATCH {{ TENANT_BASE_URL }}/games//{{ gameId }}/rounds/{{ roundId }} HTTP/1.1
 Authorization: Bearer {{ access }}
 Content-Type: application/json
+
+{
+  "patternIds": [
+    "ea0b7b03-578b-4fba-919b-b050fc6b050c"
+  ]
+}
 
 
 ###

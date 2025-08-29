@@ -12,7 +12,7 @@ export interface RoundListEntity {
   endedAt: string | null;
 }
 
-interface _BingoPattern {
+interface Pattern {
   id: string;
   name: string;
   type: 'static' | 'dynamic'; // adjust if there are other types
@@ -38,7 +38,7 @@ export interface RoundDetailEntity {
   freeColPos: number | null;
   minRange: number;
   maxRange: number;
-  patterns: _BingoPattern[];
+  patterns: Pattern[];
   calls: object[];
   createdAt: string;
   updatedAt: string;
@@ -46,4 +46,5 @@ export interface RoundDetailEntity {
 
 export interface RoundQueryParamsIface extends BaseQueryParamsIface {
   status?: RoundStatus;
+  gameId?: string;
 }

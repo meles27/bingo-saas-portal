@@ -34,6 +34,8 @@ import type {
 import { Calendar, Eye, Gift, Pencil, PlusCircle, Trash2 } from 'lucide-react';
 import { useMemo, useRef, useState } from 'react';
 import { CreateRound } from './create-round';
+import { DestroyRound } from './destroy-round';
+import { RoundDetail } from './round-detail';
 // import { CreateRound } from './create-round';
 // import { DestroyRound } from './destroy-round';
 // import { RoundDetail } from './round-detail';
@@ -123,7 +125,7 @@ const RoundCard = ({
 );
 
 interface RoundListProps {
-  gameId: string;
+  gameId?: string;
 }
 
 export const RoundList: React.FC<RoundListProps> = withAnimation(
@@ -139,12 +141,13 @@ export const RoundList: React.FC<RoundListProps> = withAnimation(
     const PAGE_SIZE = useConfigStore((state) => state.PAGE_SIZE);
     const [searchParams, setSearchParams] = useState<RoundQueryParamsIface>({
       offset: 0,
-      limit: PAGE_SIZE
+      limit: PAGE_SIZE,
+      gameId: gameId
     });
 
     const paginationRef = useRef<CustomPaginationRefIFace | null>(null);
     const roundsQuery = useQuery<PaginatedResponse<RoundListEntity>>(
-      urls.getRoundsUrl(gameId), // Fetch rounds for the specific game
+      urls.getRoundsUrl(), // Fetch rounds for the specific game
       { params: searchParams }
     );
 
@@ -164,7 +167,7 @@ export const RoundList: React.FC<RoundListProps> = withAnimation(
     };
 
     return (
-      <Card>
+      <Card className="border-none">
         <CardHeader>
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
@@ -226,7 +229,7 @@ export const RoundList: React.FC<RoundListProps> = withAnimation(
           />
 
           <CreateRound
-            gameId={gameId}
+            gameId={gameId || ''}
             open={states.create}
             onOpenChange={(open) => actions.set('create', open)}
             callback={(success) =>
@@ -235,9 +238,26 @@ export const RoundList: React.FC<RoundListProps> = withAnimation(
           />
           {roundRef.current && (
             <>
-              {/* <RoundDetail roundId={roundRef.current.id} open={states.detail} onOpenChange={(open) => actions.set('detail', open)} />
-              <UpdateRound roundId={roundRef.current.id} open={states.update} onOpenChange={(open) => actions.set('update', open)} callback={(success) => (success ? roundsQuery.refetch() : null)} />
-              <DestroyRound round={roundRef.current} open={states.delete} onOpenChange={(open) => actions.set('delete', open)} callback={(success) => (success ? roundsQuery.refetch() : null)} /> */}
+              <RoundDetail
+                gameId={gameId || ''}
+                roundId={roundRef.current.id}
+                open={states.detail}
+                onOpenChange={(open) => actions.set('detail', open)}
+              />
+              {/*
+              <UpdateRound
+                roundId={roundRef.current.id}
+                open={states.update}
+                onOpenChange={(open) => actions.set('update', open)}
+                callback={(success) => (success ? roundsQuery.refetch() : null)}
+              />
+              */}
+              <DestroyRound
+                round={roundRef.current}
+                open={states.delete}
+                onOpenChange={(open) => actions.set('delete', open)}
+                callback={(success) => (success ? roundsQuery.refetch() : null)}
+              />
             </>
           )}
         </CardFooter>

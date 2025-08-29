@@ -75,7 +75,7 @@ const router = createBrowserRouter([
                 element: <GamesPage />
               },
               {
-                path: 'games/:gameId/rounds',
+                path: 'rounds',
                 element: <RoundsPage />
               },
               {

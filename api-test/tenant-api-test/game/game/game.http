@@ -15,8 +15,7 @@ Content-Type: application/json
   "name": "Friday night ",
   "totalRounds": 4,
   "entryFee": "500.0",
-  "startedAt": "2025-08-27T07:32:10.123Z",
-  "endedAt": "2025-08-29T07:32:10.123Z"
+  "startedAt": "2025-08-27T07:32:10.123Z"
 }
 
 
