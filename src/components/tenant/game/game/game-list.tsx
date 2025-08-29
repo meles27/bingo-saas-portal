@@ -29,7 +29,7 @@ import { useConfigStore } from '@/store/configStore';
 import type { PaginatedResponse } from '@/types/api/base';
 import type {
   GameListEntity,
-  GameQueryParamsType,
+  GameQueryParamsIface,
   GameStatus
 } from '@/types/api/game/game.type';
 import {
@@ -179,7 +179,7 @@ export const GameList = withAnimation(() => {
 
   const gameRef = useRef<GameListEntity | null>(null);
   const PAGE_SIZE = useConfigStore((state) => state.PAGE_SIZE);
-  const [searchParams, setSearchParams] = useState<GameQueryParamsType>({
+  const [searchParams, setSearchParams] = useState<GameQueryParamsIface>({
     offset: 0,
     limit: PAGE_SIZE
   });

@@ -11,7 +11,7 @@ export interface PatternDetailEntity extends PatternListEntity {
   updatedAt: string;
 }
 
-export interface PatternQueryParamsType {
+export interface PatternQueryParamsIface {
   offset: number;
   limit: number;
   search?: string;

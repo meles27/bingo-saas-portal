@@ -14,6 +14,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import { DashboardLayout } from '../layouts/dashboard-layout';
 import { RootLayout } from '../layouts/root-layout';
 import { SiteLayout } from '../layouts/site-layout';
+import { RoundsPage } from '@/pages/dashboard/tenant/game/rounds-page';
 
 const router = createBrowserRouter([
   {
@@ -68,11 +69,14 @@ const router = createBrowserRouter([
                 path: 'roles/:roleId/assign-permissions',
                 element: <RolePermissions />
               },
-
               // game section
               {
                 path: 'games',
                 element: <GamesPage />
+              },
+              {
+                path: 'games/:gameId/rounds',
+                element: <RoundsPage />
               },
               {
                 path: 'patterns',

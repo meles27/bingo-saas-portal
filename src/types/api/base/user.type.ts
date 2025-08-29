@@ -31,7 +31,7 @@ export interface UserProfileEntity {
   phone: string;
 }
 
-export type UserQueryParamsType = BaseQueryParams & {
+export type UserQueryParamsIface = BaseQueryParams & {
   includeDeleted?: boolean;
   status?: UserStatusValue;
 };

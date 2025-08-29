@@ -56,7 +56,7 @@ export class UpdateGameInput {
   endedAt?: Date;
 }
 
-export interface GameQueryParamsType {
+export interface GameQueryParamsIface {
   offset: number;
   limit: number;
   search?: string;

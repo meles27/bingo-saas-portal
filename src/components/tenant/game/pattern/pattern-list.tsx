@@ -27,7 +27,7 @@ import { useConfigStore } from '@/store/configStore';
 import type { PaginatedResponse } from '@/types/api/base';
 import type {
   PatternListEntity,
-  PatternQueryParamsType
+  PatternQueryParamsIface
 } from '@/types/api/game/pattern.type';
 import { Eye, Pencil, PlusCircle, Trash2 } from 'lucide-react';
 import { useMemo, useRef, useState } from 'react';
@@ -52,7 +52,7 @@ export const PatternList = withAnimation(() => {
 
   const patternRef = useRef<PatternListEntity | null>(null);
   const PAGE_SIZE = useConfigStore((state) => state.PAGE_SIZE);
-  const [searchParams, setSearchParams] = useState<PatternQueryParamsType>({
+  const [searchParams, setSearchParams] = useState<PatternQueryParamsIface>({
     offset: 0,
     limit: PAGE_SIZE
   });

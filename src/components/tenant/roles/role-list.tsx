@@ -27,7 +27,7 @@ import { useConfigStore } from '@/store/configStore';
 import type { PaginatedResponse } from '@/types/api/base';
 import type {
   RoleListEntity,
-  RoleQueryParamsType
+  RoleQueryParamsIface
 } from '@/types/api/base/role.type';
 import { Eye, KeyRound, Pencil, PlusCircle, Trash2 } from 'lucide-react';
 import { useMemo, useRef, useState } from 'react';
@@ -54,7 +54,7 @@ export const RoleList = withAnimation(() => {
 
   const roleRef = useRef<RoleListEntity | null>(null);
   const PAGE_SIZE = useConfigStore((state) => state.PAGE_SIZE);
-  const [searchParams, setSearchParams] = useState<RoleQueryParamsType>({
+  const [searchParams, setSearchParams] = useState<RoleQueryParamsIface>({
     offset: 0,
     limit: PAGE_SIZE
   });

@@ -16,4 +16,4 @@ export interface RoleDetailEntity {
   isDefault: boolean;
 }
 
-export type RoleQueryParamsType = BaseQueryParams & {};
+export type RoleQueryParamsIface = BaseQueryParams & {};

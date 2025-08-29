@@ -36,7 +36,7 @@ import { useConfigStore } from '@/store/configStore';
 import type { PaginatedResponse } from '@/types/api/base';
 import type {
   UserEntity,
-  UserQueryParamsType
+  UserQueryParamsIface
 } from '@/types/api/base/user.type';
 import { Eye, Trash2, UserCheck, UserCog, UserPlus, UserX } from 'lucide-react';
 import { useRef, useState } from 'react';
@@ -70,7 +70,7 @@ export const UserList = withAnimation(() => {
     'assign-role',
     'status'
   ]);
-  const [searchParams, setSearchParams] = useState<UserQueryParamsType>({
+  const [searchParams, setSearchParams] = useState<UserQueryParamsIface>({
     offset: 0,
     limit: PAGE_SIZE,
     search: ''

@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader2 } from 'lucide-react';
+import { Loader2, X } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
@@ -26,6 +26,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { urls } from '@/config/urls';
 import { useApiResponseToast } from '@/hooks/base/api/use-api-response-toast';
 import { useMutation } from '@/hooks/base/api/useMutation';
+import { DialogTrigger } from '@radix-ui/react-dialog';
 
 // This is the shape the API expects, as you defined.
 export interface CreateGameInput {
@@ -121,8 +122,13 @@ export const CreateGame: React.FC<CreateGameProps> = withAnimation(
 
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="sm:max-w-lg">
-          <DialogHeader>
+        <DialogContent
+          showCloseButton={false}
+          className="sm:max-w-lg max-h-[95dvh] overflow-y-auto">
+          <DialogHeader className="sticky top-0 left-0 z bg-inherit">
+            <DialogTrigger className="absolute top-0 right-0">
+              <X className="hover:text-red-500 hover:scale-105 active:scale-95 transform" />
+            </DialogTrigger>
             <DialogTitle>Create New Game</DialogTitle>
             <DialogDescription>
               Set up a new bingo game session with all the necessary details.
@@ -132,7 +138,7 @@ export const CreateGame: React.FC<CreateGameProps> = withAnimation(
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-4 max-h-[70vh] overflow-y-auto p-4">
+              className="space-y-4 p-4">
               <FormField
                 control={form.control}
                 name="name"
@@ -201,15 +207,7 @@ export const CreateGame: React.FC<CreateGameProps> = withAnimation(
                   <FormItem>
                     <FormLabel>Start Date and Time</FormLabel>
                     <FormControl>
-                      <Input
-                        type="datetime-local"
-                        {...field}
-                        // value={
-                        //   field.value instanceof Date
-                        //     ? field.value.toISOString().slice(0, 16)
-                        //     : field.value
-                        // }
-                      />
+                      <Input type="datetime-local" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -222,21 +220,13 @@ export const CreateGame: React.FC<CreateGameProps> = withAnimation(
                   <FormItem>
                     <FormLabel>End Date and Time</FormLabel>
                     <FormControl>
-                      <Input
-                        type="datetime-local"
-                        {...field}
-                        // value={
-                        //   field.value instanceof Date
-                        //     ? field.value.toISOString().slice(0, 16)
-                        //     : field.value
-                        // }
-                      />
+                      <Input type="datetime-local" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <DialogFooter className="pt-4">
+              <DialogFooter className="pt-4 sticky bottom-0 left-0 z-10 bg-inherit">
                 <Button
                   type="button"
                   variant="outline"
