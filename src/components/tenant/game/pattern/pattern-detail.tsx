@@ -15,7 +15,7 @@ import { Separator } from '@/components/ui/separator';
 import { urls } from '@/config/urls';
 import { useQuery } from '@/hooks/base/api/useQuery';
 import type { PatternDetailEntity } from '@/types/api/game/pattern.type';
-import { Calendar, Hash, Shapes, Type } from 'lucide-react';
+import { Calendar, Shapes, Type } from 'lucide-react';
 import React, { useMemo } from 'react';
 import { PatternVisualizer } from './pattern-visualizer';
 
@@ -91,11 +91,6 @@ export const PatternDetail: React.FC<PatternDetailProps> = withAnimation(
                     <Badge variant="outline" className="capitalize">
                       {patternQuery.data.type}
                     </Badge>
-                  </DetailRow>
-                  <DetailRow icon={<Hash className="h-4 w-4" />} label="ID">
-                    <span className="font-mono text-xs">
-                      {patternQuery.data.id}
-                    </span>
                   </DetailRow>
                 </div>
                 <div className="flex justify-center md:justify-end">

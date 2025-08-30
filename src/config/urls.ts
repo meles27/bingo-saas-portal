@@ -77,5 +77,8 @@ export const urls = {
   LOGOUT_REDIRECT: '/signin',
 
   // Tenant Identifier
-  TENANT_IDENTIFIER: 'subdomain'
+  TENANT_IDENTIFIER: 'subdomain',
+
+  // currency options
+  CurrencyOptions: ['ETB', 'USD', 'EUR', 'GBP']
 };

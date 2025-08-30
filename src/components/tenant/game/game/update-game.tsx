@@ -26,6 +26,14 @@ import {
   FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { urls } from '@/config/urls';
 import { useApiResponseToast } from '@/hooks/base/api/use-api-response-toast';
@@ -33,7 +41,7 @@ import { useMutation } from '@/hooks/base/api/useMutation';
 import { useQuery } from '@/hooks/base/api/useQuery';
 import type {
   GameDetailEntity,
-  UpdateGameInput
+  UpdateGameApiInput
 } from '@/types/api/game/game.type';
 
 // --- Types and Schema ---
@@ -56,7 +64,13 @@ const updateGameSchema = z.object({
     .string()
     .regex(/^\d+(\.\d{1,2})?$/, 'Must be a valid decimal number.')
     .optional(),
-  startedAt: z.date({ error: 'A valid start date is required.' }).optional()
+  startedAt: z.date({ error: 'A valid start date is required.' }).optional(),
+  currency: z
+    .string()
+    .refine((val) => urls.CurrencyOptions.includes(val), {
+      message: 'Currency must be a valid 3-letter code.'
+    })
+    .optional()
 });
 
 // Type for the form's internal state (holds a Date object)
@@ -88,12 +102,13 @@ export const UpdateGame: React.FC<UpdateGameProps> = withAnimation(
           entryFee: gameQuery.data.entryFee,
           startedAt: gameQuery.data.startedAt
             ? new Date(gameQuery.data.startedAt)
-            : undefined
+            : undefined,
+          currency: gameQuery.data.currency
         });
       }
     }, [gameQuery.data, form.reset, form]);
 
-    const updateGameMutation = useMutation<unknown, UpdateGameInput>(
+    const updateGameMutation = useMutation<unknown, UpdateGameApiInput>(
       urls.getGameUrl(gameId!),
       'PATCH'
     );
@@ -115,7 +130,7 @@ export const UpdateGame: React.FC<UpdateGameProps> = withAnimation(
     );
 
     function onSubmit(values: UpdateGameFormValues) {
-      const apiPayload: UpdateGameInput = {
+      const apiPayload: UpdateGameApiInput = {
         ...values,
         startedAt: values.startedAt ? values.startedAt.toISOString() : undefined
       };
@@ -143,7 +158,8 @@ export const UpdateGame: React.FC<UpdateGameProps> = withAnimation(
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-6 p-1">
+                className="space-y-6 p-1"
+                id="update-form">
                 <FormField
                   control={form.control}
                   name="name"
@@ -193,17 +209,27 @@ export const UpdateGame: React.FC<UpdateGameProps> = withAnimation(
                   />
                   <FormField
                     control={form.control}
-                    name="startedAt"
+                    name="currency"
                     render={({ field }) => (
-                      <FormItem className="flex flex-col">
-                        <FormLabel>Start Date and Time</FormLabel>
+                      <FormItem className="">
+                        <FormLabel>Currency</FormLabel>
                         <FormControl>
-                          <DateTimePicker
-                            selected={field.value}
-                            onChange={field.onChange}
-                            onBlur={field.onBlur}
-                            name={field.name}
-                          />
+                          <Select
+                            onValueChange={field.onChange}
+                            value={field.value}>
+                            <SelectTrigger className="sm:flex-1 min-w-24">
+                              <SelectValue placeholder="Select a currency" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectGroup>
+                                {urls.CurrencyOptions.map((op) => (
+                                  <SelectItem key={op} value={op}>
+                                    {op}
+                                  </SelectItem>
+                                ))}
+                              </SelectGroup>
+                            </SelectContent>
+                          </Select>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -211,9 +237,28 @@ export const UpdateGame: React.FC<UpdateGameProps> = withAnimation(
                   />
                 </div>
 
+                <FormField
+                  control={form.control}
+                  name="startedAt"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col">
+                      <FormLabel>Start Date and Time</FormLabel>
+                      <FormControl>
+                        <DateTimePicker
+                          selected={field.value}
+                          onChange={field.onChange}
+                          onBlur={field.onBlur}
+                          name={field.name}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <DialogFooter className="pt-4">
                   <Button
                     type="button"
+                    form="update-form"
                     variant="outline"
                     onClick={() => onOpenChange(false)}>
                     Cancel

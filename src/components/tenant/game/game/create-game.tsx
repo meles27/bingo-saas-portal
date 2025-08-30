@@ -24,6 +24,14 @@ import {
   FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { urls } from '@/config/urls';
 import { useApiResponseToast } from '@/hooks/base/api/use-api-response-toast';
@@ -39,28 +47,17 @@ interface CreateGameProps {
 }
 
 // Zod schema for frontend validation (dates are Date objects)
-const createGameSchema = z
-  .object({
-    name: z.string().min(3, 'Game name must be at least 3 characters.'),
-    description: z.string().optional(),
-    totalRounds: z.coerce
-      .number()
-      .int()
-      .min(1, 'Must have at least one round.'),
-    entryFee: z
-      .string()
-      .regex(/^\d+(\.\d{1,2})?$/, 'Must be a valid decimal number.'),
-    startedAt: z.date({ error: 'A valid start date is required.' }),
-    endedAt: z.date({ error: 'A valid end date is required.' }),
-    currency: z
-      .string()
-      .length(3, 'Currency must be a 3-letter code.')
-      .optional()
+const createGameSchema = z.object({
+  name: z.string().min(3, 'Game name must be at least 3 characters.'),
+  description: z.string().optional(),
+  entryFee: z
+    .string()
+    .regex(/^\d+(\.\d{1,2})?$/, 'Must be a valid decimal number.'),
+  startedAt: z.date({ error: 'A valid start date is required.' }),
+  currency: z.string().refine((val) => urls.CurrencyOptions.includes(val), {
+    message: 'Currency must be a valid 3-letter code.'
   })
-  .refine((data) => data.endedAt > data.startedAt, {
-    message: 'End date must be after the start date.',
-    path: ['endedAt']
-  });
+});
 
 // Type for the form's internal state
 type CreateGameFormValues = z.infer<typeof createGameSchema>;
@@ -74,9 +71,7 @@ export const CreateGame: React.FC<CreateGameProps> = withAnimation(
       defaultValues: {
         name: '',
         description: '',
-        totalRounds: '1',
-        entryFee: '0.00',
-        startedAt: undefined
+        entryFee: '0.00'
       }
     });
 
@@ -103,9 +98,11 @@ export const CreateGame: React.FC<CreateGameProps> = withAnimation(
     );
 
     function onSubmit(values: CreateGameFormValues) {
+      console.log('values ', values);
       const apiPayload: CreateGameApiInput = {
         ...values,
-        startedAt: values.startedAt.toISOString()
+        startedAt: values.startedAt.toISOString(),
+        currency: values.currency as string
       };
       createGameMutation.execute(apiPayload);
     }
@@ -132,6 +129,7 @@ export const CreateGame: React.FC<CreateGameProps> = withAnimation(
 
           <Form {...form}>
             <form
+              id="create-game-form"
               onSubmit={form.handleSubmit(onSubmit)}
               className="space-y-4 overflow-y-auto flex-grow">
               <FormField
@@ -176,7 +174,7 @@ export const CreateGame: React.FC<CreateGameProps> = withAnimation(
                       <FormLabel>Entry Fee</FormLabel>
                       <FormControl>
                         <Input
-                          className="sm:flex-1"
+                          className="sm:flex-2"
                           placeholder="500.00"
                           {...field}
                         />
@@ -187,22 +185,50 @@ export const CreateGame: React.FC<CreateGameProps> = withAnimation(
                 />
                 <FormField
                   control={form.control}
-                  name="startedAt"
+                  name="currency"
                   render={({ field }) => (
-                    <FormItem className="flex flex-col">
-                      <FormLabel>Start Date and Time</FormLabel>
+                    <FormItem className="">
+                      <FormLabel>Currency</FormLabel>
                       <FormControl>
-                        <DateTimePicker
-                          className="sm:flex-1"
-                          selected={field.value}
-                          onChange={field.onChange}
-                        />
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}>
+                          <SelectTrigger className="sm:flex-1 min-w-24">
+                            <SelectValue placeholder="Select a currency" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectGroup>
+                              {urls.CurrencyOptions.map((op) => (
+                                <SelectItem key={op} value={op}>
+                                  {op}
+                                </SelectItem>
+                              ))}
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
               </div>
+              <FormField
+                control={form.control}
+                name="startedAt"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Start Date and Time</FormLabel>
+                    <FormControl>
+                      <DateTimePicker
+                        className="sm:flex-1"
+                        selected={field.value}
+                        onChange={field.onChange}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </form>
           </Form>
 

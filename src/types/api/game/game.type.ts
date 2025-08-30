@@ -42,6 +42,7 @@ export interface CreateGameApiInput {
   description?: string;
   entryFee: string;
   startedAt: string; // ISO String
+  currency: string;
 }
 
 export class UpdateGameApiInput {
@@ -49,6 +50,7 @@ export class UpdateGameApiInput {
   description?: string;
   entryFee?: string;
   startedAt?: string;
+  currency?: string;
 }
 
 export interface GameQueryParamsIface {
