@@ -15,9 +15,11 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
-  SidebarRail
+  SidebarRail,
+  useSidebar
 } from '@/components/ui/sidebar';
 import { useAuthStore } from '@/store/authStore';
+import { useLocation } from 'react-router-dom';
 
 // This is sample data.
 const data = {
@@ -70,6 +72,17 @@ const data = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const userInfo = useAuthStore((state) => state.user);
+
+  const { isMobile, openMobile, toggleSidebar } = useSidebar();
+  const location = useLocation();
+
+  React.useEffect(() => {
+    console.log('is mobile ', isMobile);
+    if (isMobile && openMobile) {
+      toggleSidebar();
+    }
+  }, [isMobile, location.pathname]);
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>

@@ -107,7 +107,7 @@ export const UserList = withAnimation(() => {
 
   return (
     <div className="w-full">
-      <Card className="shadow-none border-none">
+      <Card className="shadow-none border-none min-h-screen">
         <CardHeader>
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>

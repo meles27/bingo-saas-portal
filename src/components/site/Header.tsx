@@ -1,32 +1,13 @@
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils'; // The 'cn' utility is crucial for conditional classes
-import { Menu, Moon, Rocket, Sun, X } from 'lucide-react';
+import { Menu, Rocket, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-
-// This is a simplified hook for theme toggling.
-// In a real app, you would use the ThemeProvider from shadcn/ui's setup.
-const useTheme = () => {
-  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
-
-  useEffect(() => {
-    const root = window.document.documentElement;
-    root.classList.remove('light', 'dark');
-    root.classList.add(theme);
-    localStorage.setItem('theme', theme);
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
-  };
-
-  return { theme, toggleTheme };
-};
+import { ModeToggle } from '../mode-toggle';
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -74,24 +55,12 @@ export function Header() {
             Log In
           </Button>
           <Button>Get Started</Button>
-          <Button variant="outline" size="icon" onClick={toggleTheme}>
-            {theme === 'light' ? (
-              <Moon className="h-[1.2rem] w-[1.2rem]" />
-            ) : (
-              <Sun className="h-[1.2rem] w-[1.2rem]" />
-            )}
-          </Button>
+          <ModeToggle />
         </div>
 
         {/* Mobile Menu Button */}
         <div className="md:hidden flex items-center gap-2">
-          <Button variant="outline" size="icon" onClick={toggleTheme}>
-            {theme === 'light' ? (
-              <Moon className="h-[1.2rem] w-[1.2rem]" />
-            ) : (
-              <Sun className="h-[1.2rem] w-[1.2rem]" />
-            )}
-          </Button>
+          <ModeToggle />
           <Button
             variant="outline"
             size="icon"

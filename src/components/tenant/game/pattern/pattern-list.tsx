@@ -96,7 +96,9 @@ export const PatternList = withAnimation(() => {
             </CardDescription>
           </div>
           <CardAction>
-            <Button onClick={() => actions.toggle('create')}>
+            <Button
+              className="text-foreground dark:text-yellow-300"
+              onClick={() => actions.toggle('create')}>
               <PlusCircle className="mr-2 h-4 w-4" />
               Add New Pattern
             </Button>
