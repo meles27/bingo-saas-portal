@@ -43,7 +43,7 @@ export const formatDate = (
     return 'N/A';
   }
   // 1. Create a valid Date object or return a fallback.
-  const date = new Date(dateInput);
+  const date = dateInput instanceof Date ? dateInput : new Date(dateInput);
   if (Number.isNaN(date.getTime())) {
     return 'Invalid Date';
   }

@@ -20,7 +20,7 @@ const config = {
   SCANNER_DEBOUNCE_TIME: 300,
   UPGRADE_ALERT_TIME: 10 * 1000, // 10 seconds
   JWT_KEY_NAME: 'token',
-  user: { firstName: 'meles', lastName: 'haileselassie' },
+  user: null,
   SUBDOMAIN_POSITION: 0
 };
 
@@ -36,6 +36,7 @@ type ConfigStore = ConfigType & {
   ) => unknown;
   getTenantSubDomain: () => string;
   getTenantNamespace: () => string;
+  getPublicNamespace: () => string;
 };
 
 export const useConfigStore = create<ConfigStore>((set, get) => ({
@@ -65,5 +66,8 @@ export const useConfigStore = create<ConfigStore>((set, get) => ({
   },
   getTenantNamespace() {
     return `tenant-${get().getTenantSubDomain()}`;
+  },
+  getPublicNamespace() {
+    return `public-${get().getTenantSubDomain()}`;
   }
 }));

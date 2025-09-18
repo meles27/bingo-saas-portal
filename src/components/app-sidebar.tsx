@@ -77,10 +77,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const location = useLocation();
 
   React.useEffect(() => {
-    console.log('is mobile ', isMobile);
     if (isMobile && openMobile) {
       toggleSidebar();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMobile, location.pathname]);
 
   return (

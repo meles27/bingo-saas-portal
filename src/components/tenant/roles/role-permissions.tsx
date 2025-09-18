@@ -29,7 +29,6 @@ import { Loader2 } from 'lucide-react';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
-import { Show } from 'react-smart-conditional';
 import { z } from 'zod';
 
 export const AssignPermissionSchema = z.object({
@@ -254,67 +253,62 @@ export const RolePermissions = withAnimation(() => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Show>
-              <Show.If condition={isLoading}>
-                <Spinner variant="page" />
-              </Show.If>
+            {isLoading && <Spinner variant="page" />}
 
-              <Show.If condition={isError}>
-                <ApiError
-                  error={error}
-                  customAction={{
-                    label: 'Refresh',
-                    handler: () => {
-                      permissionsQuery.refetch();
-                      rolePermissionsQuery.refetch();
-                    }
-                  }}
-                />
-              </Show.If>
+            {isError && (
+              <ApiError
+                error={error}
+                customAction={{
+                  label: 'Refresh',
+                  handler: () => {
+                    permissionsQuery.refetch();
+                    rolePermissionsQuery.refetch();
+                  }
+                }}
+              />
+            )}
 
-              <Show.If condition={isSuccess}>
-                <Show>
-                  <Show.If condition={!!groupedPermissions.length}>
-                    <div className="space-y-8">
-                      {groupedPermissions.map(({ groupName, permissions }) => (
-                        <div key={groupName} className="space-y-4">
-                          <h3 className="text-xl font-semibold tracking-tight border-b pb-2">
-                            {groupName}
-                          </h3>
-                          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                            {permissions.map((permission) => {
-                              const state = selectedPermissionsMap.get(
-                                permission.id
-                              );
-                              const isChecked = !!state;
-                              const isTemporary = state?.isTemporary ?? false;
+            {isSuccess && (
+              <>
+                {groupedPermissions.length ? (
+                  <div className="space-y-8">
+                    {groupedPermissions.map(({ groupName, permissions }) => (
+                      <div key={groupName} className="space-y-4">
+                        <h3 className="text-xl font-semibold tracking-tight border-b pb-2">
+                          {groupName}
+                        </h3>
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                          {permissions.map((permission) => {
+                            const state = selectedPermissionsMap.get(
+                              permission.id
+                            );
+                            const isChecked = !!state;
+                            const isTemporary = state?.isTemporary ?? false;
 
-                              return (
-                                <PermissionCard
-                                  key={permission.id}
-                                  permission={permission}
-                                  isChecked={isChecked}
-                                  isTemporary={isTemporary}
-                                  onCheckedChange={(checked) =>
-                                    handleCheckedChange(permission.id, checked)
-                                  }
-                                  onTemporaryChange={(temp) =>
-                                    handleTemporaryChange(permission.id, temp)
-                                  }
-                                />
-                              );
-                            })}
-                          </div>
+                            return (
+                              <PermissionCard
+                                key={permission.id}
+                                permission={permission}
+                                isChecked={isChecked}
+                                isTemporary={isTemporary}
+                                onCheckedChange={(checked) =>
+                                  handleCheckedChange(permission.id, checked)
+                                }
+                                onTemporaryChange={(temp) =>
+                                  handleTemporaryChange(permission.id, temp)
+                                }
+                              />
+                            );
+                          })}
                         </div>
-                      ))}
-                    </div>
-                  </Show.If>
-                  <Show.Else>
-                    <EmptyList itemName="permissions" />
-                  </Show.Else>
-                </Show>
-              </Show.If>
-            </Show>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <EmptyList itemName="permissions" />
+                )}
+              </>
+            )}
           </CardContent>
           <CardFooter className="flex justify-end sticky bottom-0 bg-background py-4 border-t">
             <Button type="submit" disabled={rolePermissionsMutation.isLoading}>

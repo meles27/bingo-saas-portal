@@ -1,58 +1,56 @@
 # Script to install multiple shadcn-ui components
 
-# List of components to install
-$components = @(
-    "accordion",
-    "alert",
-    "alert-dialog",
-    "aspect-ratio",
-    "avatar",
-    "badge",
-    "breadcrumb",
-    "button",
-    "calendar",
-    "card",
-    "carousel",
-    "chart",
-    "checkbox",
-    "collapsible",
-    "combobox",
-    "command",
-    "context-menu",
-    # "data-table",
-    # "date-picker",
-    "dialog",
-    "drawer",
-    "dropdown-menu",
-    "form",             # Corresponds to React Hook Form
-    "hover-card",
-    "input",
-    "input-otp",
-    "label",
-    "menubar",
-    "navigation-menu",
-    "pagination",
-    "popover",
-    "progress",
-    "radio-group",
-    "resizable",
-    "scroll-area",
-    "select",
-    "separator",
-    "sheet",
-    "sidebar",
-    "skeleton",
-    "slider",
-    "sonner",
-    "switch",
-    "table",
-    "tabs",
-    "textarea",
-    "toast",
-    "toggle",
-    "toggle-group",
-    "tooltip",
-    "typography"
+# --- List of components to install ---
+# The list is based on the official shadcn documentation.
+# 'sidebar' and 'typography' are not installable components.
+# 'chart' has been updated to 'charts'.
+components=@(
+    "accordion"
+    "alert"
+    "alert-dialog"
+    "aspect-ratio"
+    "avatar"
+    "badge"
+    "breadcrumb"
+    "button"
+    "calendar"
+    "card"
+    "carousel"
+    "chart"            # Installs the charting library
+    "checkbox"
+    "collapsible"
+    "command"
+    "context-menu"
+    "date-picker"
+    "dialog"
+    "drawer"
+    "dropdown-menu"
+    "form"              # Corresponds to React Hook Form
+    "hover-card"
+    "input"
+    "input-otp"
+    "label"
+    "menubar"
+    "navigation-menu"
+    "pagination"
+    "popover"
+    "progress"
+    "radio-group"
+    "resizable"
+    "scroll-area"
+    "select"
+    "separator"
+    "sheet"
+    "skeleton"
+    "slider"
+    "sonner"            # Toast notifications
+    "switch"
+    "table"
+    "tabs"
+    "textarea"
+    "toggle"
+    "toggle-group"
+    "tooltip"
 )
 
 
@@ -73,7 +71,7 @@ foreach ($component in $components) {
         # Execute the npx command
         # The '&' (call operator) is generally not needed if npx is in PATH and first token.
         # Invoke-Expression could be used but is less safe. Direct call is preferred.
-        npx shadcn@latest add $component
+        npx shadcn@latest add $component --overwrite
 
         # Check the exit code of the last command
         if ($LASTEXITCODE -ne 0) {

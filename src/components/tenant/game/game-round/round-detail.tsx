@@ -66,17 +66,18 @@ type RoundDetailProps = {
 
 export const RoundDetail: React.FC<RoundDetailProps> = withAnimation(
   ({ gameId, roundId, open, onOpenChange }) => {
-    const roundQuery = useQuery<RoundDetailEntity>(
-      urls.getRoundUrl(gameId!, roundId!), // Assuming urls.getRoundUrl(roundId) exists
-      { skip: !roundId || !gameId || !open }
-    );
+    const roundQuery = useQuery<RoundDetailEntity>(urls.getRoundUrl(roundId!), {
+      skip: !roundId || !gameId || !open
+    });
 
     const round = roundQuery.data;
 
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="sm:max-w-2xl">
-          <DialogHeader>
+        <DialogContent
+          showCloseButton={false}
+          className="flex flex-col max-h-[95svh] overflow-auto p-0 sm:max-w-2xl">
+          <DialogHeader className="sticky top-0 left-0 p-6  bg-background">
             <DialogTitle>
               Round {round?.roundNumber}: {round?.name || '...'}
             </DialogTitle>
@@ -85,7 +86,7 @@ export const RoundDetail: React.FC<RoundDetailProps> = withAnimation(
             </DialogDescription>
           </DialogHeader>
 
-          <div className="max-h-[70vh] overflow-y-auto p-4 space-y-6">
+          <div className="flex flex-col flex-1 p-6 gap-6">
             {roundQuery.isLoading && <Spinner variant="page" />}
             {roundQuery.isError && (
               <ApiError
@@ -206,7 +207,7 @@ export const RoundDetail: React.FC<RoundDetailProps> = withAnimation(
             )}
           </div>
 
-          <DialogFooter>
+          <DialogFooter className="sticky bottom-0 left-0 p-6 drop-shadow-xl shadow-red-500 bg-background m-2">
             <Button variant="outline" onClick={() => onOpenChange(false)}>
               Close
             </Button>

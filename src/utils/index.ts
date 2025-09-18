@@ -1,9 +1,3 @@
-// import {
-//   Attributes,
-//   ProductData,
-//   Variant,
-// } from "../components/dashboard/products/addProduct/_types";
-
 import { useConfigStore } from '@/store/configStore';
 
 export function formatEpochToDate(epochMillSeconds: number) {

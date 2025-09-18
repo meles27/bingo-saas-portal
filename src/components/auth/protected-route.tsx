@@ -1,7 +1,6 @@
-import { socketManager } from '@/lib/socket-manager';
+import { useSocket } from '@/hooks/base/use-socket';
 import { useAuthStore } from '@/store/authStore';
-import { useConfigStore } from '@/store/configStore';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 
 interface ProtectedRouteProps {
@@ -21,28 +20,15 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   redirectTo = '/login',
   onAuthorizationFailRedirect = '/unauthorized'
 }) => {
+  const location = useLocation();
+
   // Select state and functions from the store
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated());
   const checkPermission = useAuthStore((state) => state.checkPermission);
-  const getTenantSubDomain = useConfigStore(
-    (state) => state.getTenantSubDomain
-  );
 
-  const getTenantNamespace = useConfigStore(
-    (state) => state.getTenantNamespace
-  );
-
-  const token = useAuthStore((state) => state.token);
-
-  const location = useLocation();
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      const namespace = getTenantNamespace();
-      const subdomain = getTenantSubDomain();
-      socketManager.connect(token.access, subdomain, namespace);
-    }
-  }, [getTenantNamespace, getTenantSubDomain, isAuthenticated, token.access]);
+  useSocket<object>('private', 'connect', (data) => {
+    console.log(data);
+  });
 
   // 1. First, check if the user is authenticated at all.
   if (!isAuthenticated) {

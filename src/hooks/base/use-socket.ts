@@ -1,28 +1,43 @@
-import { socketManager } from '@/lib/socket-manager';
-import type { ServerToClientEvents } from '@/types/base/socket-events.type';
+import {
+  socketManager,
+  type NamespaceType,
+  type SocketEventListener
+} from '@/lib/socket/socket-manager';
 import { useCallback, useEffect } from 'react';
 
 /**
- * A type-safe custom hook to manage Socket.IO event listeners within a React component.
- * It ensures listeners are added on mount and removed on unmount.
+ * A type-safe custom React hook to manage a Socket.IO event listener and ensure
+ * a connection for the specified namespace is active when the component is mounted.
  *
- * @param eventName The event to listen for (must be a key of ServerToClientEvents).
- * @param handler The callback function to handle the event (must match the event's signature).
+ * @param namespace The namespace to connect to ('private' or 'public').
+ * @param eventName The event to listen for from the server.
+ * @param handler The callback function to execute when the event is received.
  */
-export const useSocket = <E extends keyof ServerToClientEvents>(
-  eventName: E,
-  handler: ServerToClientEvents[E]
+export const useSocket = <T>(
+  namespace: NamespaceType,
+  eventName: string,
+  handler: SocketEventListener<T>
 ) => {
-  // Memoize the handler to prevent re-registering the listener on every render if the handler is defined inline.
+  // Memoize the handler to prevent re-subscribing on every component render.
   const memoizedHandler = useCallback(handler, [handler]);
 
   useEffect(() => {
-    // Register the event listener when the component mounts
-    socketManager.on(eventName, memoizedHandler);
+    // On mount, ensure a connection for this namespace exists.
+    // If already connected, this does nothing. If not, it initiates connection.
+    let socket = socketManager.getSocket(namespace);
+    if (!socket || socket.disconnected) {
+      socket = socketManager.connect(namespace);
+    }
 
-    // Cleanup: Unregister the event listener when the component unmounts
+    // If a connection was successfully established (or already existed),
+    // register the event listener.
+    if (socket) {
+      socketManager.on(namespace, eventName, memoizedHandler);
+    }
+
+    // Cleanup function: This will be called when the component unmounts.
     return () => {
-      socketManager.off(eventName, memoizedHandler);
+      socketManager.off(namespace, eventName, memoizedHandler);
     };
-  }, [eventName, memoizedHandler]); // Effect dependencies
+  }, [namespace, eventName, memoizedHandler]); // Re-run effect if these change.
 };

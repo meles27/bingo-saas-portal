@@ -1,28 +1,37 @@
-import AppHeader from '@/components/app-header';
 import { AppSidebar } from '@/components/app-sidebar';
-import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import withAnimation from '@/components/base/route-animation/with-animation';
+import { Separator } from '@/components/ui/separator';
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger
+} from '@/components/ui/sidebar';
 import { AnimatePresence } from 'framer-motion';
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 
-export const DashboardLayout: React.FC = () => {
+export const DashboardLayout: React.FC = withAnimation(() => {
   return (
-    <SidebarProvider
-      className="relative flex flex-row h-screen w-screen"
-      id="fslfsfojfosjoifsdifodf">
-      {/* <section className="relative flex flex-row h-screen w-screen"> */}
-      <AppSidebar className="max-w-[300px]" />
-      <main className="flex flex-col w-full flex-1 md:w-[calc(100vw-300px)]">
-        <AppHeader>
-          <SidebarTrigger />
-        </AppHeader>
-        <div className="w-full h-full overflow-auto">
-          <AnimatePresence>
-            <Outlet />
-          </AnimatePresence>
+    <SidebarProvider>
+      <AppSidebar />
+      <SidebarInset className="overflow-hidden h-[100svh]">
+        <div className="flex flex-col w-full h-full">
+          <header className="border-b border-border sticky top-0 bg-background z-10">
+            <div className="flex h-14 items-center justify-between px-4">
+              <div className="flex items-center gap-2">
+                <SidebarTrigger className="-ml-1" />
+                <Separator orientation="vertical" className="mr-2 h-4" />
+              </div>
+            </div>
+          </header>
+
+          <main className="flex-1 bg-background overflow-auto">
+            <AnimatePresence>
+              <Outlet />
+            </AnimatePresence>
+          </main>
         </div>
-      </main>
-      {/* </section> */}
+      </SidebarInset>
     </SidebarProvider>
   );
-};
+});
