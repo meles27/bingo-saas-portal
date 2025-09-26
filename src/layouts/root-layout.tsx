@@ -1,3 +1,4 @@
+import { AuthManager } from '@/components/auth/auth-manager';
 import { ApiError } from '@/components/base/api-error';
 import { Spinner } from '@/components/base/spinner';
 import { Toaster } from '@/components/ui/sonner';
@@ -68,6 +69,7 @@ export const RootLayout: React.FC = () => {
             position="top-right"
             duration={TOAST_DEFAULT_TIMEOUT}
           />
+          <AuthManager />
         </AnimatePresence>
       )}
     </>

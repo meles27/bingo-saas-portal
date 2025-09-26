@@ -1,4 +1,3 @@
-// src/hooks/use-debounce.ts
 import { useEffect, useState } from 'react';
 
 /**

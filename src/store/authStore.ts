@@ -6,6 +6,11 @@ import { jwtDecode } from 'jwt-decode';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+const REFRESH_THRESHOLD_SECONDS = 5 * 60;
+// How often (in milliseconds) the interval should check the token's expiry.
+// e.g., every 60 seconds.
+const REFRESH_INTERVAL_MS = 60 * 1000;
+
 export interface AuthToken {
   access: string;
   refresh: string;
@@ -54,6 +59,7 @@ type AuthStore = {
   isSystemUser: boolean;
   loginState: AsyncState;
   refreshState: AsyncState;
+  timerId: NodeJS.Timeout | null;
 
   // ACTIONS
   login: (
@@ -62,6 +68,8 @@ type AuthStore = {
   ) => Promise<AsyncResult<AuthResponse>>;
   logout: () => void;
   refresh: () => Promise<AsyncResult<AuthResponse>>;
+  startTokenRefreshInterval: () => void;
+  stopTokenRefreshInterval: () => void;
 
   checkPermission: (permission: string) => boolean;
 
@@ -89,7 +97,8 @@ const initialState = {
   isSystemUser: false,
   permissions: null,
   loginState: initialAsyncState,
-  refreshState: initialAsyncState
+  refreshState: initialAsyncState,
+  timerId: null
 };
 
 // --- Store Implementation ---
@@ -116,7 +125,8 @@ export const useAuthStore = create<AuthStore>()(
             loginState: { ...initialAsyncState, isSuccess: true }
           });
 
-          // CHANGED: Return data on success, with null for the error.
+          get().startTokenRefreshInterval();
+
           return [response.data, null];
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
@@ -133,18 +143,17 @@ export const useAuthStore = create<AuthStore>()(
             }
           });
 
-          // CHANGED: Return null for data, with the error object.
           return [null, error];
         }
       },
 
       logout: () => {
+        get().stopTokenRefreshInterval();
         set(initialState);
       },
 
       refresh: async () => {
         if (get().refreshState.isLoading) {
-          // Avoid returning anything meaningful if a refresh is already in progress
           return [null, { message: 'Refresh already in progress.' }];
         }
 
@@ -180,10 +189,49 @@ export const useAuthStore = create<AuthStore>()(
               error: 'Session expired. Please log in again.'
             }
           });
-          get().logout(); // Logout user if refresh fails
+          get().logout();
 
-          // CHANGED: Return null for data, with the error object.
           return [null, error];
+        }
+      },
+
+      // --- NEW: Interval Management Actions ---
+
+      startTokenRefreshInterval: () => {
+        // First, clear any existing timer to prevent duplicates
+        get().stopTokenRefreshInterval();
+
+        const timerId = setInterval(() => {
+          const { isAuthenticated, getAccessTimeLeft, refresh, refreshState } =
+            get();
+          const timeLeft = getAccessTimeLeft();
+
+          // Conditions to refresh:
+          // 1. User must be authenticated.
+          // 2. Token must not be expired (timeLeft > 0).
+          // 3. Time left must be within our defined threshold.
+          // 4. A refresh should not already be in progress.
+          if (
+            isAuthenticated() &&
+            timeLeft > 0 &&
+            timeLeft < REFRESH_THRESHOLD_SECONDS &&
+            !refreshState.isLoading
+          ) {
+            console.log(
+              `Proactive token refresh: ${Math.round(timeLeft)}s left.`
+            );
+            refresh();
+          }
+        }, REFRESH_INTERVAL_MS);
+
+        set({ timerId });
+      },
+
+      stopTokenRefreshInterval: () => {
+        const { timerId } = get();
+        if (timerId) {
+          clearInterval(timerId);
+          set({ timerId: null });
         }
       },
 
@@ -191,17 +239,8 @@ export const useAuthStore = create<AuthStore>()(
 
       checkPermission: (permission: string): boolean => {
         const { permissions } = get();
-
-        if (!permissions) {
-          return false;
-        }
-
-        // 2. Check for a matching global permission.
-        if (permissions.global.includes(permission)) {
-          return true;
-        }
-
-        // 4. If no permission was found, deny access.
+        if (!permissions) return false;
+        if (permissions.global.includes(permission)) return true;
         return false;
       },
 
@@ -251,14 +290,9 @@ export const useAuthStore = create<AuthStore>()(
       partialize: (state) => ({
         token: state.token,
         user: state.user,
-        permissions: state.permissions
+        permissions: state.permissions,
+        isSystemUser: state.isSystemUser
       })
-      // partialize: (state) => ({ token: state.token })
-      // onRehydrateStorage: () => (state) => {
-      //   if (state) {
-      //     state.user = state.decodeJwtToken(state.token.access);
-      //   }
-      // }
     }
   )
 );

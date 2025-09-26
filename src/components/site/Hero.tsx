@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 
 export function Hero() {
   return (
-    <section className="pt-32 pb-20 text-center">
+    <section className="py-14 text-center">
       <div className="container">
         <h1 className="text-4xl md:text-6xl font-bold tracking-tighter mb-6">
           Build Your React Portal, Faster Than Ever
