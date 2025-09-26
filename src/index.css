@@ -205,7 +205,7 @@
   input[type='reset']:active,
   [role='button']:active,
   [tabindex]:not([tabindex='-1']):active {
-    @apply scale-[99%];
+    @apply scale-[99.7%];
   }
 
   body {

@@ -17,7 +17,7 @@ import { urls } from '@/config/urls';
 import { useQuery } from '@/hooks/base/api/useQuery';
 import { cn } from '@/lib/utils';
 import type { PaginatedResponse } from '@/types/api/base';
-import type { RoleEntity } from '@/types/api/base/role.type';
+import type { RoleListEntity } from '@/types/api/base/role.type';
 import { Check, ChevronsUpDown, X } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Spinner } from '../spinner';
@@ -41,8 +41,9 @@ export default function SelectRole({
   const {
     data: listRolesResponse,
     isLoading,
-    isError
-  } = useQuery<PaginatedResponse<RoleEntity>>(urls.getRolesUrl(), {
+    isError,
+    isSuccess
+  } = useQuery<PaginatedResponse<RoleListEntity>>(urls.getRolesUrl(), {
     params: { limit: 1000 }
   });
 
@@ -65,14 +66,6 @@ export default function SelectRole({
       onChange([...value, roleId]);
     }
   };
-
-  if (isLoading) {
-    return <Spinner />;
-  }
-
-  if (isError) {
-    return <div className="text-destructive">Failed to load roles.</div>;
-  }
 
   return (
     <div className={cn('flex flex-col gap-1.5', className)}>
@@ -117,32 +110,43 @@ export default function SelectRole({
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
-          <Command>
-            <CommandInput placeholder="Search for a role..." />
-            <CommandList>
-              <CommandEmpty>No role found.</CommandEmpty>
-              <CommandGroup>
-                {listRolesResponse?.results.map((role) => (
-                  <CommandItem
-                    key={role.id}
-                    value={role.name}
-                    onSelect={() => {
-                      handleSelect(role.id);
-                      // Popover stays open for multi-selection
-                    }}>
-                    <Check
-                      className={cn(
-                        'mr-2 h-4 w-4',
-                        // Show checkmark if the role's ID is in the value array
-                        value.includes(role.id) ? 'opacity-100' : 'opacity-0'
-                      )}
-                    />
-                    {role.name}
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            </CommandList>
-          </Command>
+          {/* loading state */}
+          {isLoading && <Spinner />}
+
+          {/* error state */}
+          {isError && (
+            <div className="text-destructive">Failed to load roles.</div>
+          )}
+
+          {/* success state */}
+          {isSuccess && (
+            <Command>
+              <CommandInput placeholder="Search for a role..." />
+              <CommandList>
+                <CommandEmpty>No role found.</CommandEmpty>
+                <CommandGroup>
+                  {listRolesResponse?.results.map((role) => (
+                    <CommandItem
+                      key={role.id}
+                      value={role.name}
+                      onSelect={() => {
+                        handleSelect(role.id);
+                        // Popover stays open for multi-selection
+                      }}>
+                      <Check
+                        className={cn(
+                          'mr-2 h-4 w-4',
+                          // Show checkmark if the role's ID is in the value array
+                          value.includes(role.id) ? 'opacity-100' : 'opacity-0'
+                        )}
+                      />
+                      {role.name}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          )}
         </PopoverContent>
       </Popover>
     </div>

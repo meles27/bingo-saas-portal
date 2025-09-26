@@ -31,6 +31,7 @@ import {
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { urls } from '@/config/urls';
 import { useQuery } from '@/hooks/base/api/useQuery';
+import { useSocket } from '@/hooks/base/use-socket';
 import { useVisibilityManager } from '@/hooks/base/use-visibility-control';
 import { useConfigStore } from '@/store/configStore';
 import type { PaginatedResponse } from '@/types/api/base';
@@ -74,6 +75,10 @@ export const UserList = withAnimation(() => {
     offset: 0,
     limit: PAGE_SIZE,
     search: ''
+  });
+
+  useSocket('private', 'user:created', (response) => {
+    console.log('user created', response);
   });
 
   const usersQuery = useQuery<PaginatedResponse<UserEntity>>(

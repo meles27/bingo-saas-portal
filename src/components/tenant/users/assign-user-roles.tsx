@@ -24,7 +24,7 @@ import type { UserEntity } from '@/types/api/base/user.type';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
 // --- 1. Define the Zod validation schema for the form ---

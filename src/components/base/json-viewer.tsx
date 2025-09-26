@@ -1,7 +1,7 @@
 import { Check, Copy } from 'lucide-react';
 import * as React from 'react';
 import JSONPretty from 'react-json-pretty';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

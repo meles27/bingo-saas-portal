@@ -22,7 +22,6 @@ export const useSocket = <T>(
   const memoizedHandler = useCallback(handler, [handler]);
 
   useEffect(() => {
-    // On mount, ensure a connection for this namespace exists.
     // If already connected, this does nothing. If not, it initiates connection.
     let socket = socketManager.getSocket(namespace);
     if (!socket || socket.disconnected) {
@@ -30,7 +29,6 @@ export const useSocket = <T>(
     }
 
     // If a connection was successfully established (or already existed),
-    // register the event listener.
     if (socket) {
       socketManager.on(namespace, eventName, memoizedHandler);
     }
@@ -40,4 +38,18 @@ export const useSocket = <T>(
       socketManager.off(namespace, eventName, memoizedHandler);
     };
   }, [namespace, eventName, memoizedHandler]); // Re-run effect if these change.
+};
+
+export const usePrivateSocket = <T>(
+  eventName: string,
+  handler: SocketEventListener<T>
+) => {
+  return useSocket('private', eventName, handler);
+};
+
+export const usePublicSocket = <T>(
+  eventName: string,
+  handler: SocketEventListener<T>
+) => {
+  return useSocket('public', eventName, handler);
 };

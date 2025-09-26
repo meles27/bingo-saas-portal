@@ -1,5 +1,6 @@
 import { ApiError } from '@/components/base/api-error';
 import { Spinner } from '@/components/base/spinner';
+import { Toaster } from '@/components/ui/sonner';
 import { urls } from '@/config/urls';
 import { useQuery } from '@/hooks/base/api/useQuery';
 import { useConfigStore } from '@/store/configStore';
@@ -7,7 +8,6 @@ import type { AxiosBaseQueryErrorResponse } from '@/utils/axiosInstance';
 import { AnimatePresence } from 'framer-motion';
 import React, { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
 
 /**
  * This component is the root layout for the application. It uses the
@@ -63,19 +63,10 @@ export const RootLayout: React.FC = () => {
       {retrieveTenantResponse.isSuccess && (
         <AnimatePresence>
           <Outlet key="root-layout-key" />
-          <ToastContainer
-            key="something-id"
-            position="bottom-right"
-            autoClose={TOAST_DEFAULT_TIMEOUT}
-            hideProgressBar
-            rtl={false}
-            newestOnTop
-            stacked
-            closeOnClick
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            className="!z-[10000] mb-10"
+          <Toaster
+            richColors
+            position="top-right"
+            duration={TOAST_DEFAULT_TIMEOUT}
           />
         </AnimatePresence>
       )}

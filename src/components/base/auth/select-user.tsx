@@ -53,11 +53,11 @@ export const SelectUser = withAnimation(
     const debouncedSearch = useDebounce(search, 300); // 300ms delay
 
     // --- QUERY 1: For the Search Results ---
-    // This query re-fetches whenever `debouncedSearch` changes.
     const {
       data: userListResponse,
-      isLoading: isSearchLoading,
-      isError
+      isLoading,
+      isError,
+      isSuccess
     } = useQuery<PaginatedResponse<UserEntity>>(urls.getUsersUrl(), {
       params: {
         limit: 10, // Fetch a smaller list for the dropdown
@@ -77,10 +77,6 @@ export const SelectUser = withAnimation(
 
     const users = userListResponse?.results ?? [];
 
-    if (isError) {
-      return <div className="text-destructive">Failed to load users.</div>;
-    }
-
     return (
       <div className={cn('flex flex-col gap-1.5', className)}>
         {label && <label className="text-sm font-medium">{label}</label>}
@@ -91,17 +87,36 @@ export const SelectUser = withAnimation(
               role="combobox"
               aria-expanded={open}
               className="w-full max-w-sm justify-between">
-              {selectedUser ? (
+              {selectedUser || users.find((u) => u.id === value) ? (
                 <div className="flex items-center gap-2">
                   <Avatar className="h-6 w-6">
-                    <AvatarImage src={selectedUser.image ?? undefined} />
+                    <AvatarImage
+                      src={
+                        (users.find((u) => u.id === value)?.image ??
+                          selectedUser?.image) ||
+                        undefined
+                      }
+                    />
                     <AvatarFallback>
-                      {selectedUser.firstName?.[0]}
-                      {selectedUser.lastName?.[0]}
+                      {
+                        (users.find((u) => u.id === value) ?? selectedUser)
+                          ?.firstName?.[0]
+                      }
+                      {
+                        (users.find((u) => u.id === value) ?? selectedUser)
+                          ?.lastName?.[0]
+                      }
                     </AvatarFallback>
                   </Avatar>
                   <span className="font-bold">
-                    {selectedUser.firstName} {selectedUser.lastName}
+                    {
+                      (users.find((u) => u.id === value) ?? selectedUser)
+                        ?.firstName
+                    }{' '}
+                    {
+                      (users.find((u) => u.id === value) ?? selectedUser)
+                        ?.lastName
+                    }
                   </span>
                 </div>
               ) : (
@@ -110,7 +125,8 @@ export const SelectUser = withAnimation(
               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
+
+          <PopoverContent className="w-[--radix-popover-trigger-width] max-h-64 overflow-y-auto p-0">
             <Command>
               <CommandInput
                 placeholder="Search by name or email..."
@@ -118,14 +134,19 @@ export const SelectUser = withAnimation(
                 onValueChange={setSearch}
               />
               <CommandList>
-                {/* Show a spinner inside the popover while a search is happening */}
-                {isSearchLoading && <Spinner className="p-4" />}
+                {isLoading && <Spinner className="p-4" />}
 
-                <CommandEmpty>
-                  {!isSearchLoading && 'No user found.'}
-                </CommandEmpty>
+                {isError && (
+                  <div className="p-2 text-sm text-destructive">
+                    Failed to load users.
+                  </div>
+                )}
 
-                {!isSearchLoading && (
+                {isSuccess && users.length === 0 && (
+                  <CommandEmpty>No user found.</CommandEmpty>
+                )}
+
+                {isSuccess && users.length > 0 && (
                   <CommandGroup>
                     {users.map((user) => (
                       <CommandItem

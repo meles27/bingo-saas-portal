@@ -1,8 +1,8 @@
 import { useAuthStore } from '@/store/authStore';
 import { useConfigStore } from '@/store/configStore';
 import { io, Socket } from 'socket.io-client';
+import { toast } from 'sonner';
 import { SocketEvent, type SocketResponse } from './socket.schema';
-import { toast } from 'react-toastify';
 
 // --- Type Definitions ---
 export type NamespaceType = 'private' | 'public';

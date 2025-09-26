@@ -6,7 +6,7 @@ import { urls } from '@/config/urls';
 import { useApiResponseToast } from '@/hooks/base/api/use-api-response-toast';
 import { useMutation } from '@/hooks/base/api/useMutation';
 import { useForm } from 'react-hook-form';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 
 type SignupFormValues = {
   firstName: string;

@@ -1,72 +1,61 @@
 import withAnimation from '@/components/base/route-animation/with-animation';
-import { useSocket } from '@/hooks/base/use-socket';
-import { SocketEvent } from '@/lib/socket/socket.schema';
+import { useActiveManager } from '@/hooks/base/use-active-manager';
 
-import React, { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { PharmacyMapView } from './pharmacy/pharmacy-map-view';
 
-interface LiveGameFeedProps {
-  roundId: string;
-}
+// 1. Define the unique keys for your tabs
+const DASHBOARD_TABS = ['overview', 'analytics', 'notifications'] as const;
+type DashboardTab = (typeof DASHBOARD_TABS)[number];
 
-export const LiveGameFeed: React.FC<LiveGameFeedProps> = ({ roundId }) => {
-  const [calledNumbers, setCalledNumbers] = useState<Record<string, any>[]>([]);
-  const [roundStatus, setRoundStatus] = useState<string>('waiting');
-
-  // --- Real-time Logic ---
-
-  // Listen for new bingo calls on the PUBLIC channel
-  useSocket<object>('public', SocketEvent.NEW_BINGO_CALL, (response) => {
-    if (response.status === 'success') {
-      console.log('New number called:', response.payload);
-      // Add the new number to the start of our list
-      setCalledNumbers((prevNumbers) => [response.payload, ...prevNumbers]);
-    }
-  });
-
-  // Listen for round status updates on the PUBLIC channel
-  useSocket<Record<string, string>>(
-    'public',
-    SocketEvent.ROUND_STATUS_UPDATE,
-    (response) => {
-      if (response.status === 'info') {
-        console.log('Round status changed:', response.payload.status);
-        setRoundStatus(response.payload.status);
-      }
-    }
+export const DashboardPage = () => {
+  // 2. Initialize the hook to manage the active tab state
+  const { activeKey, actions } = useActiveManager<DashboardTab>(
+    DASHBOARD_TABS,
+    'overview' // Default active tab
   );
 
-  // Effect to fetch initial game state (e.g., via a standard API call)
-  useEffect(() => {
-    //
-    // api.getRoundDetails(roundId).then(data => {
-    //   setCalledNumbers(data.calls);
-    //   setRoundStatus(data.status);
-    // });
-    //
-  }, [roundId]);
-
   return (
-    <div>
-      <h2>Live Feed for Round {roundId}</h2>
-      <h3>Status: {roundStatus.toUpperCase()}</h3>
+    <div className="p-8">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Dashboard</h1>
+        {/* This button lives OUTSIDE the Tabs component */}
+        <Button variant="outline" onClick={() => actions.set('notifications')}>
+          View Notifications
+        </Button>
+      </div>
 
-      <h4>Called Numbers (Latest First):</h4>
-      <ul>
-        {calledNumbers.map((call) => (
-          <li key={call.id}>
-            #{call.sequence}: <strong>{call.number}</strong>
-          </li>
-        ))}
-      </ul>
+      {/* 3. Control the Tabs component */}
+      <Tabs
+        value={activeKey ?? ''} // Pass the activeKey from our hook
+        onValueChange={(value) => actions.set(value as DashboardTab)} // Update our hook's state
+        className="w-full">
+        <TabsList>
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="analytics">Analytics</TabsTrigger>
+          <TabsTrigger value="notifications">Notifications</TabsTrigger>
+        </TabsList>
+        <TabsContent value="overview">
+          <p>Welcome to your Overview.</p>
+        </TabsContent>
+        <TabsContent value="analytics">
+          <p>Here are your detailed analytics.</p>
+        </TabsContent>
+        <TabsContent value="notifications">
+          <p>You have 3 new notifications.</p>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
 
 export const TestPage = withAnimation(() => {
   return (
-    <div className="flex items-center justify-center w-full h-full">
-      <h1 className="text-3xl font-bold">Test Page</h1>
-      <LiveGameFeed roundId="1" />
+    <div>
+      {/* <PharmacyPortal />;
+      <DashboardPage /> */}
+      <PharmacyMapView />
     </div>
   );
 });

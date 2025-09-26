@@ -3,142 +3,175 @@ import type {
   AxiosBaseQueryErrorResponse,
   StandardValidationError
 } from '@/utils/axiosInstance';
-import React, { useEffect } from 'react';
-import { toast } from 'react-toastify';
+import { useEffect, useRef, type ReactNode } from 'react';
+import { toast } from 'sonner';
 
-// --- Type Definitions for Clarity ---
+// --- Enhanced Type Definitions ---
+
+type SonnerToastContent = {
+  title: ReactNode;
+  description?: ReactNode;
+};
 
 type UseApiResponseToastOptions<TSuccessData = unknown> = {
+  loadingMessage?: string;
   successMessage?: string;
+  disableLoadingToast?: boolean;
   disableSuccessToast?: boolean;
   disableErrorToast?: boolean;
   errorCallback?: (error: AxiosBaseQueryErrorResponse) => void;
   successCallback?: (data?: TSuccessData) => void;
+
+  errorAction?: {
+    label: string;
+    onClick: () => void;
+  };
 };
 
 /**
- * Parses a custom API error and returns a user-friendly ReactNode for toasting.
+ * Parses a custom API error and returns a structured object for a sonner toast.
  *
  * @param error - The custom API error object.
  * @param validationStatusCodes - An array of status codes to be treated as validation errors.
- * @returns A ReactNode to be displayed in a toast.
+ * @returns An object with `title` and `description` for the toast.
  */
-const parseErrorToToastContent = (
+const parseErrorForSonner = (
   error: AxiosBaseQueryErrorResponse,
   validationStatusCodes: number[]
-): React.ReactNode => {
+): SonnerToastContent => {
   const { status, data } = error;
   const genericErrorMessage = 'An unexpected error occurred.';
 
-  // Start with the most specific message available
-  const mainMessage = data?.detail || error.message || genericErrorMessage;
+  const title = data?.detail || error.message || genericErrorMessage;
 
   // --- Specific Logic for 422 Validation Errors ---
   if (status === 422 && Array.isArray(data?.errors)) {
-    // We assume it matches the standard format for 422 errors
-    const validationErrors = data.errors as Array<StandardValidationError>;
-    const title = data.detail || 'Validation Failed';
+    const validationErrors = data.errors as StandardValidationError[];
+    const description = (
+      <ul className="list-disc list-inside space-y-1 text-sm">
+        {validationErrors.map(({ field, messages }) => (
+          <li key={field}>
+            <strong className="capitalize">{field.replace(/_/g, ' ')}:</strong>{' '}
+            {messages.join(', ')}
+          </li>
+        ))}
+      </ul>
+    );
+    return { title: data.detail || 'Validation Failed', description };
+  }
 
-    return (
-      <div>
-        <p className="font-semibold mb-2">{title}</p>
+  // --- General Logic for Other "Validation-like" Errors ---
+  if (status && validationStatusCodes.includes(status) && data?.errors) {
+    const errors = data.errors;
+    if (typeof errors === 'object' && !Array.isArray(errors)) {
+      const description = (
         <ul className="list-disc list-inside space-y-1 text-sm">
-          {validationErrors.map(({ field, messages }) => (
-            <li key={field}>
-              <strong className="capitalize">
-                {field.replace(/_/g, ' ')}:
-              </strong>{' '}
-              {messages.join(', ')}
+          {Object.entries(errors).map(([key, value]) => (
+            <li key={key}>
+              <strong className="capitalize">{key.replace(/_/g, ' ')}:</strong>{' '}
+              {String(value)}
             </li>
           ))}
         </ul>
-      </div>
-    );
-  }
-
-  // --- General Logic for Other "Validation-like" Errors (400, 409, etc.) ---
-  if (status && validationStatusCodes.includes(status) && data?.errors) {
-    const errors = data.errors;
-    // Handle case where `errors` is a plain object (e.g., { email: "Already exists." })
-    if (typeof errors === 'object' && !Array.isArray(errors)) {
-      return (
-        <div>
-          <p className="font-semibold mb-2">{mainMessage}</p>
-          <ul className="list-disc list-inside space-y-1 text-sm">
-            {Object.entries(errors).map(([key, value]) => (
-              <li key={key}>
-                <strong className="capitalize">
-                  {key.replace(/_/g, ' ')}:
-                </strong>{' '}
-                {String(value)}
-              </li>
-            ))}
-          </ul>
-        </div>
       );
+      return { title, description };
     }
   }
 
-  // --- Fallback for all other errors (401, 403, 404, 500) ---
-  // Just show the primary detail message.
-  return mainMessage;
+  // --- Fallback for all other errors ---
+  return { title };
 };
 
 /**
- * A hook to display success or error toasts based on the state from a custom hook.
- * It intelligently parses various API error formats for user-friendly display.
+ * A hook to display loading, success, or error toasts based on an API call's state.
+ * It intelligently transitions from a loading toast to a final state and parses
+ * various API error formats for user-friendly display using `sonner`.
  *
- * @param state - An object containing the state variables from your custom hook.
+ * @param state - The state from your query hook (e.g., from RTK Query or React Query).
  * @param options - Configuration for messages, callbacks, and disabling toasts.
  */
 export const useApiResponseToast = <TSuccessData = unknown,>(
   state: {
-    error: AxiosBaseQueryErrorResponse | null | undefined;
+    isLoading?: boolean;
+    isFetching?: boolean;
     isError: boolean;
     isSuccess: boolean;
-    data?: TSuccessData; // The success data from your custom function
+    error?: AxiosBaseQueryErrorResponse | null;
+    data?: TSuccessData;
   },
   options: UseApiResponseToastOptions<TSuccessData> = {}
 ) => {
-  const { error, isError, isSuccess, data } = state;
+  const { isLoading, isFetching, isError, isSuccess, error, data } = state;
   const {
+    loadingMessage = 'Processing your request...',
     successMessage = 'Operation successful!',
+    disableLoadingToast = false,
     disableSuccessToast = false,
     disableErrorToast = false,
     errorCallback,
-    successCallback
+    successCallback,
+    errorAction
   } = options;
 
   const STATUS_CODE_GROUP_VALIDATION = useConfigStore(
-    (state) => state.STATUS_CODE_GROUP_VALIDATION
+    (s) => s.STATUS_CODE_GROUP_VALIDATION
   );
 
-  // Effect for handling and displaying errors
+  // Use a ref to keep track of the loading toast ID
+  const loadingToastId = useRef<string | number | null>(null);
+
+  // --- Effect for Loading State ---
+  useEffect(() => {
+    // Use isLoading or isFetching, preferring isLoading if both are provided
+    const isCurrentlyLoading = isLoading ?? isFetching;
+
+    if (isCurrentlyLoading && !disableLoadingToast) {
+      // If a loading toast doesn't exist yet, create one
+      if (loadingToastId.current === null) {
+        loadingToastId.current = toast.loading(loadingMessage);
+      }
+    }
+  }, [isLoading, isFetching, disableLoadingToast, loadingMessage]);
+
+  // --- Effect for Error State ---
   useEffect(() => {
     if (isError && error) {
-      if (errorCallback) {
-        setTimeout(() => errorCallback(error), 0);
-      }
+      // Execute the callback if provided
+      errorCallback?.(error);
       if (disableErrorToast) return;
 
-      const toastContent = parseErrorToToastContent(
+      const { title, description } = parseErrorForSonner(
         error,
         STATUS_CODE_GROUP_VALIDATION
       );
-      toast.error(toastContent);
+
+      // If a loading toast was active, update it. Otherwise, create a new error toast.
+      toast.error(title, {
+        id: loadingToastId.current ?? undefined,
+        description,
+        action: errorAction
+      });
+
+      // Clear the ref after handling the state
+      loadingToastId.current = null;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isError, disableErrorToast, STATUS_CODE_GROUP_VALIDATION]);
+  }, [isError, disableErrorToast, STATUS_CODE_GROUP_VALIDATION, errorAction]);
 
-  // Effect for handling and displaying success
+  // --- Effect for Success State ---
   useEffect(() => {
     if (isSuccess) {
-      if (successCallback) {
-        setTimeout(() => successCallback(data), 0);
-      }
+      // Execute the callback if provided
+      successCallback?.(data);
       if (disableSuccessToast) return;
 
-      toast.success(successMessage);
+      // If a loading toast was active, update it. Otherwise, create a new success toast.
+      toast.success(successMessage, {
+        id: loadingToastId.current ?? undefined
+      });
+
+      // Clear the ref after handling the state
+      loadingToastId.current = null;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccess, disableSuccessToast, successMessage]);

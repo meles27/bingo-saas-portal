@@ -15,7 +15,7 @@ import { Github, Loader } from 'lucide-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { z } from 'zod';
 import PasswordInput from './base/password-input';
 
