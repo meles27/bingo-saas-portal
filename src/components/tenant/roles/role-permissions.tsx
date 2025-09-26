@@ -1,7 +1,8 @@
 import { ApiError } from '@/components/base/api-error';
+import { DraggableRefreshButton } from '@/components/base/draggable-refresh-button';
 import { EmptyList } from '@/components/base/empty-list';
-import { PullToRefreshButton } from '@/components/base/pull-to-refresh-button';
 import withAnimation from '@/components/base/route-animation/with-animation';
+import { SearchInput } from '@/components/base/search-input';
 import { Spinner } from '@/components/base/spinner';
 import { Button } from '@/components/ui/button';
 import {
@@ -22,11 +23,12 @@ import { useQuery } from '@/hooks/base/api/useQuery';
 import type { PaginatedResponse } from '@/types/api/base';
 import type {
   PermissionEntity,
+  PermissionQueryParamsIface,
   RolePermissionEntity
 } from '@/types/api/base/permission.type';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 import { z } from 'zod';
@@ -118,6 +120,11 @@ const PermissionCard = ({
 
 export const RolePermissions = withAnimation(() => {
   const params = useParams<{ roleId: string }>();
+  const [searchParams, setSearchParams] = useState<PermissionQueryParamsIface>({
+    offset: 0,
+    limit: 1000,
+    search: ''
+  });
   const form = useForm<TAssignPermissionSchema>({
     resolver: zodResolver(AssignPermissionSchema),
     defaultValues: {
@@ -127,11 +134,10 @@ export const RolePermissions = withAnimation(() => {
   const { handleSubmit, setValue, getValues, watch } = form;
 
   const selectedPermissions = watch('permissions');
-
   const permissionsQuery = useQuery<PaginatedResponse<PermissionEntity>>(
     urls.getPermissionsUrl(),
     {
-      params: { limit: 1000 }
+      params: searchParams
     }
   );
 
@@ -247,10 +253,17 @@ export const RolePermissions = withAnimation(() => {
         <Card className="shadow-none border-none">
           <CardHeader>
             <CardTitle>Manage Role Permissions</CardTitle>
-            <CardDescription>
-              Select the permissions to assign to this role. You can also mark
-              specific permissions as temporary.
-            </CardDescription>
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+              <CardDescription>
+                Select the permissions to assign to this role. You can also mark
+                specific permissions as temporary.
+              </CardDescription>
+              <SearchInput
+                onDebouncedChange={(message) =>
+                  setSearchParams((prev) => ({ ...prev, search: message }))
+                }
+              />
+            </div>
           </CardHeader>
           <CardContent>
             {isLoading && <Spinner variant="page" />}
@@ -321,7 +334,9 @@ export const RolePermissions = withAnimation(() => {
         </Card>
       </form>
 
-      <PullToRefreshButton onRefresh={() => rolePermissionsQuery.refetch()} />
+      <DraggableRefreshButton
+        onRefresh={() => rolePermissionsQuery.refetch()}
+      />
     </>
   );
 });

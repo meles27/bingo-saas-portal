@@ -52,6 +52,10 @@ export const ApiError: React.FC<ApiErrorProps> = withAnimation(
     const goBack = () => navigate(-1);
     const goHome = () => navigate('/');
 
+    const handleLogout = () => {
+      logout();
+      goHome();
+    };
     // --- MEMOIZED ERROR DETAILS (replaces Vue's computed) ---
     const details = useMemo(() => {
       const status = error?.status;
@@ -197,10 +201,9 @@ export const ApiError: React.FC<ApiErrorProps> = withAnimation(
             <Button variant="outline" onClick={goBack}>
               <ArrowLeft className="mr-2 h-4 w-4" /> Go Back
             </Button>
-            {/* highlight-start */}
             {/* Show Logout button for 401 Unauthorized errors */}
             {error.status === 401 ? (
-              <Button onClick={logout}>
+              <Button onClick={handleLogout}>
                 <LogOut className="mr-2 h-4 w-4" /> Logout
               </Button>
             ) : customAction ? (

@@ -34,7 +34,6 @@ export const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
     React.useEffect(() => {
       onDebouncedChangeRef.current = onDebouncedChange;
     });
-    // No dependency array means this runs after every render.
 
     // 3. The main effect now ONLY depends on the debounced value.
     const isInitialMount = React.useRef(true);
@@ -56,14 +55,20 @@ export const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
     );
 
     return (
-      <div className={cn('relative w-full', className)}>
-        <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+      <div className="relative">
+        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+          <Search className="h-5 w-5 text-subtle-light dark:text-subtle-dark" />
+        </div>
         <Input
           type="search"
+          className={cn(
+            'w-full rounded-full border-0 bg-primary/10 py-3 pl-11 pr-11 text-base font-medium text-content-light placeholder:text-subtle-light focus:ring-2 focus:ring-primary dark:bg-primary/20 dark:text-content-dark dark:placeholder:text-subtle-dark',
+            className
+          )}
           value={inputValue}
           onChange={handleChange}
-          className="pl-10 pr-10"
           ref={ref}
+          placeholder="search ..."
           {...props}
         />
       </div>

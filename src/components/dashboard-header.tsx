@@ -27,11 +27,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Logout } from './auth/logout';
 
-interface AppHeaderProps {
+interface DashboardHeaderProps {
   /**
    * The component to render as a trigger for the sidebar, typically a hamburger menu button.
    */
-  children?: React.ReactNode;
+  children: React.ReactNode;
 }
 /**
  * A reusable component for items in the Apps grid dropdown.
@@ -53,7 +53,7 @@ const GridMenuItem = ({
   </Link>
 );
 
-const AppHeader: React.FC<AppHeaderProps> = (props) => {
+const DashboardHeader: React.FC<DashboardHeaderProps> = (props) => {
   const user = useAuthStore((state) => state.user);
   const { actions, states } = useVisibilityManager(['logout']);
   console.log(props);
@@ -221,4 +221,4 @@ const AppHeader: React.FC<AppHeaderProps> = (props) => {
   );
 };
 
-export default AppHeader;
+export default DashboardHeader;

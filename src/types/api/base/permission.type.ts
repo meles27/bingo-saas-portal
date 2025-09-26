@@ -1,3 +1,5 @@
+import type { BaseQueryParams } from '.';
+
 export interface PermissionEntity {
   id: string;
   code: string;
@@ -16,3 +18,5 @@ export interface RolePermissionEntity {
   isTemporary: boolean;
   permission: PermissionEntity;
 }
+
+export type PermissionQueryParamsIface = BaseQueryParams & {};

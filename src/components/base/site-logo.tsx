@@ -1,5 +1,3 @@
-// src/components/ui/site-logo.tsx
-
 import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { KanbanSquare } from 'lucide-react';
