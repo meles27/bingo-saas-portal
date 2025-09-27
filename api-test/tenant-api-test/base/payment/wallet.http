@@ -1,16 +1,47 @@
 ###
-# @login wallet
+# get my wallet balance
 GET {{ TENANT_BASE_URL }}/wallet/balance HTTP/1.1
 Authorization: Bearer {{ access }}
 Content-Type: application/json
 
 
 ###
-# @refresh refresh
+# get my wallet balance
+GET {{ TENANT_BASE_URL }}/wallet/user/{{userId}}/balance HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+
+###
+# deposit (initiate)
 POST {{ TENANT_BASE_URL }}/wallet/deposit HTTP/1.1
 Authorization: Bearer {{ access }}
 Content-Type: application/json
 
 {
-  "refresh": "{{ refresh }}"
+  "amount": "5000",
+  "gateway": "telebirr"
+}
+
+
+###
+# deposit manually (cash, admin or cashier only)
+POST {{ TENANT_BASE_URL }}/wallet/deposit/manual HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+{
+  "amount": "130",
+  "userId": "{{ userId }}"
+}
+
+
+###
+# withdraw
+POST {{ TENANT_BASE_URL }}/wallet/withdraw HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+{
+  "amount": 30
 }

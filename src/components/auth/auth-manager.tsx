@@ -1,4 +1,4 @@
-import { useAuthStore } from '@/store/authStore';
+import { useAuthStore } from '@/store/auth-store';
 import { useEffect } from 'react';
 
 /**
@@ -27,12 +27,5 @@ export const AuthManager = () => {
   }, [isAuthenticated, startTokenRefreshInterval]);
 
   // This component renders nothing. Its only purpose is to run the effect.
-  return (
-    <div>
-      Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque
-      incidunt harum cumque tempora earum officia ea laborum! Quisquam, iusto.
-      Dolor sequi ratione tempore error dignissimos? Eveniet amet eos sequi
-      eius.
-    </div>
-  );
+  return null;
 };

@@ -1,0 +1,52 @@
+###
+# LIST games
+GET {{ TENANT_BASE_URL }}/games?status=scheduled HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+
+###
+# CREATE GAME
+POST {{ TENANT_BASE_URL }}/games HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+{
+  "name": "Tuesday night last",
+  "entryFee": "200.0",
+  "startedAt": "2025-08-27T07:32:10.123Z",
+  "currency": "ETB"
+}
+
+
+###
+# RETRIEVE GAME
+GET {{ TENANT_BASE_URL }}/games/{{ gameId }} HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+
+###
+# UPDATE GAME
+PATCH {{ TENANT_BASE_URL }}/games/{{ gameId }} HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+{
+  "description": "Friday night game 3 brings the thrill of big wins and endless fun to your weekend nights. Join the excitement for a chance to take home mega prizes while enjoying the ultimate bingo experience!",
+  "entryFee": "250"
+}
+
+
+###
+# start game
+POST {{ TENANT_BASE_URL }}/games/{{ gameId }}/start HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+
+###
+# cancel game
+POST {{ TENANT_BASE_URL }}/games/{{ gameId }}/cancel HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json

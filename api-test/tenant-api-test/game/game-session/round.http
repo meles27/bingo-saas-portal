@@ -1,0 +1,170 @@
+###
+# this is for the rounds in the single game
+# LIST GAME ROUNDS
+GET {{ TENANT_BASE_URL }}/rounds?gameId={{gameId}} HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+
+###
+# CREATE GAME ROUND
+POST {{ TENANT_BASE_URL }}/rounds HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+{
+  "name": "Second Test Round",
+  "rows": 5,
+  "cols": 5,
+  "minRange": 1,
+  "maxRange": 75,
+  "patternIds": [
+    "4bd9bb3f-cd9e-49af-9073-3329d973f87e"
+  ],
+  "prize": "100000.00",
+  "startedAt": "2025-08-27T07:32:10.123Z",
+  "gameId": "{{ gameId }}"
+}
+
+
+###
+# RETRIEVE GAME ROUND
+GET {{ TENANT_BASE_URL }}/rounds/{{ roundId }} HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+
+###
+# UPDATE  GAM Mega BingoE ROUND
+PATCH {{ TENANT_BASE_URL }}/rounds/{{ roundId }} HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+{
+  "name": "First test Round"
+}
+
+
+###
+# start round
+POST {{ TENANT_BASE_URL }}/rounds/{{ roundId }}/start HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+
+###
+# pause round
+POST {{ TENANT_BASE_URL }}/rounds/{{ roundId }}/pause HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+
+###
+# resume round
+POST {{ TENANT_BASE_URL }}/rounds/{{ roundId }}/resume HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+
+###
+# cancel round
+POST {{ TENANT_BASE_URL }}/rounds/{{ roundId }}/cancel HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+
+###
+# complete round
+POST {{ TENANT_BASE_URL }}/rounds/{{ roundId }}/complete HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+
+###
+# bingo calls related
+# bingo calls related
+# bingo calls related
+# list round calls
+GET {{ TENANT_BASE_URL }}/rounds/{{ roundId }}/bingo-calls HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+
+###
+# retrieve round call
+GET {{ TENANT_BASE_URL }}/rounds/{{ roundId }}/bingo-calls/{{ callId }} HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+
+###
+# call next number manually
+POST {{ TENANT_BASE_URL }}/rounds/{{ roundId }}/call-next-manually HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+{
+  "number": 3
+}
+
+
+###
+# call next number automatically
+POST {{ TENANT_BASE_URL }}/rounds/{{ roundId }}/call-next-number HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+
+###
+# OPTIONS  GAME ROUND
+OPTIONS {{ TENANT_BASE_URL }}/rounds/{{ roundId }} HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+[
+  {
+    "name": "Tuesday Night Mega Bingo",
+    "rows": 5,
+    "cols": 5,
+    "minRange": 1,
+    "maxRange": 75,
+    "patternIds": [
+      "550e8400-e29b-41d4-a716-446655440000"
+    ],
+    "prize": 10000.00
+  },
+  {
+    "name": "Sunday Jackpot Bingo",
+    "rows": 3,
+    "cols": 3,
+    "minRange": 1,
+    "maxRange": 50,
+    "patternIds": [
+      "123e4567-e89b-12d3-a456-426614174000"
+    ],
+    "prize": 5000.00
+  },
+  {
+    "name": "Daily Morning Bingo",
+    "rows": 4,
+    "cols": 4,
+    "minRange": 5,
+    "maxRange": 90,
+    "patternIds": [
+      "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+      "9a7b330a-a736-42df-b7b6-36a8c7fddc28"
+    ],
+    "prize": 1000.00
+  },
+  {
+    "name": "Evening Fun Bingo",
+    "rows": 6,
+    "cols": 6,
+    "minRange": 10,
+    "maxRange": 100,
+    "patternIds": [
+      "7c9e6679-7425-40de-944b-e07fc1f90ae7"
+    ],
+    "prize": 2500.00
+  }
+]

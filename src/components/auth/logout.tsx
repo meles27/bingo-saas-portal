@@ -12,9 +12,10 @@ import {
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
-import { useAuthStore } from '@/store/authStore';
+import { useAuthStore } from '@/store/auth-store';
 import { LogOut } from 'lucide-react';
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 // --- Component Props Interface ---
 interface LogoutProps {
@@ -39,7 +40,13 @@ interface LogoutProps {
  */
 export function Logout({ open, onOpenChange, trigger }: LogoutProps) {
   const logout = useAuthStore((state) => state.logout);
+  const navigate = useNavigate();
 
+  const handleLogout = () => {
+    logout();
+    onOpenChange(false);
+    navigate('/');
+  };
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       {/* Conditionally render the trigger if it's provided */}
@@ -61,7 +68,7 @@ export function Logout({ open, onOpenChange, trigger }: LogoutProps) {
 
           {/* The action that performs the logout */}
           <AlertDialogAction asChild>
-            <Button variant="destructive" onClick={logout}>
+            <Button variant="destructive" onClick={handleLogout}>
               <LogOut className="mr-2 h-4 w-4" />
               <span>Logout</span>
             </Button>

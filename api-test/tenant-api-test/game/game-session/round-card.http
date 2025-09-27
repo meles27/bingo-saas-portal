@@ -1,0 +1,31 @@
+###
+# this is for the round cards in the single game's round
+# LIST ROUND CARDS
+GET {{ TENANT_BASE_URL }}/rounds/{{ roundId }}/cards HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+
+###
+# CREATE ROUND CARD
+POST {{ TENANT_BASE_URL }}/rounds/{{ roundId }}/cards HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+{
+  "participantId": "{{ participantId }}"
+}
+
+
+###
+# RETRIEVE ROUND CARD
+GET {{ TENANT_BASE_URL }}/rounds/{{ roundId }}/cards/{{ cardId }} HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+
+###
+# DELETE  GAME ROUND
+DELETE {{ TENANT_BASE_URL }}/rounds/{{ roundId }}/cards/{{ cardId }} HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json

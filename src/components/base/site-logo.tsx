@@ -75,12 +75,6 @@ export const SiteLogo = React.forwardRef<HTMLAnchorElement, SiteLogoProps>(
         className={cn(logoVariants({ size, className }))}
         ref={ref}
         {...props}>
-        {/*
-          THIS IS THE FIX:
-          - If asChild is true, we render the 'children' passed by the parent.
-            This ensures <Slot> receives a single child element (e.g., <Link>).
-          - If asChild is false, we render the default internal structure.
-        */}
         {asChild ? (
           children
         ) : (

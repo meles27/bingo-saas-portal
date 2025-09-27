@@ -1,0 +1,53 @@
+###
+# this is for the participants in the single game
+# LIST GAME PARTICIPANTS
+GET {{ TENANT_BASE_URL }}/participants?gameId={{gameId}} HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+
+###
+# join for scheduled game
+POST {{ TENANT_BASE_URL }}/participants HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+{
+  "userId": "{{ userId }}",
+  "gameId": "{{ gameId }}"
+}
+
+
+###
+# retrieve game participant
+GET {{ TENANT_BASE_URL }}/participants/{{ participantId }} HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+
+###
+# make payment for the registered game
+POST {{ TENANT_BASE_URL }}/participants/{{ participantId }}/buy-in HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+
+###
+# leave for the registered game
+POST {{ TENANT_BASE_URL }}/participants/{{ participantId }}/leave HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+
+###
+# disqualify for the registered game
+POST {{ TENANT_BASE_URL }}/participants/{{ participantId }}/disqualify HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+
+
+###
+# reinstate for the registered game
+POST {{ TENANT_BASE_URL }}/participants/{{ participantId }}/reinstate HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json

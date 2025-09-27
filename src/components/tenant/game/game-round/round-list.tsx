@@ -24,7 +24,7 @@ import { urls } from '@/config/urls';
 import { useQuery } from '@/hooks/base/api/useQuery';
 import { useVisibilityManager } from '@/hooks/base/use-visibility-control';
 import { formatDate } from '@/lib/utils';
-import { useConfigStore } from '@/store/configStore';
+import { useConfigStore } from '@/store/config-store';
 import type { PaginatedResponse } from '@/types/api/base';
 import type {
   RoundListEntity,
@@ -33,6 +33,7 @@ import type {
 } from '@/types/api/game/round.type';
 import { Calendar, Eye, Gift, Pencil, PlusCircle, Trash2 } from 'lucide-react';
 import { useMemo, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { CreateRound } from './create-round';
 import { DestroyRound } from './destroy-round';
 import { RoundDetail } from './round-detail';
@@ -67,62 +68,76 @@ const RoundCard = ({
 }: {
   round: RoundListEntity;
   onAction: (name: ActionType, round: RoundListEntity) => void;
-}) => (
-  <Card key={round.id} className="flex flex-col">
-    <CardHeader>
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex-1 space-y-1.5">
-          <CardTitle className="text-lg">
-            Round {round.roundNumber}: {round.name}
-          </CardTitle>
-          <CardDescription>
-            <Badge
-              variant={getBadgeVariant(round.status)}
-              className="capitalize">
-              {round.status}
-            </Badge>
-          </CardDescription>
+}) => {
+  const navigate = useNavigate();
+
+  return (
+    <Card key={round.id} className="flex flex-col">
+      <CardHeader>
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex-1 space-y-1.5">
+            <CardTitle className="text-lg">
+              Round {round.roundNumber}: {round.name}
+            </CardTitle>
+            <CardDescription>
+              <Badge
+                variant={getBadgeVariant(round.status)}
+                className="capitalize">
+                {round.status}
+              </Badge>
+            </CardDescription>
+          </div>
+          <ActionMenu>
+            <ActionMenuItem
+              label="Details"
+              icon={<Eye className="mr-2 h-4 w-4" />}
+              callback={() => onAction('detail', round)}
+            />
+            <ActionMenuItem
+              label="Edit"
+              icon={<Pencil className="mr-2 h-4 w-4" />}
+              callback={() => onAction('update', round)}
+            />
+            <ActionMenuItem
+              label="Delete"
+              icon={<Trash2 className="mr-2 h-4 w-4" />}
+              className="text-red-500"
+              callback={() => onAction('delete', round)}
+            />
+          </ActionMenu>
         </div>
-        <ActionMenu>
-          <ActionMenuItem
-            label="Details"
-            icon={<Eye className="mr-2 h-4 w-4" />}
-            callback={() => onAction('detail', round)}
-          />
-          <ActionMenuItem
-            label="Edit"
-            icon={<Pencil className="mr-2 h-4 w-4" />}
-            callback={() => onAction('update', round)}
-          />
-          <ActionMenuItem
-            label="Delete"
-            icon={<Trash2 className="mr-2 h-4 w-4" />}
-            className="text-red-500"
-            callback={() => onAction('delete', round)}
-          />
-        </ActionMenu>
-      </div>
-    </CardHeader>
-    <CardContent className="flex-grow space-y-3 text-sm">
-      <Separator />
-      <div className="flex items-center gap-2 text-muted-foreground">
-        <Gift className="h-4 w-4" />
-        <span>
-          Prize: <strong className="text-foreground">{round.prize}</strong>
-        </span>
-      </div>
-      <div className="flex items-center gap-2 text-muted-foreground">
-        <Calendar className="h-4 w-4" />
-        <span>
-          Starts:{' '}
-          <strong className="text-foreground">
-            {formatDate(round.startedAt, { variant: 'dateTime' })}
-          </strong>
-        </span>
-      </div>
-    </CardContent>
-  </Card>
-);
+      </CardHeader>
+      <CardContent className="flex-grow space-y-3 text-sm">
+        <Separator />
+        <div className="flex items-center gap-2 text-muted-foreground">
+          <Gift className="h-4 w-4" />
+          <span>
+            Prize: <strong className="text-foreground">{round.prize}</strong>
+          </span>
+        </div>
+        <div className="flex items-center gap-2 text-muted-foreground">
+          <Calendar className="h-4 w-4" />
+          <span>
+            Starts:{' '}
+            <strong className="text-foreground">
+              {formatDate(round.startedAt, { variant: 'dateTime' })}
+            </strong>
+          </span>
+        </div>
+        <div>
+          <Button
+            onClick={() =>
+              navigate(
+                `/dashboard/games/${round?.game.id}/rounds/${round.id}/play`
+              )
+            }>
+            Play
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
 
 interface RoundListProps {
   gameId?: string;
@@ -142,7 +157,7 @@ export const RoundList: React.FC<RoundListProps> = withAnimation(
     const [searchParams, setSearchParams] = useState<RoundQueryParamsIface>({
       offset: 0,
       limit: PAGE_SIZE,
-      gameId: gameId
+      gameId: gameId ? gameId : undefined
     });
 
     const paginationRef = useRef<CustomPaginationRefIFace | null>(null);

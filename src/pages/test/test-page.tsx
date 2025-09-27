@@ -4,6 +4,7 @@ import { useActiveManager } from '@/hooks/base/use-active-manager';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PharmacyMapView } from './pharmacy/pharmacy-map-view';
+import { PlayRound } from '@/components/tenant/game/game-round/play-round';
 
 // 1. Define the unique keys for your tabs
 const DASHBOARD_TABS = ['overview', 'analytics', 'notifications'] as const;
@@ -53,9 +54,7 @@ export const DashboardPage = () => {
 export const TestPage = withAnimation(() => {
   return (
     <div>
-      {/* <PharmacyPortal />;
-      <DashboardPage /> */}
-      <PharmacyMapView />
+      <PlayRound />
     </div>
   );
 });

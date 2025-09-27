@@ -33,7 +33,7 @@ import { urls } from '@/config/urls';
 import { useQuery } from '@/hooks/base/api/useQuery';
 import { useSocket } from '@/hooks/base/use-socket';
 import { useVisibilityManager } from '@/hooks/base/use-visibility-control';
-import { useConfigStore } from '@/store/configStore';
+import { useConfigStore } from '@/store/config-store';
 import type { PaginatedResponse } from '@/types/api/base';
 import type {
   UserEntity,

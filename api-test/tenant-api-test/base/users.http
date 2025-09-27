@@ -1,8 +1,9 @@
 ###
 # LIST USERS
-GET {{ TENANT_BASE_URL }}/users HTTP/1.1
+GET {{ TENANT_BASE_URL }}/users?includeDeleted=true HTTP/1.1
 Authorization: Bearer {{ access }}
 Content-Type: application/json
+Origin: http://test.localhost.test:5173/test
 
 
 ###
@@ -12,10 +13,10 @@ Authorization: Bearer {{ access }}
 Content-Type: application/json
 
 {
-  "firstName": "Filmon",
-  "lastName": "Abadi",
-  "username": "filmon3",
-  "email": "filmon305@billing.saas.com",
+  "firstName": "samuel",
+  "lastName": "zeray",
+  "username": "samuel",
+  "email": "samuel05@billing.saas.com",
   "password": "meles05",
   "password1": "meles05",
   "phone": "+251 98434 8348"
@@ -46,3 +47,4 @@ Content-Type: application/json
 DELETE {{ TENANT_BASE_URL }}/users/{{ userId }} HTTP/1.1
 Authorization: Bearer {{ access }}
 Content-Type: application/json
+Origin: https://localhost:4000

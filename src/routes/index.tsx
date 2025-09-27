@@ -1,20 +1,23 @@
-import { ProtectedRoute } from '@/components/auth/protected-route';
-import { AnimatePage } from '@/components/base/route-animation/animate-page';
 import { RolePermissions } from '@/components/tenant/roles/role-permissions';
+import { GameLayout } from '@/layouts/dashboard/game-layout';
+import { PrivateLayout } from '@/layouts/dashboard/private-layout'; // ✅ fixed
+import { RootLayout } from '@/layouts/root/root-layout';
+import { SiteLayout } from '@/layouts/site/site-layout';
 import { LoginPage } from '@/pages/base/login-page';
 import { NotFound404Page } from '@/pages/base/not-found-404-page';
-import { DefaultPage } from '@/pages/dashboard/default-page';
+import { DashboardPage } from '@/pages/dashboard/dashboard-page';
+import { GameDetailPage } from '@/pages/dashboard/tenant/game/game-detail-page';
 import { GamesPage } from '@/pages/dashboard/tenant/game/games-page';
+import { ParticipantsPage } from '@/pages/dashboard/tenant/game/participants-page';
 import { PatternsPage } from '@/pages/dashboard/tenant/game/patterns-page';
+import { PlayRoundPage } from '@/pages/dashboard/tenant/game/play-round-page';
+import { RoundsPage } from '@/pages/dashboard/tenant/game/rounds-page';
 import { RolesPage } from '@/pages/dashboard/tenant/roles-page';
 import { UsersPage } from '@/pages/dashboard/tenant/users-page';
 import { HomePage } from '@/pages/site/home-page';
 import { TestPage } from '@/pages/test/test-page';
 import { createBrowserRouter } from 'react-router-dom';
-import { DashboardLayout } from '../layouts/dashboard-layout';
-import { RootLayout } from '../layouts/root-layout';
-import { SiteLayout } from '../layouts/site-layout';
-import { RoundsPage } from '@/pages/dashboard/tenant/game/rounds-page';
+import { DashboardLayout } from '../layouts/dashboard/dashboard-layout';
 
 const router = createBrowserRouter([
   {
@@ -22,14 +25,14 @@ const router = createBrowserRouter([
     element: <RootLayout />,
     children: [
       /**
-       * site routes
+       * Public Site Routes
        */
       {
         path: '/',
         element: <SiteLayout />,
         children: [
           {
-            path: '',
+            index: true,
             element: <HomePage />
           },
           {
@@ -42,20 +45,24 @@ const router = createBrowserRouter([
           }
         ]
       },
+
       /**
-       * dashboard routes
+       * Dashboard (Authenticated Area)
        */
       {
         path: 'dashboard',
-        element: <ProtectedRoute requiredPermissions={[]} />,
+        element: <PrivateLayout />,
         children: [
+          /**
+           * Dashboard Home + Subroutes
+           */
           {
             path: '',
             element: <DashboardLayout />,
             children: [
               {
-                path: '',
-                element: <DefaultPage />
+                index: true,
+                element: <DashboardPage />
               },
               {
                 path: 'users',
@@ -69,14 +76,9 @@ const router = createBrowserRouter([
                 path: 'roles/:roleId/assign-permissions',
                 element: <RolePermissions />
               },
-              // game section
               {
                 path: 'games',
                 element: <GamesPage />
-              },
-              {
-                path: 'rounds',
-                element: <RoundsPage />
               },
               {
                 path: 'patterns',
@@ -88,11 +90,37 @@ const router = createBrowserRouter([
               },
               {
                 path: '*',
-                element: (
-                  <AnimatePage>
-                    <NotFound404Page />
-                  </AnimatePage>
-                )
+                element: <NotFound404Page />
+              }
+            ]
+          },
+
+          /**
+           * Game-specific Routes
+           */
+          {
+            path: 'games/:gameId',
+            element: <GameLayout />,
+            children: [
+              {
+                index: true,
+                element: <GameDetailPage />
+              },
+              {
+                path: 'rounds',
+                element: <RoundsPage />
+              },
+              {
+                path: 'rounds/:roundId/play',
+                element: <PlayRoundPage />
+              },
+              {
+                path: 'participants',
+                element: <ParticipantsPage />
+              },
+              {
+                path: '*',
+                element: <NotFound404Page />
               }
             ]
           }

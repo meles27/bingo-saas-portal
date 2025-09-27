@@ -9,16 +9,16 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { useVisibilityManager } from '@/hooks/base/use-visibility-control';
-import { useAuthStore } from '@/store/authStore';
+import { useAuthStore } from '@/store/auth-store';
 import {
   Bell,
   CreditCard,
   Download,
+  Gamepad2,
   Home,
   LayoutGrid,
   LifeBuoy,
   LogOut,
-  Package,
   Settings,
   User,
   Users
@@ -26,8 +26,9 @@ import {
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Logout } from './auth/logout';
+import { ModeToggle } from './mode-toggle';
 
-interface DashboardHeaderProps {
+interface PrivateHeaderProps {
   /**
    * The component to render as a trigger for the sidebar, typically a hamburger menu button.
    */
@@ -53,7 +54,7 @@ const GridMenuItem = ({
   </Link>
 );
 
-const DashboardHeader: React.FC<DashboardHeaderProps> = (props) => {
+export const PrivateHeader: React.FC<PrivateHeaderProps> = (props) => {
   const user = useAuthStore((state) => state.user);
   const { actions, states } = useVisibilityManager(['logout']);
   console.log(props);
@@ -72,6 +73,7 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = (props) => {
               Export Report
             </Button>
 
+            <ModeToggle />
             {/* Home Link */}
             <Link to="/">
               <Button variant="ghost" size="icon">
@@ -91,14 +93,14 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = (props) => {
               <DropdownMenuContent className="w-64 p-2">
                 <div className="grid grid-cols-3 gap-2">
                   <GridMenuItem
-                    href="/dashboard/sales"
+                    href="/dashboard/users"
                     icon={Users}
-                    title="Sales"
+                    title="Users"
                   />
                   <GridMenuItem
-                    href="/dashboard/products"
-                    icon={Package}
-                    title="Products"
+                    href="/dashboard/games"
+                    icon={Gamepad2}
+                    title="Games"
                   />
                   <GridMenuItem
                     href="/dashboard/profile"
@@ -220,5 +222,3 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = (props) => {
     </header>
   );
 };
-
-export default DashboardHeader;

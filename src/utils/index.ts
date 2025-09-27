@@ -1,4 +1,4 @@
-import { useConfigStore } from '@/store/configStore';
+import { useConfigStore } from '@/store/config-store';
 
 export function formatEpochToDate(epochMillSeconds: number) {
   const date = new Date(epochMillSeconds); // Convert seconds to milliseconds

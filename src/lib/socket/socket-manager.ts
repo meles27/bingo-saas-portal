@@ -1,5 +1,5 @@
-import { useAuthStore } from '@/store/authStore';
-import { useConfigStore } from '@/store/configStore';
+import { useAuthStore } from '@/store/auth-store';
+import { useConfigStore } from '@/store/config-store';
 import { io, Socket } from 'socket.io-client';
 import { toast } from 'sonner';
 import { SocketEvent, type SocketResponse } from './socket.schema';
@@ -108,7 +108,7 @@ class SocketManager {
       toast.success(`Connected to ${type} channel for ${subdomain}.`)
     );
     socket.on('disconnect', (reason) =>
-      toast.warn(`Disconnected from ${type} channel: ${reason}`)
+      toast.warning(`Disconnected from ${type} channel: ${reason}`)
     );
     socket.on('connect_error', (err) =>
       toast.error(`Connection failed for ${type} channel: ${err.message}`)

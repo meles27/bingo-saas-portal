@@ -1,6 +1,6 @@
 import { MobileNavigation } from '@/components/mobile-navigation';
 import { SiteHeader } from '@/components/site/site-header';
-import { useAuthStore } from '@/store/authStore';
+import { useAuthStore } from '@/store/auth-store';
 import { AnimatePresence } from 'framer-motion';
 import { Gamepad2, Home, User } from 'lucide-react';
 import React from 'react';

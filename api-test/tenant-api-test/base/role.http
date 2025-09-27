@@ -56,7 +56,7 @@ Authorization: Bearer {{ access }}
 Content-Type: application/json
 
 {
-  "permissions": [
+  ": [
     {
       "permissionId": "fb89a2c0-7129-4dc1-b4ad-c8e57e44c021",
       "isTemporary": false

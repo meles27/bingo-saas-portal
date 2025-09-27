@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'; // Assuming a similar shadcn/ui Button component
-import { useAuthStore } from '@/store/authStore';
+import { useAuthStore } from '@/store/auth-store';
 import type { AxiosBaseQueryErrorResponse } from '@/utils/axiosInstance';
 import {
   AlertTriangle,

@@ -1,13 +1,16 @@
 import { Button } from '@/components/ui/button';
+import { useOnClickOutside } from '@/hooks/use-on-click-outside';
 import { cn } from '@/lib/utils'; // The 'cn' utility is crucial for conditional classes
-import { Menu, Rocket, X } from 'lucide-react';
-import { useState } from 'react';
+import { Menu, X } from 'lucide-react';
+import { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { SiteLogo } from '../base/site-logo';
 import { ModeToggle } from '../mode-toggle';
 
 export function SiteHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const headerRef = useRef<HTMLDivElement>(null);
 
   const navLinks = [
     { href: '#features', label: 'Features' },
@@ -15,16 +18,27 @@ export function SiteHeader() {
     { href: '#contact', label: 'Contact' }
   ];
 
+  useOnClickOutside(headerRef, () => {
+    setIsMenuOpen(false);
+  });
+
+  const handleSignin = () => {
+    setIsMenuOpen(false);
+    navigate('/login');
+  };
+
+  const handleSignup = () => {
+    setIsMenuOpen(false);
+    navigate('/signup');
+  };
   return (
     <header
+      ref={headerRef}
       className={cn(
         'sticky top-0 left-0 px-6 w-full z-50 transition-all duration-300 bg-background'
       )}>
       <div className="container mx-auto flex h-20 items-center justify-between">
-        <Link to="#" className="flex items-center gap-2 font-bold text-xl">
-          <Rocket className="h-6 w-6 text-primary" />
-          StartPortal
-        </Link>
+        <SiteLogo logoText="Alpha Betting" />
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-6">
@@ -39,10 +53,12 @@ export function SiteHeader() {
         </nav>
 
         <div className="hidden md:flex items-center gap-2">
-          <Button variant="ghost" onClick={() => navigate('/login')}>
+          <Button variant="ghost" onClick={handleSignin}>
             Log In
           </Button>
-          <Button>Get Started</Button>
+          <Button variant="default" onClick={handleSignup}>
+            Sign Up
+          </Button>
           <ModeToggle />
         </div>
 
@@ -76,8 +92,12 @@ export function SiteHeader() {
               </Link>
             ))}
             <div className="flex flex-col gap-2 pt-2 border-t">
-              <Button variant="ghost">Log In</Button>
-              <Button>Get Started</Button>
+              <Button variant="ghost" onClick={handleSignin}>
+                Log In
+              </Button>
+              <Button variant="default" onClick={handleSignup}>
+                Sign Up
+              </Button>
             </div>
           </nav>
         </div>

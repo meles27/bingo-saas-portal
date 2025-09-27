@@ -29,27 +29,73 @@ export const PATH_CONFIG: HeaderConfig[] = [
   },
 
   // Authenticated / Player pages
-  { id: 'lobby', path: '/lobby', title: 'Game Lobby', showBackButton: false },
+
   {
-    id: 'game-room',
-    path: '/games/:gameId',
+    id: 'dashboard',
+    path: '/dashboard',
+    title: 'Dashboard',
+    showBackButton: false
+  },
+  {
+    id: 'search',
+    path: '/dashboard/search',
+    title: 'Search',
+    showBackButton: false
+  },
+  {
+    id: 'games',
+    path: '/dashboard/games',
+    title: 'Bingo Games',
+    showBackButton: false
+  },
+
+  // game related start
+  {
+    id: 'game',
+    path: '/dashboard/games/:gameId',
     title: 'Bingo Game',
     showBackButton: true
   },
+
   {
-    id: 'my-cards',
-    path: '/my-cards',
-    title: 'My Cards',
+    id: 'participants',
+    path: '/dashboard/games/:gameId/participants',
+    title: 'Game Participants',
     showBackButton: true
   },
-  { id: 'prizes', path: '/prizes', title: 'Prizes', showBackButton: true },
+
+  {
+    id: 'rounds',
+    path: '/dashboard/games/:gameId/rounds',
+    title: 'Game Rounds',
+    showBackButton: true
+  },
+  // game related end
+
+  {
+    id: 'prizes',
+    path: '/dashboard/prizes',
+    title: 'Prizes',
+    showBackButton: true
+  },
   {
     id: 'profile',
-    path: '/profile',
+    path: '/dashboard/profile',
     title: 'My Profile',
     showBackButton: true
   },
-  { id: 'settings', path: '/settings', title: 'Settings', showBackButton: true }
+  {
+    id: 'settings',
+    path: '/dashboard/settings',
+    title: 'Settings',
+    showBackButton: true
+  },
+  {
+    id: 'wallet',
+    path: '/dashboard/my-wallet',
+    title: 'Wallet',
+    showBackButton: true
+  }
 ];
 
 const DEFAULT_CONFIG: HeaderConfig = {
@@ -59,9 +105,6 @@ const DEFAULT_CONFIG: HeaderConfig = {
   path: '*'
 };
 
-/**
- * Hook: returns dynamic header config based on the current route
- */
 export const useDynamicHeader = (): HeaderConfig => {
   const { pathname } = useLocation();
 

@@ -18,7 +18,7 @@ import {
   SidebarRail,
   useSidebar
 } from '@/components/ui/sidebar';
-import { useAuthStore } from '@/store/authStore';
+import { useAuthStore } from '@/store/auth-store';
 import { useLocation } from 'react-router-dom';
 
 // This is sample data.

@@ -25,7 +25,7 @@ import { urls } from '@/config/urls';
 import { useQuery } from '@/hooks/base/api/useQuery';
 import { useVisibilityManager } from '@/hooks/base/use-visibility-control';
 import { formatDate } from '@/lib/utils';
-import { useConfigStore } from '@/store/configStore';
+import { useConfigStore } from '@/store/config-store';
 import type { PaginatedResponse } from '@/types/api/base';
 import type {
   GameListEntity,
@@ -83,10 +83,6 @@ const GameCard = ({
   onAction: (name: ActionType, game: GameListEntity) => void;
 }) => {
   const navigate = useNavigate();
-  // const formattedStartDate = new Date(game.startedAt).toLocaleDateString(
-  //   undefined,
-  //   { year: 'numeric', month: 'short', day: 'numeric' }
-  // );
 
   return (
     <Card key={game.id} className="flex flex-col">
@@ -162,7 +158,7 @@ const GameCard = ({
         <Button
           size="sm"
           className="w-full"
-          onClick={() => navigate(`/dashboard/rounds?gameId=${game.id}`)}>
+          onClick={() => navigate(`/dashboard/games/${game.id}/rounds`)}>
           <PlayCircle className="mr-2 h-4 w-4" />
           Manage Rounds
         </Button>

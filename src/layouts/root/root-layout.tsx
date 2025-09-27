@@ -4,7 +4,7 @@ import { Spinner } from '@/components/base/spinner';
 import { Toaster } from '@/components/ui/sonner';
 import { urls } from '@/config/urls';
 import { useQuery } from '@/hooks/base/api/useQuery';
-import { useConfigStore } from '@/store/configStore';
+import { useConfigStore } from '@/store/config-store';
 import type { AxiosBaseQueryErrorResponse } from '@/utils/axiosInstance';
 import { AnimatePresence } from 'framer-motion';
 import React, { useEffect } from 'react';

@@ -1,6 +1,6 @@
 import { urls } from '@/config/urls';
-import { useAuthStore } from '@/store/authStore';
-import { useConfigStore } from '@/store/configStore';
+import { useAuthStore } from '@/store/auth-store';
+import { useConfigStore } from '@/store/config-store';
 import axios from 'axios';
 
 const axiosInstance = axios.create({

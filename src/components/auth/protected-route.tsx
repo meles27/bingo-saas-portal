@@ -1,5 +1,5 @@
 import { usePrivateSocket } from '@/hooks/base/use-socket';
-import { useAuthStore } from '@/store/authStore';
+import { useAuthStore } from '@/store/auth-store';
 import React from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { toast } from 'sonner';
