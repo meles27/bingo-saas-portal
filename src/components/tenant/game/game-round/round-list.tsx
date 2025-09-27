@@ -127,9 +127,7 @@ const RoundCard = ({
         <div>
           <Button
             onClick={() =>
-              navigate(
-                `/dashboard/games/${round?.game.id}/rounds/${round.id}/play`
-              )
+              navigate(`/dashboard/active-game/rounds/${round.id}/play`)
             }>
             Play
           </Button>

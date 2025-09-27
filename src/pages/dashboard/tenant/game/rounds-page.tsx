@@ -1,12 +1,17 @@
 import withAnimation from '@/components/base/route-animation/with-animation';
 import { RoundList } from '@/components/tenant/game/game-round/round-list';
-import { useParams } from 'react-router-dom';
+import { useGameStore } from '@/store/game-store';
+import { Navigate } from 'react-router-dom';
 
 export const RoundsPage = withAnimation(() => {
-  const { gameId } = useParams();
+  const gameId = useGameStore((state) => state.gameId);
   return (
     <>
-      <RoundList gameId={gameId} />
+      {gameId ? (
+        <RoundList gameId={gameId} />
+      ) : (
+        <Navigate to="/dashboard/games" />
+      )}
     </>
   );
 });

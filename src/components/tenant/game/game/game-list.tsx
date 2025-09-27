@@ -26,6 +26,7 @@ import { useQuery } from '@/hooks/base/api/useQuery';
 import { useVisibilityManager } from '@/hooks/base/use-visibility-control';
 import { formatDate } from '@/lib/utils';
 import { useConfigStore } from '@/store/config-store';
+import { useGameStore } from '@/store/game-store';
 import type { PaginatedResponse } from '@/types/api/base';
 import type {
   GameListEntity,
@@ -48,10 +49,6 @@ import { CreateGame } from './create-game';
 import { DestroyGame } from './destroy-game';
 import { GameDetail } from './game-detail';
 import { UpdateGame } from './update-game';
-// import { CreateGame } from './create-game';
-// import { DestroyGame } from './destroy-game';
-// import { GameDetail } from './game-detail';
-// import { UpdateGame } from './update-game';
 
 type ActionType = 'detail' | 'update' | 'delete' | 'create';
 
@@ -83,6 +80,12 @@ const GameCard = ({
   onAction: (name: ActionType, game: GameListEntity) => void;
 }) => {
   const navigate = useNavigate();
+  const setGameId = useGameStore((state) => state.setGameId);
+
+  const handleManageGame = () => {
+    setGameId(game.id);
+    navigate(`/dashboard/active-game/rounds`);
+  };
 
   return (
     <Card key={game.id} className="flex flex-col">
@@ -155,10 +158,7 @@ const GameCard = ({
         </div>
       </CardContent>
       <CardFooter>
-        <Button
-          size="sm"
-          className="w-full"
-          onClick={() => navigate(`/dashboard/games/${game.id}/rounds`)}>
+        <Button size="sm" className="w-full" onClick={handleManageGame}>
           <PlayCircle className="mr-2 h-4 w-4" />
           Manage Rounds
         </Button>

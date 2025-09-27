@@ -52,21 +52,21 @@ export const PATH_CONFIG: HeaderConfig[] = [
   // game related start
   {
     id: 'game',
-    path: '/dashboard/games/:gameId',
+    path: '/dashboard/active-game',
     title: 'Bingo Game',
     showBackButton: true
   },
 
   {
     id: 'participants',
-    path: '/dashboard/games/:gameId/participants',
+    path: '/dashboard/active-game/participants',
     title: 'Game Participants',
     showBackButton: true
   },
 
   {
     id: 'rounds',
-    path: '/dashboard/games/:gameId/rounds',
+    path: '/dashboard/active-game/rounds',
     title: 'Game Rounds',
     showBackButton: true
   },
@@ -74,7 +74,7 @@ export const PATH_CONFIG: HeaderConfig[] = [
 
   {
     id: 'prizes',
-    path: '/dashboard/prizes',
+    path: '/dashboard/active-game/prizes',
     title: 'Prizes',
     showBackButton: true
   },

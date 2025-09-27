@@ -110,7 +110,7 @@ export const GameDetail: React.FC<GameDetailProps> = withAnimation(
             )}
 
             {/* success state */}
-            {gameQuery.isSuccess && gameQuery.data && (
+            {gameQuery.isSuccess && (
               <>
                 <section className="space-y-4">
                   <h4 className="font-semibold">Session Info</h4>
@@ -179,49 +179,53 @@ export const GameDetail: React.FC<GameDetailProps> = withAnimation(
                   </h4>
                   {gameQuery.data.rounds.length > 0 ? (
                     <div className="space-y-3">
-                      {gameQuery.data.rounds.map((round) => (
-                        <div
-                          key={round.id}
-                          className="p-3 border rounded-md flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
-                          <div className="flex-1 space-y-2">
-                            <p className="font-medium">
-                              Round {round.roundNumber}: {round.name}
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                              Prize: {round.prize}
-                            </p>
-                            {/* --- ADDED THIS BLOCK --- */}
-                            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                              <Calendar className="h-3 w-3" />
-                              <span>
-                                Starts:{' '}
-                                {formatDate(round.startedAt, {
-                                  variant: 'dateTime'
-                                })}
-                              </span>
-                            </div>
-                            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                              <Calendar className="h-3 w-3" />
-                              <span>
-                                Ends:{' '}
-                                {round.endedAt ? (
-                                  formatDate(round.endedAt, {
+                      {gameQuery.data.rounds
+                        .sort(
+                          (prev, next) => prev.roundNumber - next.roundNumber
+                        )
+                        .map((round) => (
+                          <div
+                            key={round.id}
+                            className="p-3 border rounded-md flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+                            <div className="flex-1 space-y-2">
+                              <p className="font-medium">
+                                Round {round.roundNumber}: {round.name}
+                              </p>
+                              <p className="text-xs text-muted-foreground">
+                                Prize: {round.prize}
+                              </p>
+                              {/* --- ADDED THIS BLOCK --- */}
+                              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                                <Calendar className="h-3 w-3" />
+                                <span>
+                                  Starts:{' '}
+                                  {formatDate(round.startedAt, {
                                     variant: 'dateTime'
-                                  })
-                                ) : (
-                                  <span className="italic">Not ended</span>
-                                )}
-                              </span>
+                                  })}
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                                <Calendar className="h-3 w-3" />
+                                <span>
+                                  Ends:{' '}
+                                  {round.endedAt ? (
+                                    formatDate(round.endedAt, {
+                                      variant: 'dateTime'
+                                    })
+                                  ) : (
+                                    <span className="italic">Not ended</span>
+                                  )}
+                                </span>
+                              </div>
+                              {/* --- END ADDED BLOCK --- */}
                             </div>
-                            {/* --- END ADDED BLOCK --- */}
+                            <Badge
+                              variant={getRoundBadgeVariant(round.status)}
+                              className="capitalize w-min mt-1">
+                              {round.status}
+                            </Badge>
                           </div>
-                          <Badge
-                            variant={getRoundBadgeVariant(round.status)}
-                            className="capitalize w-min mt-1">
-                            {round.status}
-                          </Badge>
-                        </div>
-                      ))}
+                        ))}
                     </div>
                   ) : (
                     <p className="text-sm text-muted-foreground text-center py-4">

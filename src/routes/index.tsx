@@ -99,7 +99,7 @@ const router = createBrowserRouter([
            * Game-specific Routes
            */
           {
-            path: 'games/:gameId',
+            path: 'active-game',
             element: <GameLayout />,
             children: [
               {

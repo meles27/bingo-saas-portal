@@ -22,7 +22,7 @@ export const MobileNavigation: React.FC<MobileNavigationProps> = ({
 
   return (
     <nav
-      className="sticky bottom-0 z-50 border-t border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/75"
+      className="sticky bottom-0 z-50 border-t border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/75 overflow-x-auto"
       aria-label="Mobile Navigation">
       <div className="mx-auto flex max-w-md items-center justify-around px-2 py-3">
         {items.map((item) => {

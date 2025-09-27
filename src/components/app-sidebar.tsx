@@ -64,8 +64,15 @@ const data = {
     },
     {
       title: 'Settings',
+      icon: Settings2,
       url: '#',
-      icon: Settings2
+      isActive: true,
+      items: [
+        {
+          title: 'test',
+          url: '/dashboard/test'
+        }
+      ]
     }
   ]
 };

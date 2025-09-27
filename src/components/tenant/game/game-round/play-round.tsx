@@ -112,7 +112,7 @@ const PlayerCardGrid: React.FC<{
       </div>
     ))}
     {cardGrid[0].map((_, colIndex) =>
-      cardGrid.map((row, rowIndex) => {
+      cardGrid.map((_row, rowIndex) => {
         const number = cardGrid[rowIndex][colIndex];
         const isFreeSpace = number === 'FREE';
         const isCalled = isFreeSpace || calledNumbers.has(number as number);
@@ -193,11 +193,11 @@ export const PlayRound: React.FC = () => {
 
   return (
     <div className="bg-background font-display text-foreground antialiased">
-      <div className="relative flex flex-col min-h-screen">
+      <div className="relative flex flex-col">
         <ParticleBackground />
 
         <header className="sticky top-0 z-20 bg-background/80 backdrop-blur-lg border-b">
-          <div className="container mx-auto px-4 h-16 flex items-center justify-between gap-4">
+          <div className="mx-auto px-4 h-16 flex items-center justify-between gap-4">
             <div className="flex-1 flex justify-start">
               <div className="text-left">
                 <h1 className="text-lg font-bold leading-tight">BINGO</h1>
@@ -211,7 +211,7 @@ export const PlayRound: React.FC = () => {
               </div>
             </div>
             <div className="flex-shrink-0">
-              <div className="relative w-14 h-14 flex items-center justify-center">
+              <div className="relative h-14 p-2 flex items-center justify-center">
                 <div className="absolute inset-0 bg-primary rounded-full bingo-ball"></div>
                 <span className="relative text-2xl font-bold text-primary-foreground">
                   B-7
@@ -230,13 +230,13 @@ export const PlayRound: React.FC = () => {
         </header>
 
         {/* The main content area now has flex-1 to fill the remaining space */}
-        <main className="container mx-auto px-4 py-6 z-10 flex-1">
+        <main className="mx-auto px-4 py-6 z-10 flex-1">
           <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 min-w-0">
             <div className="lg:flex-5 flex flex-col gap-6">
               <NumbersCalledBoard calledNumbers={calledNumbers} />
             </div>
 
-            <div className="relative lg:flex-4 min-w-0 max-h-20">
+            <div className="relative max-w-96 lg:flex-4  min-w-0 max-h-20">
               <div className="absolute -inset-2 -z-1 bg-card rounded-lg border border-muted-foreground"></div>
               <div className="flex justify-between items-baseline mb-3 px-1">
                 <h2 className="text-lg font-bold">My Cards</h2>
