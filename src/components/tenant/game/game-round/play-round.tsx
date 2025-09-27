@@ -236,7 +236,8 @@ export const PlayRound: React.FC = () => {
               <NumbersCalledBoard calledNumbers={calledNumbers} />
             </div>
 
-            <div className="lg:flex-4 min-w-0">
+            <div className="relative lg:flex-4 min-w-0 max-h-20">
+              <div className="absolute -inset-2 -z-1 bg-card rounded-lg border border-muted-foreground"></div>
               <div className="flex justify-between items-baseline mb-3 px-1">
                 <h2 className="text-lg font-bold">My Cards</h2>
                 <span className="text-sm font-semibold text-muted-foreground">
