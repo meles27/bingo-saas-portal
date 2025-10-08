@@ -2,6 +2,8 @@
 # @login login
 POST {{ TENANT_BASE_URL }}/auth/token HTTP/1.1
 Content-Type: application/json
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
 
 {
   "username": "admin",
@@ -13,6 +15,8 @@ Content-Type: application/json
 # @refresh refresh
 POST {{ TENANT_BASE_URL }}/auth/token/refresh HTTP/1.1
 Content-Type: application/json
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
 
 {
   "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijk4YjQxY2M2LTE1YzYtNGI3YS04OWU5LWQ3MTA4NzY3MzcyZCIsInVzZXJuYW1lIjoiYWRtaW4iLCJmaXJzdE5hbWUiOiJtZWxlcyIsImxhc3ROYW1lIjoiaGFpbGVzZWxhc3NpZSIsInN0YXR1cyI6ImFjdGl2ZSIsInRlbmFudElkIjoiNzY0ZDA1MTgtNmM3Mi00MzkzLWE0ZDYtMzFjNDA5OTJhN2IxIiwic3ViZG9tYWluIjoiYmV6YS1idXJnZXIiLCJpYXQiOjE3NTc2NzQ2NzQsImV4cCI6MTc2MDI2NjY3NH0.Y-JsiwA-hLdqLWQl7nIBXPj6fpGoYVYhBIyDywa6coY"
@@ -23,6 +27,8 @@ Content-Type: application/json
 # @reset-password reset-password
 POST {{ TENANT_BASE_URL }}/auth/reset-password HTTP/1.1
 Content-Type: application/json
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
 
 {
   "username": "admin"
@@ -33,6 +39,8 @@ Content-Type: application/json
 # @confirm-reset-password confirm-reset-password
 POST {{ TENANT_BASE_URL }}/auth/confirm-reset-password HTTP/1.1
 Content-Type: application/json
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
 
 {
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijg0MjU1NjhkLWZjYmItNDI2Mi1iNmUxLTE2ZjBkMTBiMDBmMCIsImlhdCI6MTc1MjYxODAzMCwiZXhwIjoxNzUyNjIxNjMwfQ.vLqtE41EPtzg1gjpLNsURcQBGLRKUouWz0icmxDjZQ0",

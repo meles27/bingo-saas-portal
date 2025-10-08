@@ -41,6 +41,7 @@ import { useApiResponseToast } from '@/hooks/base/api/use-api-response-toast';
 import { useMutation } from '@/hooks/base/api/useMutation';
 import { useQuery } from '@/hooks/base/api/useQuery';
 import { cn } from '@/lib/utils';
+import { useGameStore } from '@/store/game-store';
 import type { PaginatedResponse } from '@/types/api/base';
 import type { PatternListEntity } from '@/types/api/game/pattern.type';
 import { useMemo } from 'react';
@@ -65,7 +66,6 @@ import { useMemo } from 'react';
 // }
 
 interface CreateRoundProps {
-  gameId: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   callback?: (success: boolean) => void;
@@ -89,14 +89,7 @@ const createRoundSchema = z
     patternIds: z.array(z.uuid()).min(1, 'Select at least one pattern.'),
     startedAt: z.string().refine((val) => !isNaN(Date.parse(val)), {
       message: 'A valid start date is required.'
-    }),
-    endedAt: z.string().refine((val) => !isNaN(Date.parse(val)), {
-      message: 'A valid end date is required.'
     })
-  })
-  .refine((data) => data.endedAt > data.startedAt, {
-    message: 'End date must be after start date.',
-    path: ['endedAt']
   })
   .refine((data) => data.maxRange > data.minRange, {
     message: 'Max range must be greater than min range.',
@@ -134,8 +127,9 @@ type CreateRoundFormValues = z.infer<typeof createRoundSchema>;
 // --- Main Component ---
 
 export const CreateRound: React.FC<CreateRoundProps> = withAnimation(
-  ({ gameId, open, onOpenChange, callback }) => {
-    // Fetch patterns for the multi-select dropdown
+  ({ open, onOpenChange, callback }) => {
+    const gameId = useGameStore((state) => state.gameId);
+
     const patternsQuery = useQuery<PaginatedResponse<PatternListEntity>>(
       urls.getPatternsUrl(),
       { params: { limit: 1000 } } // Fetch all patterns
@@ -161,13 +155,12 @@ export const CreateRound: React.FC<CreateRoundProps> = withAnimation(
         maxRange: 75,
         freespaceEnabled: false,
         patternIds: [],
-        startedAt: '',
-        endedAt: ''
+        startedAt: ''
       }
     });
 
     const createRoundMutation = useMutation<unknown, CreateRoundFormValues>(
-      urls.getRoundsUrl(gameId),
+      urls.getRoundsUrl(),
       'POST'
     );
 
@@ -189,21 +182,17 @@ export const CreateRound: React.FC<CreateRoundProps> = withAnimation(
     );
 
     function onSubmit(values: CreateRoundFormValues) {
-      const apiPayload: CreateRoundFormValues = {
+      const apiPayload: CreateRoundFormValues & { gameId: string | null } = {
         ...values,
-        rows: Number(values.rows),
-        cols: Number(values.cols),
-        minRange: Number(values.minRange),
-        maxRange: Number(values.maxRange),
-        freeRowPos: values.freespaceEnabled
-          ? Number(values.freeRowPos)
-          : undefined,
-        freeColPos: values.freespaceEnabled
-          ? Number(values.freeColPos)
-          : undefined,
+        rows: values.rows,
+        cols: values.cols,
+        minRange: values.minRange,
+        maxRange: values.maxRange,
+        freeRowPos: values.freespaceEnabled ? values.freeRowPos : undefined,
+        freeColPos: values.freespaceEnabled ? values.freeColPos : undefined,
         startedAt: values.startedAt,
-        endedAt: values.endedAt,
-        description: 'this is simple description'
+        description: 'this is simple description',
+        gameId: gameId
       };
       createRoundMutation.execute(apiPayload);
     }
@@ -435,19 +424,6 @@ export const CreateRound: React.FC<CreateRoundProps> = withAnimation(
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Start Time</FormLabel>
-                    <FormControl>
-                      <Input type="datetime-local" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                name="endedAt"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>End Time</FormLabel>
                     <FormControl>
                       <Input type="datetime-local" {...field} />
                     </FormControl>

@@ -3,6 +3,8 @@
 GET {{ TENANT_BASE_URL }}/roles?search= HTTP/1.1
 Authorization: Bearer {{ access }}
 Content-Type: application/json
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
 
 
 ###
@@ -10,6 +12,8 @@ Content-Type: application/json
 POST {{ TENANT_BASE_URL }}/roles HTTP/1.1
 Authorization: Bearer {{ access }}
 Content-Type: application/json
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
 
 {
   "name": "Cashier",
@@ -22,6 +26,8 @@ Content-Type: application/json
 GET {{ TENANT_BASE_URL }}/roles/{{ roleId }} HTTP/1.1
 Authorization: Bearer {{ access }}
 Content-Type: application/json
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
 
 
 ###
@@ -29,6 +35,8 @@ Content-Type: application/json
 PATCH {{ TENANT_BASE_URL }}/roles/{{ roleId }} HTTP/1.1
 Authorization: Bearer {{ access }}
 Content-Type: application/json
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
 
 {
   "name": "Cashier"
@@ -40,6 +48,8 @@ Content-Type: application/json
 DELETE {{ TENANT_BASE_URL }}/roles/{{ roleId }} HTTP/1.1
 Authorization: Bearer {{ access }}
 Content-Type: application/json
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
 
 
 ###
@@ -47,6 +57,8 @@ Content-Type: application/json
 GET {{ TENANT_BASE_URL }}/roles/{{ roleId }}/permissions HTTP/1.1
 Authorization: Bearer {{ access }}
 Content-Type: application/json
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
 
 
 ###
@@ -54,6 +66,8 @@ Content-Type: application/json
 PATCH {{ TENANT_BASE_URL }}/roles/{{ roleId }}/role-permissions HTTP/1.1
 Authorization: Bearer {{ access }}
 Content-Type: application/json
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
 
 {
   ": [

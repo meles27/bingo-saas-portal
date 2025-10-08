@@ -42,9 +42,24 @@ const data = {
   ],
   navMain: [
     {
-      title: 'Organization',
+      title: 'Game Managment',
       url: '#',
       icon: SquareTerminal,
+      isActive: true,
+      items: [
+        { icon: Settings2, title: 'Games', url: '/dashboard/games' },
+        {
+          icon: Settings2,
+          title: 'Card Templates',
+          url: '/dashboard/bingo-cards'
+        },
+        { icon: Settings2, title: 'Patterns', url: '/dashboard/patterns' }
+      ]
+    },
+    {
+      title: 'Admin Managment',
+      icon: Settings2,
+      url: '#',
       isActive: true,
       items: [
         {
@@ -54,23 +69,6 @@ const data = {
         {
           title: 'Roles',
           url: '/dashboard/roles'
-        },
-        { icon: Settings2, title: 'Games', url: '/dashboard/games' },
-        { icon: Settings2, title: 'Transactions', url: '/dashboard/test' },
-        { icon: Settings2, title: 'Card Templates', url: '/dashboard/test' },
-        { icon: Settings2, title: 'Patterns', url: '/dashboard/patterns' },
-        { icon: Settings2, title: 'My Wallet', url: '/dashboard/test' }
-      ]
-    },
-    {
-      title: 'Settings',
-      icon: Settings2,
-      url: '#',
-      isActive: true,
-      items: [
-        {
-          title: 'test',
-          url: '/dashboard/test'
         }
       ]
     }

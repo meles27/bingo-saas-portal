@@ -1,9 +1,9 @@
-import axiosInstance from '@/utils/interceptors';
+import { globalAxiosInstance, tenantAxiosInstance } from '@/utils/interceptors';
 import type { AxiosRequestConfig } from 'axios';
 import axios from 'axios';
 import { useCallback, useEffect, useMemo, useReducer, useRef } from 'react';
 
-// --- Type Definitions ---
+// --- Type Definitions (No Changes) ---
 
 /**
  * A standardized error response structure for API queries.
@@ -16,20 +16,16 @@ export interface AxiosBaseQueryErrorResponse {
   };
 }
 
-// --- Discriminated Union for Query Result ---
+// --- Discriminated Union for Query Result (No Changes) ---
 
 interface UseQueryBaseResult<T> {
-  /**
-   * Function to manually trigger a refetch of the query.
-   * Returns a promise that resolves with the [data, error] tuple.
-   */
   refetch: () => Promise<
     [T | undefined, AxiosBaseQueryErrorResponse | undefined]
   >;
 }
 
 interface UseQueryLoadingResult<T> extends UseQueryBaseResult<T> {
-  data: T | null; // Can hold stale data while refetching
+  data: T | null;
   error: null;
   isLoading: true;
   isSuccess: false;
@@ -37,7 +33,7 @@ interface UseQueryLoadingResult<T> extends UseQueryBaseResult<T> {
 }
 
 interface UseQuerySuccessResult<T> extends UseQueryBaseResult<T> {
-  data: T; // Data is guaranteed to be present and non-nullable
+  data: T;
   error: null;
   isLoading: false;
   isSuccess: true;
@@ -46,7 +42,7 @@ interface UseQuerySuccessResult<T> extends UseQueryBaseResult<T> {
 
 interface UseQueryErrorResult<T> extends UseQueryBaseResult<T> {
   data: null;
-  error: AxiosBaseQueryErrorResponse; // Error is guaranteed to be present
+  error: AxiosBaseQueryErrorResponse;
   isLoading: false;
   isSuccess: false;
   isError: true;
@@ -60,30 +56,17 @@ interface UseQueryIdleResult<T> extends UseQueryBaseResult<T> {
   isError: false;
 }
 
-/**
- * The result of the useQuery hook, discriminated by the state flags
- * (isLoading, isSuccess, isError). This allows for type-safe access
- * to `data` and `error` properties.
- *
- * - When `isSuccess` is true, `data` is of type `T`.
- * - When `isError` is true, `error` is of type `AxiosBaseQueryErrorResponse`.
- * - When `isLoading` is true, `data` can be null (or hold stale data).
- */
 export type UseQueryResult<T> =
   | UseQueryLoadingResult<T>
   | UseQuerySuccessResult<T>
   | UseQueryErrorResult<T>
   | UseQueryIdleResult<T>;
 
-/**
- * Generates a structured error object from various error types.
- * @param error The error caught in a catch block.
- * @returns An object conforming to AxiosBaseQueryErrorResponse.
- */
+// --- Error Generation Utility (No Changes) ---
+
 function generateAxiosError(error: unknown): AxiosBaseQueryErrorResponse {
   if (axios.isAxiosError(error)) {
     if (error.response) {
-      // The server responded with a status code outside the 2xx range
       return {
         status: error.response.status,
         data: {
@@ -97,7 +80,6 @@ function generateAxiosError(error: unknown): AxiosBaseQueryErrorResponse {
       };
     }
     if (error.request) {
-      // The request was made but no response was received
       return {
         status: undefined,
         data: {
@@ -106,7 +88,6 @@ function generateAxiosError(error: unknown): AxiosBaseQueryErrorResponse {
         }
       };
     }
-    // Something happened in setting up the request
     return {
       status: undefined,
       data: {
@@ -114,16 +95,16 @@ function generateAxiosError(error: unknown): AxiosBaseQueryErrorResponse {
       }
     };
   }
-  // Handle non-Axios errors
   if (error instanceof Error) {
     return { status: undefined, data: { detail: error.message } };
   }
-  // Fallback for unknown errors
   return {
     status: undefined,
     data: { detail: 'An unexpected error occurred.' }
   };
 }
+
+// --- Options Interface ---
 
 export interface UseQueryOptions {
   params?: AxiosRequestConfig['params'];
@@ -132,9 +113,16 @@ export interface UseQueryOptions {
   manual?: boolean;
   /** If true, the query will be skipped entirely. @default false */
   skip?: boolean;
+  /**
+   * Determines which API to target.
+   * 'tenant' uses the subdomain-aware instance.
+   * 'global' uses the main API instance.
+   * @default 'tenant'
+   */
+  apiScope?: 'tenant' | 'global';
 }
 
-// --- State and Reducer ---
+// --- State and Reducer (No Changes) ---
 
 interface State<T> {
   data: T | null;
@@ -178,7 +166,13 @@ export function useQuery<T>(
   url: string,
   options: UseQueryOptions = {}
 ): UseQueryResult<T> {
-  const { params = {}, headers = {}, manual = false, skip = false } = options;
+  const {
+    params = {},
+    headers = {},
+    manual = false,
+    skip = false,
+    apiScope = 'tenant'
+  } = options;
 
   const initialState: State<T> = {
     data: null,
@@ -189,8 +183,6 @@ export function useQuery<T>(
 
   const [state, dispatch] = useReducer(fetchReducer<T>, initialState);
   const isInitialMount = useRef(true);
-
-  // Derive the isError flag from the state
   const isError = useMemo(() => state.error !== null, [state.error]);
 
   const refetch = useCallback(async (): Promise<
@@ -200,8 +192,12 @@ export function useQuery<T>(
       return [undefined, undefined];
     }
     dispatch({ type: 'FETCH_START' });
+
+    const instance =
+      apiScope === 'global' ? globalAxiosInstance : tenantAxiosInstance;
+
     try {
-      const response = await axiosInstance.get<T>(url, { params, headers });
+      const response = await instance.get<T>(url, { params, headers });
       dispatch({ type: 'FETCH_SUCCESS', payload: response.data });
       return [response.data, undefined];
     } catch (err) {
@@ -210,17 +206,15 @@ export function useQuery<T>(
       return [undefined, queryError];
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [url, skip, JSON.stringify(params), JSON.stringify(headers)]);
+  }, [url, skip, apiScope, JSON.stringify(params), JSON.stringify(headers)]);
 
   useEffect(() => {
-    // Only fetch on initial mount if not manual or skipped
     if (isInitialMount.current && !manual && !skip) {
       isInitialMount.current = false;
       refetch();
       return;
     }
 
-    // After initial mount, refetch if dependencies change, but not if manual/skipped
     if (!isInitialMount.current && !manual && !skip) {
       refetch();
     }

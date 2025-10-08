@@ -59,15 +59,14 @@ const DetailRow = ({
 
 type RoundDetailProps = {
   roundId: string | null;
-  gameId: string | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 };
 
 export const RoundDetail: React.FC<RoundDetailProps> = withAnimation(
-  ({ gameId, roundId, open, onOpenChange }) => {
+  ({ roundId, open, onOpenChange }) => {
     const roundQuery = useQuery<RoundDetailEntity>(urls.getRoundUrl(roundId!), {
-      skip: !roundId || !gameId || !open
+      skip: !roundId || !open
     });
 
     const round = roundQuery.data;
@@ -174,10 +173,7 @@ export const RoundDetail: React.FC<RoundDetailProps> = withAnimation(
                         <p className="text-sm font-medium text-center">
                           {pattern.name}
                         </p>
-                        <PatternVisualizer
-                          coordinates={pattern.coordinates}
-                          cellSize="h-4 w-4"
-                        />
+                        <PatternVisualizer coordinates={pattern.coordinates} />
                       </div>
                     ))}
                   </div>

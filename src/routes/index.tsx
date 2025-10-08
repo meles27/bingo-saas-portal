@@ -6,6 +6,7 @@ import { SiteLayout } from '@/layouts/site/site-layout';
 import { LoginPage } from '@/pages/base/login-page';
 import { NotFound404Page } from '@/pages/base/not-found-404-page';
 import { DashboardPage } from '@/pages/dashboard/dashboard-page';
+import { BingoCardsPage } from '@/pages/dashboard/tenant/game/bingo-card-page';
 import { GameDetailPage } from '@/pages/dashboard/tenant/game/game-detail-page';
 import { GamesPage } from '@/pages/dashboard/tenant/game/games-page';
 import { ParticipantsPage } from '@/pages/dashboard/tenant/game/participants-page';
@@ -79,6 +80,10 @@ const router = createBrowserRouter([
               {
                 path: 'games',
                 element: <GamesPage />
+              },
+              {
+                path: 'bingo-cards',
+                element: <BingoCardsPage />
               },
               {
                 path: 'patterns',

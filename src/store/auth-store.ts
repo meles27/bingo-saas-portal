@@ -1,6 +1,6 @@
 import { urls } from '@/config/urls';
 import type { UserProfileEntity } from '@/types/api/base/user.type';
-import axiosInstance from '@/utils/interceptors';
+import { tenantAxiosInstance } from '@/utils/interceptors';
 import type { JwtPayload } from 'jwt-decode';
 import { jwtDecode } from 'jwt-decode';
 import { create } from 'zustand';
@@ -112,7 +112,7 @@ export const useAuthStore = create<AuthStore>()(
         set({ loginState: { ...initialAsyncState, isLoading: true } });
 
         try {
-          const response = await axiosInstance.post<AuthResponse>(
+          const response = await tenantAxiosInstance.post<AuthResponse>(
             urls.getAuthTokenUrl(),
             { username, password }
           );
@@ -160,7 +160,7 @@ export const useAuthStore = create<AuthStore>()(
         set({ refreshState: { ...initialAsyncState, isLoading: true } });
 
         try {
-          const response = await axiosInstance.post<AuthResponse>(
+          const response = await tenantAxiosInstance.post<AuthResponse>(
             urls.getAuthRefreshTokenUrl(),
             { refresh: get().token.refresh }
           );

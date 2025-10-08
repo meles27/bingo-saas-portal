@@ -3,6 +3,8 @@
 GET {{ TENANT_BASE_URL }}/permissions HTTP/1.1
 Authorization: Bearer {{ access }}
 Content-Type: application/json
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
 
 
 ###
@@ -10,6 +12,8 @@ Content-Type: application/json
 GET {{ TENANT_BASE_URL }}/permissions/{{ permissionId }} HTTP/1.1
 Authorization: Bearer {{ access }}
 Content-Type: application/json
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
 
 
 ###
@@ -17,6 +21,8 @@ Content-Type: application/json
 PATCH {{ TENANT_BASE_URL }}/permissions/{{ permissionId }} HTTP/1.1
 Authorization: Bearer {{ access }}
 Content-Type: application/json
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
 
 {
   "name": "Update User Status ."

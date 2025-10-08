@@ -1,8 +1,10 @@
 ###
 # LIST CARD-TEMPLATES
-GET {{ TENANT_BASE_URL }}/card-templates?search= HTTP/1.1
+GET {{ TENANT_BASE_URL }}/card-templates?limit=10 HTTP/1.1
 Authorization: Bearer {{ access }}
 Content-Type: application/json
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
 
 
 ###
@@ -10,16 +12,17 @@ Content-Type: application/json
 POST {{ TENANT_BASE_URL }}/card-templates HTTP/1.1
 Authorization: Bearer {{ access }}
 Content-Type: application/json
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
 
 {
-  "name": "Classic 5x5 Freespace",
-  "serial": "BINGO-CLASSIC-001",
-  "minRange": 1,
-  "maxRange": 75,
-  "freespaceEnabled": true,
-  "freeRowPos": 2,
-  "freeColPos": 2,
+  "serial": "BINGO-CLASSIC-506",
   "layout": [
+    [
+      0,
+      0,
+      16
+    ],
     [
       0,
       1,
@@ -27,23 +30,18 @@ Content-Type: application/json
     ],
     [
       0,
-      0,
-      30
-    ],
-    [
-      0,
       2,
-      33
+      42
     ],
     [
       0,
       3,
-      50
+      60
     ],
     [
       0,
       4,
-      71
+      75
     ],
     [
       1,
@@ -53,22 +51,22 @@ Content-Type: application/json
     [
       1,
       1,
-      19
+      9
     ],
     [
       1,
       2,
-      45
+      14
     ],
     [
       1,
       3,
-      60
+      19
     ],
     [
       1,
       4,
-      66
+      21
     ],
     [
       2,
@@ -78,67 +76,72 @@ Content-Type: application/json
     [
       2,
       1,
-      16
+      10
     ],
     [
       2,
-      3,
-      48
-    ],
-    [
       2,
-      4,
-      75
-    ],
-    [
-      3,
-      0,
-      9
-    ],
-    [
-      3,
-      1,
-      21
-    ],
-    [
-      3,
-      2,
-      31
-    ],
-    [
-      3,
-      3,
-      55
-    ],
-    [
-      3,
-      4,
-      61
-    ],
-    [
-      4,
-      0,
-      14
-    ],
-    [
-      4,
-      1,
       30
     ],
     [
-      4,
       2,
+      3,
+      31
+    ],
+    [
+      2,
+      4,
+      33
+    ],
+    [
+      3,
+      0,
       42
     ],
     [
-      4,
       3,
+      1,
+      45
+    ],
+    [
+      3,
+      2,
+      48
+    ],
+    [
+      3,
+      3,
+      50
+    ],
+    [
+      3,
+      4,
+      55
+    ],
+    [
+      4,
+      0,
       59
     ],
     [
       4,
+      1,
+      61
+    ],
+    [
       4,
+      2,
+      66
+    ],
+    [
+      4,
+      3,
       68
+    ],
+    [
+      4,
+      4,
+      71
     ]
   ]
 }
@@ -146,25 +149,33 @@ Content-Type: application/json
 
 ###
 # RETRIEVE PATTERN
-GET {{ TENANT_BASE_URL }}/card-templates/{{ patternId }} HTTP/1.1
+GET {{ TENANT_BASE_URL }}/card-templates/{{ cardTemplateId }} HTTP/1.1
 Authorization: Bearer {{ access }}
 Content-Type: application/json
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
 
 
 ###
 # UPDATE PATTERN
-PATCH {{ TENANT_BASE_URL }}/card-templates/{{ patternId }} HTTP/1.1
+PATCH {{ TENANT_BASE_URL }}/card-templates/{{ cardTemplateId }} HTTP/1.1
 Authorization: Bearer {{ access }}
 Content-Type: application/json
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
 
-{}
+{
+  "serial": "MOLS-2024-00223"
+}
 
 
 ###
 # DELETE PATTERN
-DELETE {{ TENANT_BASE_URL }}/card-templates/{{ patternId }} HTTP/1.1
+DELETE {{ TENANT_BASE_URL }}/card-templates/{{ cardTemplateId }} HTTP/1.1
 Authorization: Bearer {{ access }}
 Content-Type: application/json
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
 
 
 ###
@@ -172,5 +183,6 @@ Content-Type: application/json
 OPTIONS {{ TENANT_BASE_URL }}/card-templates?search= HTTP/1.1
 Authorization: Bearer {{ access }}
 Content-Type: application/json
-
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
 []

@@ -1,8 +1,106 @@
+// import { Button } from '@/components/ui/button';
+// import { ChevronLeft, ChevronRight } from 'lucide-react';
+// import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
+
+// // The new, cleaner props interface
+// interface CustomPaginationProps {
+//   totalItems: number;
+//   pageSize: number;
+//   /** The initial page index (0-based). Defaults to 0. */
+//   initialPage?: number;
+//   /** Callback fired when the page changes. Receives the new 0-based page index. */
+//   onPageChange: (page: number) => void;
+// }
+
+// // The ref interface remains the same, as its purpose is still valid.
+// export interface CustomPaginationRefIFace {
+//   /** Resets the customPagination to the first page. */
+//   reset: () => void;
+//   /** Returns the current 0-based page index. */
+//   getCurrentPage: () => number;
+// }
+
+// export const CustomPagination = forwardRef<
+//   CustomPaginationRefIFace,
+//   CustomPaginationProps
+// >(({ totalItems, pageSize, initialPage = 0, onPageChange }, ref) => {
+//   // Use useState for currentPage to trigger re-renders correctly.
+//   const [currentPage, setCurrentPage] = useState(initialPage);
+
+//   // Calculate total pages. Use Math.max(1, ...) to avoid 0 pages if totalItems is 0.
+//   const totalPages = Math.ceil(totalItems / pageSize);
+
+//   // Effect to sync the internal state if the initialPage prop changes from the parent.
+//   useEffect(() => {
+//     // Ensure the initialPage is valid before setting it.
+//     if (initialPage >= 0 && initialPage < totalPages) {
+//       setCurrentPage(initialPage);
+//     }
+//   }, [initialPage, totalPages]);
+
+//   // Expose control methods to the parent component via the ref.
+//   useImperativeHandle(ref, () => ({
+//     reset: () => {
+//       setCurrentPage(0);
+//       onPageChange(0); // Also notify parent of the reset.
+//     },
+//     getCurrentPage: () => currentPage
+//   }));
+
+//   const handlePrevious = () => {
+//     const newPage = Math.max(0, currentPage - 1);
+//     setCurrentPage(newPage);
+//     onPageChange(newPage);
+//   };
+
+//   const handleNext = () => {
+//     const newPage = Math.min(totalPages - 1, currentPage + 1);
+//     setCurrentPage(newPage);
+//     onPageChange(newPage);
+//   };
+
+//   // Don't render the component if there's only one page or no items.
+//   if (totalPages <= 1) {
+//     return null;
+//   }
+
+//   return (
+//     <div className="flex items-center justify-between w-full border border-red-500">
+//       <div className="text-sm text-muted-foreground">
+//         {totalItems} total items
+//       </div>
+//       <div className="flex items-center space-x-4">
+//         <Button
+//           variant="outline"
+//           size="sm"
+//           onClick={handlePrevious}
+//           disabled={currentPage === 0}>
+//           <ChevronLeft className="h-4 w-4 mr-1" />
+//           Previous
+//         </Button>
+
+//         <div className="text-sm font-medium">
+//           Page {currentPage + 1} of {totalPages}
+//         </div>
+
+//         <Button
+//           variant="outline"
+//           size="sm"
+//           onClick={handleNext}
+//           disabled={currentPage >= totalPages - 1}>
+//           Next
+//           <ChevronRight className="h-4 w-4 ml-1" />
+//         </Button>
+//       </div>
+//     </div>
+//   );
+// });
+
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 
-// The new, cleaner props interface
+// Props interface for the component
 interface CustomPaginationProps {
   totalItems: number;
   pageSize: number;
@@ -12,9 +110,9 @@ interface CustomPaginationProps {
   onPageChange: (page: number) => void;
 }
 
-// The ref interface remains the same, as its purpose is still valid.
+// Ref interface to expose control methods to the parent
 export interface CustomPaginationRefIFace {
-  /** Resets the customPagination to the first page. */
+  /** Resets the pagination to the first page (index 0). */
   reset: () => void;
   /** Returns the current 0-based page index. */
   getCurrentPage: () => number;
@@ -24,11 +122,10 @@ export const CustomPagination = forwardRef<
   CustomPaginationRefIFace,
   CustomPaginationProps
 >(({ totalItems, pageSize, initialPage = 0, onPageChange }, ref) => {
-  // Use useState for currentPage to trigger re-renders correctly.
   const [currentPage, setCurrentPage] = useState(initialPage);
 
-  // Calculate total pages. Use Math.max(1, ...) to avoid 0 pages if totalItems is 0.
-  const totalPages = Math.ceil(totalItems / pageSize);
+  // Calculate total pages, ensuring it's at least 1.
+  const totalPages = Math.ceil(totalItems / pageSize) || 1;
 
   // Effect to sync the internal state if the initialPage prop changes from the parent.
   useEffect(() => {
@@ -41,8 +138,10 @@ export const CustomPagination = forwardRef<
   // Expose control methods to the parent component via the ref.
   useImperativeHandle(ref, () => ({
     reset: () => {
-      setCurrentPage(0);
-      onPageChange(0); // Also notify parent of the reset.
+      if (currentPage !== 0) {
+        setCurrentPage(0);
+        onPageChange(0); // Also notify parent of the reset.
+      }
     },
     getCurrentPage: () => currentPage
   }));
@@ -65,21 +164,23 @@ export const CustomPagination = forwardRef<
   }
 
   return (
-    <div className="flex items-center justify-between w-full">
-      <div className="text-sm text-muted-foreground">
+    <div className="flex items-center justify-between w-full p-4">
+      {/* Total items count - hidden on smaller screens for a cleaner look */}
+      <div className="hidden sm:block text-sm text-muted-foreground">
         {totalItems} total items
       </div>
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center justify-center sm:justify-end gap-2 w-full sm:w-auto">
         <Button
           variant="outline"
           size="sm"
           onClick={handlePrevious}
-          disabled={currentPage === 0}>
-          <ChevronLeft className="h-4 w-4 mr-1" />
-          Previous
+          disabled={currentPage === 0}
+          aria-label="Go to previous page">
+          <ChevronLeft className="h-4 w-4 sm:mr-1" />
+          <span className="sr-only sm:not-sr-only">Previous</span>
         </Button>
 
-        <div className="text-sm font-medium">
+        <div className="text-sm font-medium px-2">
           Page {currentPage + 1} of {totalPages}
         </div>
 
@@ -87,9 +188,10 @@ export const CustomPagination = forwardRef<
           variant="outline"
           size="sm"
           onClick={handleNext}
-          disabled={currentPage >= totalPages - 1}>
-          Next
-          <ChevronRight className="h-4 w-4 ml-1" />
+          disabled={currentPage >= totalPages - 1}
+          aria-label="Go to next page">
+          <span className="sr-only sm:not-sr-only">Next</span>
+          <ChevronRight className="h-4 w-4 sm:ml-1" />
         </Button>
       </div>
     </div>

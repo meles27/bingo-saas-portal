@@ -1,11 +1,11 @@
-import { parse } from 'tldts';
+import type { TenantEntity } from '@/types/api/base/tenant.type';
 import { create } from 'zustand';
 
-const config = {
+const initialState = {
   /**
    * UI CONFIGURATIONS
    */
-  PAGE_SIZE: 40,
+  PAGE_SIZE: 10,
   SEARCH_PAGINATION_LIMIT: 1000,
   CURRENCY: 'ETB',
   TOAST_ERROR_TIMEOUT: 3000,
@@ -20,53 +20,23 @@ const config = {
   UPGRADE_ALERT_TIME: 10 * 1000, // 10 seconds
   JWT_KEY_NAME: 'token',
   user: null,
-  SUBDOMAIN_POSITION: 0
+  SUBDOMAIN_POSITION: 0,
+  tenant: null as Partial<TenantEntity> | null
 };
 
-type ConfigType = typeof config;
+type ConfigState = typeof initialState;
 
-type ConfigStore = ConfigType & {
-  /**
-   * update configuration dynamically
-   */
-  updateConfigValue: <K extends keyof ConfigType>(
+type ConfigActions = {
+  // A simplified, type-safe action to update a configuration value.
+  setConfig: <K extends keyof ConfigState>(
     key: K,
-    value: Partial<ConfigType[K]>
-  ) => unknown;
-  getTenantSubDomain: () => string;
-  getTenantNamespace: () => string;
-  getPublicNamespace: () => string;
+    value: ConfigState[K]
+  ) => void;
 };
 
-export const useConfigStore = create<ConfigStore>((set, get) => ({
-  ...config,
-  updateConfigValue: async (key, value) => {
-    console.log(get);
-    set((state) => ({
-      ...state,
-      [key]: value
-    }));
-  },
-  getTenantSubDomain() {
-    let subdomain: string = '';
-    const hostname = window.location.hostname;
-    const position = get().SUBDOMAIN_POSITION;
-    // Use tldts to reliably parse the hostname
-    const parsed = parse(hostname, { allowPrivateDomains: true });
-
-    if (parsed.subdomain) {
-      const subdomains = parsed.subdomain.split('.');
-      if (subdomains.length > position) {
-        subdomain = subdomains[position];
-      }
-    }
-
-    return subdomain;
-  },
-  getTenantNamespace() {
-    return `tenant-${get().getTenantSubDomain()}`;
-  },
-  getPublicNamespace() {
-    return `public-${get().getTenantSubDomain()}`;
+export const useConfigStore = create<ConfigState & ConfigActions>((set) => ({
+  ...initialState,
+  setConfig: (key, value) => {
+    set({ [key]: value });
   }
 }));

@@ -1,55 +1,62 @@
+import { socketManager, type NamespaceType } from '@/lib/socket/socket-manager';
 import {
-  socketManager,
-  type NamespaceType,
-  type SocketEventListener
-} from '@/lib/socket/socket-manager';
+  SocketEvent,
+  type SocketEventHandler
+} from '@/lib/socket/socket.schema';
 import { useCallback, useEffect } from 'react';
 
 /**
- * A type-safe custom React hook to manage a Socket.IO event listener and ensure
- * a connection for the specified namespace is active when the component is mounted.
+ * A type-safe custom React hook to manage a Socket.IO event listener.
+ * It ensures the listener is correctly added when the component mounts and
+ * removed when it unmounts.
  *
- * @param namespace The namespace to connect to ('private' or 'public').
- * @param eventName The event to listen for from the server.
- * @param handler The callback function to execute when the event is received.
+ * @example
+ * useSocket('private', SocketEvent.T_NEW_NUMBER_CALLED, (response) => {
+ *   // `response` is fully typed here!
+ *   console.log('New number:', response.payload.number);
+ * });
+ *
+ * @template E - The specific event from the SocketEvent enum you are listening for.
+ * @param {NamespaceType} namespace - The namespace to listen on ('private' or 'public').
+ * @param {E} eventName - The strongly-typed event name.
+ * @param {SocketEventHandler<E>} handler - The callback function to execute. Its argument is automatically typed based on the eventName.
  */
-export const useSocket = <T>(
+export const useSocket = <E extends SocketEvent>(
   namespace: NamespaceType,
-  eventName: string,
-  handler: SocketEventListener<T>
+  eventName: E,
+  handler: SocketEventHandler<E>
 ) => {
-  // Memoize the handler to prevent re-subscribing on every component render.
+  // Memoize the handler to prevent re-subscribing on every component render if the handler is defined inline.
   const memoizedHandler = useCallback(handler, [handler]);
 
   useEffect(() => {
-    // If already connected, this does nothing. If not, it initiates connection.
-    let socket = socketManager.getSocket(namespace);
-    if (!socket || socket.disconnected) {
-      socket = socketManager.connect(namespace);
-    }
-
-    // If a connection was successfully established (or already existed),
+    const socket = socketManager.getSocket(namespace);
     if (socket) {
-      socketManager.on(namespace, eventName, memoizedHandler);
+      // The type assertion is safe because we know our handler's signature matches the event.
+      socket.on(eventName, memoizedHandler as (...args: any[]) => void);
     }
 
-    // Cleanup function: This will be called when the component unmounts.
+    // The cleanup function is crucial to prevent memory leaks and duplicate listeners.
     return () => {
-      socketManager.off(namespace, eventName, memoizedHandler);
+      socket?.off(eventName, memoizedHandler as (...args: any[]) => void);
     };
-  }, [namespace, eventName, memoizedHandler]); // Re-run effect if these change.
+  }, [namespace, eventName, memoizedHandler]);
 };
 
-export const usePrivateSocket = <T>(
-  eventName: string,
-  handler: SocketEventListener<T>
+// --- Convenience Hooks ---
+
+/** Listens on the 'private' (authenticated) namespace. */
+export const usePrivateSocket = <E extends SocketEvent>(
+  eventName: E,
+  handler: SocketEventHandler<E>
 ) => {
   return useSocket('private', eventName, handler);
 };
 
-export const usePublicSocket = <T>(
-  eventName: string,
-  handler: SocketEventListener<T>
+/** Listens on the 'public' namespace. */
+export const usePublicSocket = <E extends SocketEvent>(
+  eventName: E,
+  handler: SocketEventHandler<E>
 ) => {
   return useSocket('public', eventName, handler);
 };

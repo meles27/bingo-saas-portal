@@ -1,0 +1,194 @@
+###
+# this is for the games in the single game
+# LIST GAME GAMES
+GET {{ TENANT_BASE_URL }}/games?gameId={{gameId}} HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
+
+
+###
+# CREATE GAME GAME
+POST {{ TENANT_BASE_URL }}/games HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
+
+{
+  "entryFee": "200.0",
+  "startedAt": "2025-08-27T07:32:10.123Z",
+  "currency": "ETB",
+  "patternIds": [
+    "4bd9bb3f-cd9e-49af-9073-3329d973f87e"
+  ],
+  "prize": "100000.00",
+  "description": "this is description section"
+}
+
+
+###
+# RETRIEVE GAME GAME
+GET {{ TENANT_BASE_URL }}/games/{{ gameId }} HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
+
+
+###
+# UPDATE  GAM Mega BingoE GAME
+PATCH {{ TENANT_BASE_URL }}/games/{{ gameId }} HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
+
+{
+  "prize": "50000"
+}
+
+
+###
+# start game
+POST {{ TENANT_BASE_URL }}/games/{{ gameId }}/start HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
+
+
+###
+# pause game
+POST {{ TENANT_BASE_URL }}/games/{{ gameId }}/pause HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
+
+
+###
+# resume game
+POST {{ TENANT_BASE_URL }}/games/{{ gameId }}/resume HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
+
+
+###
+# cancel game
+POST {{ TENANT_BASE_URL }}/games/{{ gameId }}/cancel HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
+
+
+###
+# complete game
+POST {{ TENANT_BASE_URL }}/games/{{ gameId }}/complete HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
+
+
+###
+# bingo calls related
+# bingo calls related
+# bingo calls related
+# list game calls
+GET {{ TENANT_BASE_URL }}/games/{{ gameId }}/bingo-calls HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
+
+
+###
+# retrieve game call
+GET {{ TENANT_BASE_URL }}/games/{{ gameId }}/bingo-calls/{{ callId }} HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
+
+
+###
+# call next number manually
+POST {{ TENANT_BASE_URL }}/games/{{ gameId }}/call-next-manually HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
+
+{
+  "number": 3
+}
+
+
+###
+# call next number automatically
+POST {{ TENANT_BASE_URL }}/games/{{ gameId }}/call-next-number HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
+
+
+###
+# OPTIONS  GAME GAME
+OPTIONS {{ TENANT_BASE_URL }}/games/{{ gameId }} HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
+[
+{
+"name": "Tuesday Night Mega Bingo",
+"rows": 5,
+"cols": 5,
+"minRange": 1,
+"maxRange": 75,
+"patternIds": [
+"550e8400-e29b-41d4-a716-446655440000"
+],
+"prize": 10000.00
+},
+{
+"name": "Sunday Jackpot Bingo",
+"rows": 3,
+"cols": 3,
+"minRange": 1,
+"maxRange": 50,
+"patternIds": [
+"123e4567-e89b-12d3-a456-426614174000"
+],
+"prize": 5000.00
+},
+{
+"name": "Daily Morning Bingo",
+"rows": 4,
+"cols": 4,
+"minRange": 5,
+"maxRange": 90,
+"patternIds": [
+"f47ac10b-58cc-4372-a567-0e02b2c3d479",
+"9a7b330a-a736-42df-b7b6-36a8c7fddc28"
+],
+"prize": 1000.00
+},
+{
+"name": "Evening Fun Bingo",
+"rows": 6,
+"cols": 6,
+"minRange": 10,
+"maxRange": 100,
+"patternIds": [
+"7c9e6679-7425-40de-944b-e07fc1f90ae7"
+],
+"prize": 2500.00
+}
+]

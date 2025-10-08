@@ -3,6 +3,8 @@
 GET {{ SYSTEM_BASE_URL }}/system-permissions HTTP/1.1
 Authorization: Bearer {{ access }}
 Content-Type: application/json
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
 
 
 ###
@@ -10,6 +12,8 @@ Content-Type: application/json
 GET {{ SYSTEM_BASE_URL }}/system-permissions/{{ systemPermissionId }} HTTP/1.1
 Authorization: Bearer {{ access }}
 Content-Type: application/json
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
 
 
 ###
@@ -17,6 +21,8 @@ Content-Type: application/json
 PATCH {{ SYSTEM_BASE_URL }}/system-permissions/{{ systemPermissionId }} HTTP/1.1
 Authorization: Bearer {{ access }}
 Content-Type: application/json
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
 
 {
   "ast": "atte",

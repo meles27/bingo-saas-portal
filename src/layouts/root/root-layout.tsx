@@ -4,7 +4,9 @@ import { Spinner } from '@/components/base/spinner';
 import { Toaster } from '@/components/ui/sonner';
 import { urls } from '@/config/urls';
 import { useQuery } from '@/hooks/base/api/useQuery';
+import { initializeSocketConnection } from '@/lib/socket';
 import { useConfigStore } from '@/store/config-store';
+import type { TenantEntity } from '@/types/api/base/tenant.type';
 import type { AxiosBaseQueryErrorResponse } from '@/utils/axiosInstance';
 import { AnimatePresence } from 'framer-motion';
 import React, { useEffect } from 'react';
@@ -29,10 +31,15 @@ export const RootLayout: React.FC = () => {
   /**
    * totast time out
    */
+
   const TOAST_DEFAULT_TIMEOUT = useConfigStore(
     (state) => state.TOAST_DEFAULT_TIMEOUT
   );
-  const retrieveTenantResponse = useQuery(urls.getTenantSettingsUrl());
+  const setConfig = useConfigStore((state) => state.setConfig);
+
+  const retrieveTenantResponse = useQuery<TenantEntity>(
+    urls.getTenantSettingsUrl()
+  );
   useEffect(() => {
     if (retrieveTenantResponse.isSuccess) {
       console.log('tenant; ', retrieveTenantResponse.data);
@@ -41,7 +48,17 @@ export const RootLayout: React.FC = () => {
 
   useEffect(() => {
     console.log(retrieveTenantResponse);
+    if (retrieveTenantResponse.isSuccess) {
+      setConfig('tenant', retrieveTenantResponse.data);
+    }
   }, [retrieveTenantResponse, retrieveTenantResponse.isSuccess]);
+
+  /**
+   * Initialize socket connection
+   */
+  useEffect(() => {
+    initializeSocketConnection();
+  }, []);
 
   return (
     <>

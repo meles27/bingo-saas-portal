@@ -323,7 +323,7 @@ export const RolePermissions = withAnimation(() => {
               </>
             )}
           </CardContent>
-          <CardFooter className="flex justify-end sticky bottom-0 bg-background py-4 border-t">
+          <CardFooter className="flex self-end justify-end sticky bottom-0 bg-background border-t pb-4">
             <Button type="submit" disabled={rolePermissionsMutation.isLoading}>
               {rolePermissionsMutation.isLoading && (
                 <Loader2 className="animate-spin mr-2" />

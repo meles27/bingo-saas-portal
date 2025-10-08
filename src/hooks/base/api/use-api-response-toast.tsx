@@ -1,10 +1,10 @@
 import { useConfigStore } from '@/store/config-store';
+import { useEffect, useRef, type ReactNode } from 'react';
+import { toast } from 'sonner';
 import type {
   AxiosBaseQueryErrorResponse,
   StandardValidationError
-} from '@/utils/axiosInstance';
-import { useEffect, useRef, type ReactNode } from 'react';
-import { toast } from 'sonner';
+} from './useMutation';
 
 // --- Enhanced Type Definitions ---
 
@@ -42,7 +42,8 @@ const parseErrorForSonner = (
   const { status, data } = error;
   const genericErrorMessage = 'An unexpected error occurred.';
 
-  const title = data?.detail || error.message || genericErrorMessage;
+  const title =
+    data?.detail || (error as unknown as any).message || genericErrorMessage;
 
   // --- Specific Logic for 422 Validation Errors ---
   if (status === 422 && Array.isArray(data?.errors)) {

@@ -6,7 +6,9 @@ GET {{ SYSTEM_BASE_URL }}/system-roles HTTP/1.1
 ###
 #CREATE SYSTEM-ROLE
 POST {{ SYSTEM_BASE_URL }}/system-roles HTTP/1.1
-content-type: application/json
+Content-Type: application/json
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
 
 {
   "name": "Billing Manager",

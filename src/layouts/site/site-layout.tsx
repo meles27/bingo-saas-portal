@@ -1,30 +1,11 @@
-import { MobileNavigation } from '@/components/mobile-navigation';
 import { SiteHeader } from '@/components/site/site-header';
 import { useAuthStore } from '@/store/auth-store';
 import { AnimatePresence } from 'framer-motion';
-import { Gamepad2, Home, User } from 'lucide-react';
 import React from 'react';
-import { Navigate, Outlet, useNavigate } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 
 export const SiteLayout: React.FC = () => {
-  const navigate = useNavigate();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-
-  const navItems = [
-    { id: 'home', label: 'Home', icon: Home, onClick: () => navigate('/') },
-    {
-      id: 'lobby',
-      label: 'Lobby',
-      icon: Gamepad2,
-      onClick: () => navigate('/lobby')
-    },
-    {
-      id: 'profile',
-      label: 'Profile',
-      icon: User,
-      onClick: () => navigate('/profile')
-    }
-  ];
 
   return (
     <>
@@ -39,7 +20,6 @@ export const SiteLayout: React.FC = () => {
               <Outlet key={'site-layout-key'} />
             </AnimatePresence>
           </div>
-          <MobileNavigation items={navItems} />
         </div>
       )}
     </>

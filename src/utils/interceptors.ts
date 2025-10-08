@@ -3,54 +3,93 @@ import { useAuthStore } from '@/store/auth-store';
 import { useConfigStore } from '@/store/config-store';
 import axios from 'axios';
 
-const axiosInstance = axios.create({
+// Structure for the specific 422 validation error item
+export type StandardValidationError = {
+  field: string;
+  messages: string[];
+};
+
+// Shape of the API error data payload (flexible)
+type ApiErrorData = {
+  detail?: string;
+  // `errors` can be an array of objects, a plain object, a string, or an array of strings
+  errors?:
+    | StandardValidationError[]
+    | Record<string, unknown>
+    | string
+    | string[];
+};
+
+export interface AxiosBaseQueryErrorResponse {
+  status?: number;
+  data: ApiErrorData;
+  message?: string;
+}
+
+// =================================================================
+//                      GLOBAL AXIOS INSTANCE
+// =================================================================
+const globalAxiosInstance = axios.create({
+  baseURL: urls.getGlobalBaseUrl(),
+  withCredentials: true
+});
+
+globalAxiosInstance.interceptors.request.use(
+  (config) => {
+    // You might have a separate auth mechanism for global users (e.g., superadmins)
+    // const globalToken = useGlobalAuthStore.getState().token;
+    // if (globalToken) {
+    //   config.headers.Authorization = `Bearer ${globalToken.access}`;
+    // }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+// =================================================================
+//                      TENANT AXIOS INSTANCE
+// =================================================================
+const tenantAxiosInstance = axios.create({
   withCredentials: true
 });
 
 /**
- * urls that doesn't required access token
+ * URLs that don't require an access token for the tenant
  */
-const publicUrls = [urls.getAuthTokenUrl(), urls.getTenantSettingsUrl()];
+const publicTenantUrls = [urls.getAuthTokenUrl(), urls.getTenantSettingsUrl()];
 
-axiosInstance.interceptors.request.use(
+tenantAxiosInstance.interceptors.request.use(
   (config) => {
-    /**
-     * get tenant subdomain from configuration
-     */
-    const subdomain = useConfigStore.getState().getTenantSubDomain();
-    config.baseURL = urls.getBaseUrl(subdomain);
+    const tenant = useConfigStore.getState().tenant;
+    const defaultTenantId = '764d0518-6c72-4393-a4d6-31c40992a7b1';
 
-    console.log(
-      'the current request is ',
-      `${config.baseURL}${config.url ? config.url : ''}${
-        config.auth ? config.auth : ''
-      }`,
-      config.params
-    );
+    config.baseURL = urls.getTenantBaseUrl();
+
+    // Your existing logic for tenant-specific headers
     const token = useAuthStore.getState().token;
 
-    if (!publicUrls.includes(config.url || '')) {
+    if (!publicTenantUrls.includes(config.url || '')) {
       if (token && token?.access) {
         config.headers.Authorization = `Bearer ${token?.access}`;
       }
     }
-    /**
-     * set tenant id
-     */
-    config.headers['X-Tenant-ID'] = 'ff1411a8-c93e-4f2e-b39d-8177e01c6986';
+
+    config.headers['X-Tenant-ID'] = tenant?.id || defaultTenantId;
 
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
-axiosInstance.interceptors.response.use(
-  async (response) => {
-    return response;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
+
+// You can add response interceptors to both instances if needed
+tenantAxiosInstance.interceptors.response.use(
+  (response) => response,
+  (error) => Promise.reject(error)
 );
-export default axiosInstance;
+
+globalAxiosInstance.interceptors.response.use(
+  (response) => response,
+  (error) => Promise.reject(error)
+);
+
+export { globalAxiosInstance, tenantAxiosInstance };

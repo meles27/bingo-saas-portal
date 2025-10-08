@@ -6,7 +6,9 @@ GET {{ SYSTEM_BASE_URL }}/pricing-plans HTTP/1.1
 ###
 #CREATE PRICING-PLAN
 POST {{ SYSTEM_BASE_URL }}/pricing-plans HTTP/1.1
-content-type: application/json
+Content-Type: application/json
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
 
 {
   "name": "Starter",
@@ -28,7 +30,9 @@ GET {{ SYSTEM_BASE_URL }}/pricing-plans/{{ pricingPlanId }} HTTP/1.1
 ###
 # UPDATE PRICING-PLAN
 PATCH {{ SYSTEM_BASE_URL }}/pricing-plans/{{ pricingPlanId }} HTTP/1.1
-content-type: application/json
+Content-Type: application/json
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
 
 {
   "extraFeatures": [
@@ -42,13 +46,17 @@ content-type: application/json
 ###
 # DELETE PRICING-PLAN
 DELETE {{ SYSTEM_BASE_URL }}/pricing-plans/{{ pricingPlanId }} HTTP/1.1
-content-type: application/json
+Content-Type: application/json
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
 
 
 ###
 # DELETE PRICING-PLAN
 OPTIONS {{ SYSTEM_BASE_URL }}/pricing-plans/{{ pricingPlanId }} HTTP/1.1
-content-type: application/json
+Content-Type: application/json
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
 
 [
   {

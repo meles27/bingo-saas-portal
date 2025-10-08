@@ -1,0 +1,39 @@
+###
+# this is for the game cards in the single game's game
+# LIST GAME CARDS
+GET {{ TENANT_BASE_URL }}/games/{{ gameId }}/cards HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
+
+
+###
+# CREATE GAME CARD
+POST {{ TENANT_BASE_URL }}/games/{{ gameId }}/cards HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
+
+{
+  "participantId": "{{ participantId }}"
+}
+
+
+###
+# RETRIEVE GAME CARD
+GET {{ TENANT_BASE_URL }}/games/{{ gameId }}/cards/{{ cardId }} HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
+
+
+###
+# DELETE  GAME GAME
+DELETE {{ TENANT_BASE_URL }}/games/{{ gameId }}/cards/{{ cardId }} HTTP/1.1
+Authorization: Bearer {{ access }}
+Content-Type: application/json
+X-Tenant-Subdomain: {{ subdomain }}
+X-Tenant-ID: {{ tenantId }}
